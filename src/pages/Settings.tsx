@@ -56,9 +56,7 @@ const Settings: React.FC = () => {
                     onSuccess: () => {
                         window.location.href = '/login';
                     }
-                },
-                redirect: true,
-                callbackURL: "/login"
+                }
             });
         } catch (error) {
             console.error("Sign out error:", error);
