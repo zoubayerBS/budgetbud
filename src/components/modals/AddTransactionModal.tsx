@@ -4,7 +4,6 @@ import { CATEGORIES } from '../../types';
 import type { Category, TransactionType, RecurrenceFrequency } from '../../types';
 import {
     X,
-    Plus,
     Repeat,
     Calendar,
     CreditCard,
@@ -56,8 +55,7 @@ const AddTransactionModal: React.FC = () => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [note, setNote] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
-    const [frequency, setFrequency] = useState<RecurrenceFrequency>('monthly');
-    const [step, setStep] = useState(1);
+    const [frequency] = useState<RecurrenceFrequency>('monthly');
     const [loading, setLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
@@ -100,7 +98,6 @@ const AddTransactionModal: React.FC = () => {
 
     const resetAndClose = () => {
         setIsSuccess(false);
-        setStep(1);
         setAmount('');
         setNote('');
         closeAddModal();
