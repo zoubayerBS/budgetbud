@@ -15,7 +15,7 @@ const Login: React.FC = () => {
         setError('');
         setLoading(true);
         try {
-            const { error: signInError } = await signIn.email({
+            await signIn.email({
                 email,
                 password,
             }, {

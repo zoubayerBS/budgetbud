@@ -16,7 +16,7 @@ const Register: React.FC = () => {
         setError('');
         setLoading(true);
         try {
-            const { error: signUpError } = await signUp.email({
+            await signUp.email({
                 email,
                 password,
                 name,
