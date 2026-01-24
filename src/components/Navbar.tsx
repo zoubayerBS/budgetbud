@@ -19,12 +19,12 @@ const Navbar: React.FC = () => {
             {/* Desktop Container */}
             <div className="hidden md:flex flex-col w-72 h-[95vh] my-auto ml-6 clay-card p-6 bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 shadow-2xl z-40 ring-1 ring-slate-200/50 dark:ring-slate-900/50">
                 <div className="flex items-center gap-4 mb-10 px-2 mt-2">
-                    <div className="w-12 h-12 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 text-white">
-                        <span className="font-extrabold text-2xl">B</span>
+                    <div className="w-12 h-12 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-[1.25rem] flex items-center justify-center shadow-xl shadow-blue-500/20 text-white transition-transform hover:scale-110 duration-500">
+                        <span className="font-black text-2xl tracking-tighter">B</span>
                     </div>
                     <div>
-                        <h1 className="text-xl font-extrabold text-slate-800 dark:text-white tracking-tight leading-none">BudgetBud</h1>
-                        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Finance</p>
+                        <h1 className="text-xl font-black text-slate-800 dark:text-white tracking-tighter leading-none">BudgetBud</h1>
+                        <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Neural Finance</p>
                     </div>
                 </div>
 

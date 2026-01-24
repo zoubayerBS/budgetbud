@@ -36,12 +36,12 @@ const Login: React.FC = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#eef2f6] dark:bg-[#111827] p-4">
             <div className="clay-card p-8 w-full max-w-md animate-in zoom-in-95 duration-500">
-                <div className="flex flex-col items-center mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 text-white mb-4">
-                        <span className="font-extrabold text-3xl">B</span>
+                <div className="flex flex-col items-center mb-8 text-center">
+                    <div className="w-16 h-16 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-[1.75rem] flex items-center justify-center shadow-xl shadow-blue-500/20 text-white mb-6 transition-transform hover:scale-110 duration-500">
+                        <span className="font-black text-3xl tracking-tighter">B</span>
                     </div>
-                    <h2 className="text-2xl font-extrabold text-slate-800 dark:text-white">Bienvenue !</h2>
-                    <p className="text-slate-500 font-medium text-center">Connectez-vous à BudgetBud avec Neon Auth</p>
+                    <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-tight">BudgetBud</h2>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Neural Finance</p>
                 </div>
 
                 {error && (

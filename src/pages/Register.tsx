@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus } from 'lucide-react';
 import { signUp } from '../lib/auth-client';
 
 const Register: React.FC = () => {
@@ -38,12 +37,12 @@ const Register: React.FC = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#eef2f6] dark:bg-[#111827] p-4">
             <div className="clay-card p-8 w-full max-w-md animate-in zoom-in-95 duration-500">
-                <div className="flex flex-col items-center mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30 text-white mb-4">
-                        <UserPlus className="w-8 h-8" />
+                <div className="flex flex-col items-center mb-8 text-center">
+                    <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-[1.75rem] flex items-center justify-center shadow-xl shadow-emerald-500/20 text-white mb-6 transition-transform hover:scale-110 duration-500">
+                        <span className="font-black text-3xl tracking-tighter">B</span>
                     </div>
-                    <h2 className="text-2xl font-extrabold text-slate-800 dark:text-white">Créer un compte</h2>
-                    <p className="text-slate-500 font-medium text-center">Rejoignez BudgetBud avec Neon Auth</p>
+                    <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-tight">BudgetBud</h2>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Neural Registry</p>
                 </div>
 
                 {error && (
