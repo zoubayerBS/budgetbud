@@ -11,6 +11,7 @@ interface BudgetContextType {
     deleteTransaction: (id: string) => Promise<void>;
     deleteRecurringTemplate: (id: string) => Promise<void>;
     updateBudget: (category: Category, limit: number) => Promise<void>;
+    refresh: () => Promise<void>;
     currency: Currency;
     setCurrency: (c: Currency) => void;
     theme: 'light' | 'dark';
@@ -52,6 +53,17 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         }
     }, [isPending, session]);
 
+    // Auto-refresh on window focus
+    useEffect(() => {
+        const handleFocus = () => {
+            if (session) {
+                fetchData(false); // Background refresh
+            }
+        };
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
+    }, [session]);
+
     const getHeaders = () => {
         const headers: Record<string, string> = {
             'Content-Type': 'application/json',
@@ -62,8 +74,8 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         return headers;
     };
 
-    const fetchData = async () => {
-        setLoading(true);
+    const fetchData = async (showLoading = true, retries = 3) => {
+        if (showLoading) setLoading(true);
         try {
             const headers = getHeaders();
             const [resTrans, resBudgets, resRecurring] = await Promise.all([
@@ -91,13 +103,20 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                     ...r,
                     amount: parseFloat(r.amount) || 0
                 })));
+            } else if (retries > 0) {
+                throw new Error("Fetch failed");
             }
         } catch (error) {
             console.error("Error fetching data:", error);
+            if (retries > 0) {
+                setTimeout(() => fetchData(showLoading, retries - 1), 2000);
+            }
         } finally {
-            setLoading(false);
+            if (showLoading) setLoading(false);
         }
     };
+
+    const refresh = () => fetchData(true);
 
     const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
         try {
@@ -182,6 +201,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             deleteTransaction,
             deleteRecurringTemplate,
             updateBudget,
+            refresh,
             currency,
             setCurrency,
             theme,
