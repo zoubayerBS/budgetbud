@@ -54,12 +54,8 @@ const Settings: React.FC = () => {
     const handleSignOut = async () => {
         try {
             await signOut({
-                fetchOptions: {
-                    onSuccess: () => {
-                        navigate('/login');
-                    }
-                }
-            });
+                redirectTo: "/login"
+            } as any);
         } catch (error) {
             console.error("Sign out error:", error);
             navigate('/login');
