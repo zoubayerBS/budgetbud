@@ -3,7 +3,7 @@
 
 -- 1. Create Demo User
 INSERT INTO users (id, email, password_hash)
-VALUES ('00000000-0000-0000-0000-000000000000', 'demo@budgetbud.com', '$2b$10$xTPzsMD0saDrFceYTL6nDuqGgDkcQbjUq543oqF/OqAUUGjAcl9DC')
+VALUES ('00000000-0000-0000-0000-000000000000', 'demo@budgetbud.com', '$2b$10$YKoIQrZ3TFBepyg1ujaYuuq/eaTyJvbWGZbbRNZl9Su1UwO9YK78q')
 ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
 
 -- 2. Define Budgets for Demo User

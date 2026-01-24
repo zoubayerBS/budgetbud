@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useBudget } from '../context/BudgetContext';
 import type { Currency, RecurringTemplate } from '../types';
 import {
@@ -35,7 +34,6 @@ const Settings: React.FC = () => {
         budgets,
         user
     } = useBudget();
-    const navigate = useNavigate();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
     const currencies: Currency[] = ['EUR', 'USD', 'CHF', 'CAD', 'TND'];

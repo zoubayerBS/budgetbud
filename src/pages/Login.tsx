@@ -85,7 +85,7 @@ const Login: React.FC = () => {
                     <button
                         onClick={() => {
                             setEmail('demo@budgetbud.com');
-                            setPassword('demo123');
+                            setPassword('budgetbud2026');
                         }}
                         className="text-blue-500 font-black text-[10px] uppercase tracking-widest hover:text-blue-600 transition-colors"
                     >
