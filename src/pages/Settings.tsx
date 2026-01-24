@@ -52,12 +52,16 @@ const Settings: React.FC = () => {
     ];
 
     const handleSignOut = async () => {
+        console.log("Sign out triggered...");
         try {
+            console.log("Calling signOut with redirectTo: /login");
             await signOut({
                 redirectTo: "/login"
             } as any);
+            console.log("signOut call completed (redirection should have happened)");
         } catch (error) {
-            console.error("Sign out error:", error);
+            console.error("Sign out error caught:", error);
+            console.log("Attempting fallback navigate to /login");
             navigate('/login');
         }
     };
