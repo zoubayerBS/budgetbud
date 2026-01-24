@@ -4,11 +4,11 @@ import { cn } from '../lib/utils';
 import { useBudget } from '../context/BudgetContext';
 
 const Navbar: React.FC = () => {
-    const { refresh, loading } = useBudget();
+    const { refresh, loading, openAddModal } = useBudget();
     const navItems = [
         { to: '/', icon: LayoutDashboard, label: 'Tableau' },
         { to: '/history', icon: History, label: 'Hist.' },
-        { to: '/add', icon: Plus, label: '', isFab: true }, // FAB in middle
+        { to: '#', icon: Plus, label: '', isFab: true }, // Changed to #
         { to: '/budgets', icon: PiggyBank, label: 'Budgets' },
         { to: '/settings', icon: Settings, label: 'Param.' },
     ];
@@ -59,13 +59,13 @@ const Navbar: React.FC = () => {
                         <span>{loading ? 'Sincronisation...' : 'Synchroniser'}</span>
                     </button>
 
-                    <NavLink
-                        to="/add"
+                    <button
+                        onClick={openAddModal}
                         className="clay-button-primary w-full py-4 rounded-2xl flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-95 transition-all z-10"
                     >
                         <Plus className="w-6 h-6" />
                         <span className="font-bold">Nouvelle Transaction</span>
-                    </NavLink>
+                    </button>
                 </div>
             </div>
 
@@ -77,17 +77,15 @@ const Navbar: React.FC = () => {
                     if (item.isFab) {
                         return (
                             <div key="fab-container" className="relative -top-8 z-50">
-                                <NavLink
-                                    to={item.to}
-                                    className={({ isActive }) => cn(
+                                <button
+                                    onClick={openAddModal}
+                                    className={cn(
                                         "w-16 h-16 rounded-full flex items-center justify-center shadow-xl transition-transform duration-300 border-[6px] border-[#eef2f6] dark:border-[#111827]",
-                                        isActive
-                                            ? "bg-gradient-to-tr from-blue-600 to-indigo-600 text-white scale-110 shadow-blue-500/50"
-                                            : "bg-gradient-to-tr from-blue-500 to-indigo-500 text-white hover:scale-105"
+                                        "bg-gradient-to-tr from-blue-500 to-indigo-500 text-white hover:scale-105 active:scale-95"
                                     )}
                                 >
                                     <Plus className="w-8 h-8" />
-                                </NavLink>
+                                </button>
                             </div>
                         );
                     }

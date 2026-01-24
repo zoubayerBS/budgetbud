@@ -12,6 +12,9 @@ interface BudgetContextType {
     deleteRecurringTemplate: (id: string) => Promise<void>;
     updateBudget: (category: Category, limit: number) => Promise<void>;
     refresh: () => Promise<void>;
+    isAddModalOpen: boolean;
+    openAddModal: () => void;
+    closeAddModal: () => void;
     currency: Currency;
     setCurrency: (c: Currency) => void;
     theme: 'light' | 'dark';
@@ -27,6 +30,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [budgets, setBudgets] = useState<Budget[]>([]);
     const [recurringTemplates, setRecurringTemplates] = useState<RecurringTemplate[]>([]);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [currency, setCurrency] = useState<Currency>('TND');
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const [loading, setLoading] = useState(true);
@@ -189,6 +193,9 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         } catch (err) { console.error(err); }
     };
 
+    const openAddModal = () => setIsAddModalOpen(true);
+    const closeAddModal = () => setIsAddModalOpen(false);
+
     return (
         <BudgetContext.Provider value={{
             transactions,
@@ -200,6 +207,9 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             deleteRecurringTemplate,
             updateBudget,
             refresh,
+            isAddModalOpen,
+            openAddModal,
+            closeAddModal,
             currency,
             setCurrency,
             theme,

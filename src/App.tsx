@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { BudgetProvider } from './context/BudgetContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
-import AddTransaction from './pages/AddTransaction';
 import History from './pages/History';
 import Budgets from './pages/Budgets';
 import Settings from './pages/Settings';
@@ -12,6 +11,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import { useSession } from './lib/auth-client';
 import SplashScreen from './components/common/SplashScreen';
+import AddTransactionModal from './components/modals/AddTransactionModal';
 
 const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { data: session, isPending } = useSession();
@@ -40,6 +40,7 @@ function App() {
     <>
       <SplashScreen />
       <BudgetProvider>
+        <AddTransactionModal />
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
