@@ -51,25 +51,17 @@ const Settings: React.FC = () => {
 
     const handleSignOut = async () => {
         try {
-            // Brute force clear any local storage that might interfere
-            localStorage.removeItem('better-auth.session-token');
-
             await signOut({
                 fetchOptions: {
                     onSuccess: () => {
                         window.location.href = '/login';
-                    },
-                    onError: () => {
-                        window.location.href = '/login';
                     }
-                }
+                },
+                redirect: true,
+                callbackURL: "/login"
             });
-
-            // Absolute fallback
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 500);
         } catch (error) {
+            console.error("Sign out error:", error);
             window.location.href = '/login';
         }
     };
