@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useBudget } from '../context/BudgetContext';
 import type { Currency, RecurringTemplate } from '../types';
 import {
@@ -24,7 +23,6 @@ import { formatCurrency } from '../lib/format';
 import AlertModal from '../components/common/AlertModal';
 
 const Settings: React.FC = () => {
-    const navigate = useNavigate();
     const {
         theme,
         toggleTheme,
@@ -70,7 +68,7 @@ const Settings: React.FC = () => {
                         clearTimeout(timeout);
                         window.location.href = '/login';
                     },
-                    onError: (ctx) => {
+                    onError: (ctx: any) => {
                         console.error("Sign out error callback triggered:", ctx.error);
                         clearTimeout(timeout);
                         window.location.href = '/login';
