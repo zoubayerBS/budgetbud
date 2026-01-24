@@ -202,18 +202,17 @@ const AddTransactionModal: React.FC = () => {
 
                         {/* Secondary Inputs */}
                         <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <DatePicker label="Date" value={date} onChange={setDate} />
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Note</label>
-                                    <input
-                                        type="text"
-                                        value={note}
-                                        onChange={(e) => setNote(e.target.value)}
-                                        placeholder="Ex: Café..."
-                                        className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border-none outline-none font-bold text-sm text-slate-700 dark:text-slate-200 shadow-inner"
-                                    />
-                                </div>
+                            <DatePicker label="Date" value={date} onChange={setDate} />
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Note</label>
+                                <input
+                                    type="text"
+                                    value={note}
+                                    onChange={(e) => setNote(e.target.value)}
+                                    placeholder="Ex: Café..."
+                                    className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-950 rounded-xl border-none outline-none font-bold text-sm text-slate-700 dark:text-slate-200 shadow-inner"
+                                />
                             </div>
 
                             {/* Automation Zen Toggle */}
