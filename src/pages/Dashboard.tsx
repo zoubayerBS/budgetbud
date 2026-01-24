@@ -4,6 +4,7 @@ import FinancialOverview from '../components/dashboard/FinancialOverview';
 import RecentActivity from '../components/dashboard/RecentActivity';
 import ExpensePieChart from '../components/dashboard/ExpensePieChart';
 import RecentTrendsChart from '../components/dashboard/RecentTrendsChart';
+import { Link } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -101,12 +102,16 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
                 {/* Future widget placeholder or budgets summary could go here */}
-                <div className="clay-card p-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex flex-col items-start justify-center">
+                <div className="clay-card p-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex flex-col items-start justify-center overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-8 -mt-8"></div>
                     <h3 className="text-2xl font-extrabold mb-2">Gardez le cap ! 🎯</h3>
                     <p className="text-indigo-100 font-medium mb-6 max-w-sm">Définir des petits budgets aide à réaliser de grands projets.</p>
-                    <button className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                    <Link
+                        to="/budgets"
+                        className="bg-white text-indigo-600 px-8 py-4 rounded-2xl font-black text-sm shadow-xl hover:scale-105 active:scale-95 transition-all"
+                    >
                         Voir mes budgets
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>
