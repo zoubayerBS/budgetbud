@@ -24,7 +24,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-me';
 
 // Middleware to extract User ID from Neon Auth session
 const getUserId = (req: any) => {
-    return req.headers['x-user-id'] || 'local-dev-user';
+    return req.headers['x-user-id'] || '00000000-0000-0000-0000-000000000000';
 };
 
 // Auto-initialize Schema

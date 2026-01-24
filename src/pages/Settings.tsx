@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBudget } from '../context/BudgetContext';
 import type { Currency, RecurringTemplate } from '../types';
 import {
@@ -34,6 +35,7 @@ const Settings: React.FC = () => {
         budgets,
         user
     } = useBudget();
+    const navigate = useNavigate();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
     const currencies: Currency[] = ['EUR', 'USD', 'CHF', 'CAD', 'TND'];
@@ -48,6 +50,24 @@ const Settings: React.FC = () => {
         { label: 'Budgets Actifs', value: budgets.length, icon: CreditCard, color: 'text-emerald-500' },
         { label: 'Automatisations', value: recurringTemplates.length, icon: Zap, color: 'text-amber-500' },
     ];
+
+    const handleSignOut = async () => {
+        try {
+            await signOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        navigate('/login');
+                    },
+                    onError: () => {
+                        // Fallback force redirect
+                        window.location.href = '/login';
+                    }
+                }
+            });
+        } catch (error) {
+            window.location.href = '/login';
+        }
+    };
 
     return (
         <div className="max-w-5xl mx-auto space-y-12 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700 p-4">
@@ -69,7 +89,7 @@ const Settings: React.FC = () => {
                             </p>
                         </div>
                         <button
-                            onClick={() => signOut()}
+                            onClick={handleSignOut}
                             className="bg-red-500/20 hover:bg-red-500/40 border border-red-500/30 px-6 py-3 rounded-2xl font-black text-sm flex items-center gap-2 transition-all active:scale-95"
                         >
                             <LogOut className="w-4 h-4" /> Déconnexion
