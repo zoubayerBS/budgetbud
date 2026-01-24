@@ -28,7 +28,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, label }) => {
     return (
         <div className="relative w-full">
             {label && (
-                <label className="block text-sm font-bold text-slate-500 uppercase tracking-wide mb-3 ml-2">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">
                     {label}
                 </label>
             )}
@@ -36,10 +36,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, label }) => {
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-6 py-5 bg-slate-50 dark:bg-slate-900 border-none rounded-3xl text-lg font-extrabold text-slate-800 dark:text-white shadow-inner flex items-center justify-between group transition-all active:scale-[0.98]"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl text-sm font-bold text-slate-800 dark:text-white shadow-inner flex items-center justify-between group transition-all active:scale-[0.98]"
             >
                 <span>{format(selectedDate, 'dd MMMM yyyy', { locale: fr })}</span>
-                <CalendarIcon className="w-6 h-6 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                <CalendarIcon className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />
             </button>
 
             {isOpen && (
