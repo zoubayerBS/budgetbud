@@ -11,6 +11,7 @@ import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { useSession } from './lib/auth-client';
+import SplashScreen from './components/common/SplashScreen';
 
 const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { data: session, isPending } = useSession();
@@ -36,26 +37,29 @@ const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) =
 
 function App() {
   return (
-    <BudgetProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+    <>
+      <SplashScreen />
+      <BudgetProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
-          <Route path="/" element={
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          }>
-            <Route index element={<Dashboard />} />
-            <Route path="add" element={<AddTransaction />} />
-            <Route path="history" element={<History />} />
-            <Route path="budgets" element={<Budgets />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </BudgetProvider>
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<Dashboard />} />
+              <Route path="add" element={<AddTransaction />} />
+              <Route path="history" element={<History />} />
+              <Route path="budgets" element={<Budgets />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </BudgetProvider>
+    </>
   );
 }
 
