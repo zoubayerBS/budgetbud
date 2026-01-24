@@ -51,34 +51,28 @@ const Settings: React.FC = () => {
 
     const handleSignOut = async () => {
         console.log("Logout Process Started");
-        console.log("Current user state:", user);
 
-        // Safety timeout: if signOut takes too long or hangs, we redirect anyway
-        const timeout = setTimeout(() => {
-            console.warn("Sign out timed out, forcing redirection...");
-            window.location.href = '/login';
-        }, 5000);
+        const baseURL = import.meta.env.VITE_NEON_AUTH_URL;
+        const logoutURL = `${baseURL}/sign-out?callbackURL=${encodeURIComponent(window.location.origin + '/login')}`;
 
         try {
-            console.log("Executing signOut API call...");
+            console.log("Attempting standard signOut API call...");
             await signOut({
                 fetchOptions: {
                     onSuccess: () => {
-                        console.log("Sign out success callback triggered");
-                        clearTimeout(timeout);
+                        console.log("API sign-out success, redirecting to /login");
                         window.location.href = '/login';
                     },
                     onError: (ctx: any) => {
-                        console.error("Sign out error callback triggered:", ctx.error);
-                        clearTimeout(timeout);
-                        window.location.href = '/login';
+                        console.warn("API sign-out returned error (likely 403), falling back to hosted logout...");
+                        console.error(ctx.error);
+                        window.location.href = logoutURL;
                     }
                 }
             } as any);
         } catch (error) {
-            console.error("Critical error during sign out:", error);
-            clearTimeout(timeout);
-            window.location.href = '/login';
+            console.error("Critical error during API sign-out, falling back to hosted logout:", error);
+            window.location.href = logoutURL;
         }
     };
 
