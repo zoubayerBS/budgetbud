@@ -41,7 +41,7 @@ const Login: React.FC = () => {
                         <span className="font-black text-3xl tracking-tighter">B</span>
                     </div>
                     <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-tight">BudgetBud</h2>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Neural Finance</p>
+                    <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mt-3">Gestion de Patrimoine Zen</p>
                 </div>
 
                 {error && (
@@ -82,6 +82,15 @@ const Login: React.FC = () => {
                 </form>
 
                 <div className="mt-8 flex flex-col gap-4 text-center">
+                    <button
+                        onClick={() => {
+                            setEmail('demo@budgetbud.com');
+                            setPassword('demo123');
+                        }}
+                        className="text-blue-500 font-black text-[10px] uppercase tracking-widest hover:text-blue-600 transition-colors"
+                    >
+                        Utiliser les accès démo
+                    </button>
                     <p className="text-slate-500 font-medium text-sm">
                         Pas encore de compte ? <Link to="/register" className="text-blue-600 font-bold hover:underline">Créer un compte</Link>
                     </p>

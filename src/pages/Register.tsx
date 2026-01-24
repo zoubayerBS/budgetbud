@@ -42,7 +42,7 @@ const Register: React.FC = () => {
                         <span className="font-black text-3xl tracking-tighter">B</span>
                     </div>
                     <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-tight">BudgetBud</h2>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Neural Registry</p>
+                    <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mt-3">Création de Profil Zen</p>
                 </div>
 
                 {error && (
