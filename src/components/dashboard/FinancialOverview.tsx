@@ -51,7 +51,7 @@ const FinancialOverview: React.FC = () => {
                             className="bg-white text-slate-900 px-10 py-5 rounded-[2rem] font-black text-sm flex items-center gap-3 shadow-2xl hover:scale-105 active:scale-95 transition-all group/btn"
                         >
                             <Plus className="w-5 h-5 group-hover/btn:rotate-90 transition-transform duration-500" />
-                            <span>Ajouter Flux</span>
+                            <span>Ajouter</span>
                         </button>
                         <Link
                             to="/history"

@@ -29,7 +29,7 @@ const Budgets: React.FC = () => {
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
                     <h2 className="text-4xl font-black text-slate-800 dark:text-white tracking-tight">Budgets 💎</h2>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold mt-1">L'art de maîtriser ses flux financiers.</p>
+                    <p className="text-slate-500 dark:text-slate-400 font-bold mt-1">L'art de maîtriser ses finances.</p>
                 </div>
                 <button
                     onClick={() => setIsModalOpen(true)}

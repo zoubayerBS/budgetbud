@@ -42,7 +42,7 @@ const History: React.FC = () => {
             <header className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4">
                 <div>
                     <h2 className="text-4xl font-black text-slate-800 dark:text-white tracking-tight">Historique 🕰️</h2>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold mt-1">Voyagez à travers vos flux passés.</p>
+                    <p className="text-slate-500 dark:text-slate-400 font-bold mt-1">Voyagez à travers vos transactions passées.</p>
                 </div>
                 <button
                     onClick={() => setShowFilters(!showFilters)}
@@ -62,7 +62,7 @@ const History: React.FC = () => {
             {showFilters && (
                 <div className="clay-card p-8 grid grid-cols-1 md:grid-cols-2 gap-8 animate-in slide-in-from-top-4 duration-300 border-white/50 backdrop-blur-3xl overflow-visible">
                     <Dropdown
-                        label="Type de flux"
+                        label="Type de transaction"
                         options={typeOptions}
                         value={filterType}
                         onChange={(v) => setFilterType(v as any)}
