@@ -44,12 +44,10 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
-    // Load Data whenever Auth changes
+    // Load Data whenever Auth changes or first load
     useEffect(() => {
-        if (!isPending && session) {
+        if (!isPending) {
             fetchData();
-        } else if (!isPending) {
-            setLoading(false);
         }
     }, [isPending, session]);
 

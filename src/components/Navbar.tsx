@@ -1,9 +1,10 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Plus, History, PiggyBank, Settings } from 'lucide-react';
+import { LayoutDashboard, Plus, History, PiggyBank, Settings, RefreshCw } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useBudget } from '../context/BudgetContext';
 
 const Navbar: React.FC = () => {
+    const { refresh, loading } = useBudget();
     const navItems = [
         { to: '/', icon: LayoutDashboard, label: 'Tableau' },
         { to: '/history', icon: History, label: 'Hist.' },
@@ -48,7 +49,16 @@ const Navbar: React.FC = () => {
                     })}
                 </div>
 
-                <div className="mt-auto">
+                <div className="mt-auto space-y-4">
+                    <button
+                        onClick={() => refresh()}
+                        disabled={loading}
+                        className="w-full py-4 rounded-2xl bg-slate-50 dark:bg-slate-900 text-slate-500 font-bold flex items-center justify-center gap-3 shadow-inner hover:text-blue-500 transition-all active:scale-95 group"
+                    >
+                        <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
+                        <span>{loading ? 'Sincronisation...' : 'Synchroniser'}</span>
+                    </button>
+
                     <NavLink
                         to="/add"
                         className="clay-button-primary w-full py-4 rounded-2xl flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-95 transition-all z-10"

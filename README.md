@@ -24,6 +24,15 @@ A high-tech filtering system with frosted glass inspiration (but zero blur, keep
 ### 🇹🇳 Localized Experience
 Fully compatible with **Tunisian Dinar (TND)** and localized in French by default.
 
+## 🔌 Local Connectivity & Troubleshooting
+
+If you experience issues fetching data on `localhost`:
+
+1. **Manual Sync**: Use the new **"Synchroniser"** button in the sidebar (Desktop) to force a data refresh.
+2. **ESM Support**: The local server now uses `--esm` for reliable module resolution. Always use `npm run dev:all`.
+3. **Session Fallback**: On localhost, the app now automatically fetches data using a `local-dev-user` ID even if you aren't logged in yet.
+4. **Neon Database**: Ensure your machine can reach the Neon cluster (port 5432 or pooler ports).
+
 ---
 
 ## 🛠️ Tech Stack
