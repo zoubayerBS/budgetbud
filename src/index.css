@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-slate-900: #0f172a;
+    --color-slate-800: #1e293b;
+    --color-slate-100: #f1f5f9;
+    --color-emerald-500: #10b981;
+    --color-red-500: #ef4444;
+    --color-sky-500: #0ea5e9;
+}
+
+body {
+    @apply bg-[#eef2f6] dark:bg-[#111827] text-slate-700 dark:text-slate-200 font-sans antialiased transition-colors duration-300;
+}
+
+/* Claymorphism Utilities */
+@layer components {
+    .clay-card {
+        @apply bg-white dark:bg-slate-800 border-none rounded-[2.5rem] transition-all duration-300 shadow-xl;
+        box-shadow: 12px 12px 24px #cbd5e1, -12px -12px 24px #ffffff;
+    }
+
+    .dark .clay-card {
+        box-shadow: 15px 15px 30px #0a0f1a, -15px -15px 30px #1c2535;
+    }
+
+    .animate-shimmer {
+        animation: shimmer 2s infinite linear;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(200%);
+    }
+}
+
+.clay-button {
+    @apply rounded-2xl transition-transform active:scale-95 duration-200 font-bold;
+    box-shadow:
+        6px 6px 12px 0 rgba(0, 0, 0, 0.1),
+        inset -2px -2px 4px 0 rgba(0, 0, 0, 0.05),
+        inset 2px 2px 4px 0 rgba(255, 255, 255, 0.4);
+}
+
+.clay-button-primary {
+    @apply bg-blue-500 text-white;
+    box-shadow:
+        6px 6px 12px 0 rgba(59, 130, 246, 0.3),
+        inset -3px -3px 6px 0 rgba(0, 0, 0, 0.1),
+        inset 3px 3px 6px 0 rgba(255, 255, 255, 0.3);
+}
+
+.clay-button-danger {
+    @apply bg-red-500 text-white;
+    box-shadow:
+        6px 6px 12px 0 rgba(239, 68, 68, 0.3),
+        inset -3px -3px 6px 0 rgba(0, 0, 0, 0.1),
+        inset 3px 3px 6px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400 dark:bg-slate-600;
+}

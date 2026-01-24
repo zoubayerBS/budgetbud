@@ -1,0 +1,203 @@
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { useSession } from '../lib/auth-client';
+import type { Transaction, Budget, Category, Currency, RecurringTemplate } from '../types';
+
+interface BudgetContextType {
+    transactions: Transaction[];
+    budgets: Budget[];
+    recurringTemplates: RecurringTemplate[];
+    addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
+    addRecurringTemplate: (template: Omit<RecurringTemplate, 'id'>) => Promise<void>;
+    deleteTransaction: (id: string) => Promise<void>;
+    deleteRecurringTemplate: (id: string) => Promise<void>;
+    updateBudget: (category: Category, limit: number) => Promise<void>;
+    currency: Currency;
+    setCurrency: (c: Currency) => void;
+    theme: 'light' | 'dark';
+    toggleTheme: () => void;
+    loading: boolean;
+    user: any;
+}
+
+const BudgetContext = createContext<BudgetContextType | undefined>(undefined);
+
+export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const { data: session, isPending } = useSession();
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [budgets, setBudgets] = useState<Budget[]>([]);
+    const [recurringTemplates, setRecurringTemplates] = useState<RecurringTemplate[]>([]);
+    const [currency, setCurrency] = useState<Currency>('TND');
+    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const [loading, setLoading] = useState(true);
+
+    const API_URL = '/api';
+
+    // Theme logic
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [theme]);
+
+    const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+
+    // Load Data whenever Auth changes
+    useEffect(() => {
+        if (!isPending && session) {
+            fetchData();
+        } else if (!isPending) {
+            setLoading(false);
+        }
+    }, [isPending, session]);
+
+    const getHeaders = () => {
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+        };
+        if (session?.user?.id) {
+            headers['x-user-id'] = session.user.id;
+        }
+        return headers;
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const headers = getHeaders();
+            const [resTrans, resBudgets, resRecurring] = await Promise.all([
+                fetch(`${API_URL}/transactions`, { headers }),
+                fetch(`${API_URL}/budgets`, { headers }),
+                fetch(`${API_URL}/recurring`, { headers })
+            ]);
+
+            if (resTrans.ok && resBudgets.ok && resRecurring.ok) {
+                const tData = await resTrans.json();
+                const bData = await resBudgets.json();
+                const rData = await resRecurring.json();
+
+                setTransactions(tData.map((t: any) => ({
+                    ...t,
+                    amount: parseFloat(t.amount) || 0
+                })));
+
+                setBudgets(bData.map((b: any) => ({
+                    ...b,
+                    limit: parseFloat(b.limit_amount) || 0
+                })));
+
+                setRecurringTemplates(rData.map((r: any) => ({
+                    ...r,
+                    amount: parseFloat(r.amount) || 0
+                })));
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
+        try {
+            const res = await fetch(`${API_URL}/transactions`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(transaction)
+            });
+            const newT = await res.json();
+            setTransactions(prev => [{
+                ...newT,
+                amount: parseFloat(newT.amount) || 0
+            }, ...prev]);
+        } catch (err) { console.error(err); }
+    };
+
+    const addRecurringTemplate = async (template: Omit<RecurringTemplate, 'id'>) => {
+        try {
+            const res = await fetch(`${API_URL}/recurring`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(template)
+            });
+            const newR = await res.json();
+            setRecurringTemplates(prev => [{
+                ...newR,
+                amount: parseFloat(newR.amount) || 0
+            }, ...prev]);
+            await fetchData(); // Force sync generated transactions
+        } catch (err) { console.error(err); }
+    };
+
+    const deleteTransaction = async (id: string) => {
+        try {
+            await fetch(`${API_URL}/transactions/${id}`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            setTransactions(prev => prev.filter(t => t.id !== id));
+        } catch (err) { console.error(err); }
+    };
+
+    const deleteRecurringTemplate = async (id: string) => {
+        try {
+            await fetch(`${API_URL}/recurring/${id}`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            setRecurringTemplates(prev => prev.filter(t => t.id !== id));
+        } catch (err) { console.error(err); }
+    };
+
+    const updateBudget = async (category: Category, limit: number) => {
+        try {
+            const res = await fetch(`${API_URL}/budgets`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify({ category, limit_amount: limit })
+            });
+            const updatedB = await res.json();
+            const numericLimit = parseFloat(updatedB.limit_amount) || 0;
+
+            setBudgets(prev => {
+                const existing = prev.find(b => b.category === category);
+                if (existing) {
+                    return prev.map(b => b.category === category ? { ...b, limit: numericLimit } : b);
+                } else {
+                    return [...prev, { id: updatedB.id, category: updatedB.category, limit: numericLimit }];
+                }
+            });
+            await fetchData();
+        } catch (err) { console.error(err); }
+    };
+
+    return (
+        <BudgetContext.Provider value={{
+            transactions,
+            budgets,
+            recurringTemplates,
+            addTransaction,
+            addRecurringTemplate,
+            deleteTransaction,
+            deleteRecurringTemplate,
+            updateBudget,
+            currency,
+            setCurrency,
+            theme,
+            toggleTheme,
+            loading,
+            user: session?.user
+        }}>
+            {children}
+        </BudgetContext.Provider>
+    );
+};
+
+export const useBudget = () => {
+    const context = useContext(BudgetContext);
+    if (context === undefined) {
+        throw new Error('useBudget must be used within a BudgetProvider');
+    }
+    return context;
+};
