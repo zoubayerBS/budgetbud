@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Cpu } from 'lucide-react';
 
 const SplashScreen: React.FC = () => {
     const [isVisible, setIsVisible] = useState(true);
@@ -41,8 +40,7 @@ const SplashScreen: React.FC = () => {
                     BudgetBud
                 </h1>
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12 flex items-center gap-2">
-                    <Cpu className="w-3 h-3 text-blue-500 animate-spin" />
-                    Neural Syncing
+                    Chargement...
                 </p>
 
                 {/* Progress bar */}

@@ -14,15 +14,15 @@ const RecentActivity: React.FC = () => {
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                     <div className="w-1.5 h-6 bg-blue-500 rounded-full"></div>
-                    <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">Flux Récents</h3>
+                    <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">Activités Récentes</h3>
                 </div>
-                <Link to="/history" className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Explorer</Link>
+                <Link to="/history" className="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Voir Tout</Link>
             </div>
 
             <div className="space-y-4">
                 {recent.length === 0 ? (
                     <div className="py-12 text-center bg-slate-50 dark:bg-slate-900/40 rounded-[2rem] border-dashed border-2 border-slate-200 dark:border-slate-800 animate-in fade-in duration-700">
-                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em]">Neural Feed Vide</p>
+                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Aucune activité récente</p>
                     </div>
                 ) : (
                     recent.map((t, idx) => (
@@ -54,7 +54,7 @@ const RecentActivity: React.FC = () => {
                                 )}>
                                     {t.type === 'income' ? '+' : '-'} {formatCurrency(t.amount, currency)}
                                 </span>
-                                <span className="text-[8px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest leading-none">Vérifié</span>
+                                <span className="text-[8px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest leading-none">Complété</span>
                             </div>
                         </div>
                     ))

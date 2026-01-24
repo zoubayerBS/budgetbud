@@ -32,13 +32,13 @@ const FinancialOverview: React.FC = () => {
                     <div className="flex justify-between items-start">
                         <div>
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(96,165,250,0.8)]"></div>
-                                <p className="text-blue-200/50 font-black uppercase tracking-[0.4em] text-[10px]">Neural Balance System</p>
+                                <div className="w-2 h-2 bg-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.8)]"></div>
+                                <p className="text-blue-200/50 font-black uppercase tracking-[0.2em] text-[10px]">Solde Disponible</p>
                             </div>
                             <h2 className="text-6xl font-black tracking-tighter transition-all duration-500 group-hover:scale-[1.02] origin-left">
                                 {formatCurrency(balance, currency)}
                             </h2>
-                            <p className="text-sm font-bold text-slate-400 dark:text-slate-500 mt-2 opacity-80">Liquidité instantanée synchronisée</p>
+                            <p className="text-sm font-bold text-slate-400 dark:text-slate-500 mt-2 opacity-80">Mis à jour en temps réel</p>
                         </div>
                         <div className="p-4 bg-white/5 rounded-[2rem] border border-white/10 backdrop-blur-xl shadow-2xl transition-transform duration-700 group-hover:rotate-12">
                             <Wallet className="w-8 h-8 text-blue-300" />
@@ -72,8 +72,8 @@ const FinancialOverview: React.FC = () => {
                             <TrendingUp className="w-6 h-6" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Entrées</p>
-                            <span className="text-xs font-black text-emerald-500 uppercase tracking-tighter">Flux Positif</span>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total</p>
+                            <span className="text-xs font-black text-emerald-500 uppercase tracking-tighter">Revenus</span>
                         </div>
                     </div>
                     <p className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter">
@@ -88,8 +88,8 @@ const FinancialOverview: React.FC = () => {
                             <TrendingDown className="w-6 h-6" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Sorties</p>
-                            <span className="text-xs font-black text-red-500 uppercase tracking-tighter">Consommation</span>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total</p>
+                            <span className="text-xs font-black text-red-500 uppercase tracking-tighter">Dépenses</span>
                         </div>
                     </div>
                     <p className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter">
