@@ -5,7 +5,7 @@ import RecentActivity from '../components/dashboard/RecentActivity';
 import ExpensePieChart from '../components/dashboard/ExpensePieChart';
 import RecentTrendsChart from '../components/dashboard/RecentTrendsChart';
 import { Link } from 'react-router-dom';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ArrowRight } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
     const { transactions, budgets, user } = useBudget();
