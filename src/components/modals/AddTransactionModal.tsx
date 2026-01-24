@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useBudget } from '../../context/BudgetContext';
-import { CATEGORIES } from '../../types';
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../types';
 import type { Category, TransactionType } from '../../types';
 import {
     X,
     Repeat,
-    Calendar,
-    CreditCard,
     Zap,
     ArrowRight,
     Utensils,
@@ -20,7 +18,8 @@ import {
     Gift,
     Coins,
     Sparkles,
-    CheckCircle2
+    CheckCircle2,
+    TrendingUp
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import DatePicker from '../common/DatePicker';
@@ -37,6 +36,8 @@ const categoryIcons: Record<string, any> = {
     'Professionnel': Briefcase,
     'Cadeaux': Gift,
     'Salaire': Coins,
+    'Freelance': Briefcase,
+    'Investissement': TrendingUp,
     'Autre': Sparkles,
 };
 
@@ -51,12 +52,19 @@ const AddTransactionModal: React.FC = () => {
 
     const [type, setType] = useState<TransactionType>('expense');
     const [amount, setAmount] = useState('');
-    const [category, setCategory] = useState<Category>(CATEGORIES[0]);
+    const [category, setCategory] = useState<Category>(EXPENSE_CATEGORIES[0]);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [note, setNote] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+
+    const activeCategories = type === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+
+    const handleTypeChange = (newType: TransactionType) => {
+        setType(newType);
+        setCategory(newType === 'expense' ? EXPENSE_CATEGORIES[0] : INCOME_CATEGORIES[0]);
+    };
 
     if (!isAddModalOpen) return null;
 
@@ -139,7 +147,7 @@ const AddTransactionModal: React.FC = () => {
                         {/* Type Toggle - Pure Clay Style */}
                         <div className="flex p-1 bg-slate-100 dark:bg-slate-950 rounded-2xl">
                             <button
-                                onClick={() => setType('expense')}
+                                onClick={() => handleTypeChange('expense')}
                                 className={cn(
                                     "flex-1 py-3 rounded-xl font-black text-xs transition-all",
                                     type === 'expense'
@@ -150,7 +158,7 @@ const AddTransactionModal: React.FC = () => {
                                 Dépense
                             </button>
                             <button
-                                onClick={() => setType('income')}
+                                onClick={() => handleTypeChange('income')}
                                 className={cn(
                                     "flex-1 py-3 rounded-xl font-black text-xs transition-all",
                                     type === 'income'
@@ -179,13 +187,13 @@ const AddTransactionModal: React.FC = () => {
 
                         {/* Category Grid - Subtle */}
                         <div className="grid grid-cols-4 gap-3">
-                            {CATEGORIES.map(cat => {
+                            {activeCategories.map((cat: string) => {
                                 const Icon = categoryIcons[cat] || Sparkles;
                                 const isActive = category === cat;
                                 return (
                                     <button
                                         key={cat}
-                                        onClick={() => setCategory(cat)}
+                                        onClick={() => setCategory(cat as Category)}
                                         className={cn(
                                             "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-300",
                                             isActive

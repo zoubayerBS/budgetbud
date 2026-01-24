@@ -29,7 +29,7 @@ export interface RecurringTemplate {
     note?: string;
 }
 
-export const CATEGORIES = [
+export const EXPENSE_CATEGORIES = [
     'Alimentation',
     'Transport',
     'Logement',
@@ -39,9 +39,19 @@ export const CATEGORIES = [
     'Shopping',
     'Éducation',
     'Professionnel',
-    'Cadeaux',
-    'Salaire',
     'Autre'
 ] as const;
 
+export const INCOME_CATEGORIES = [
+    'Salaire',
+    'Cadeaux',
+    'Freelance',
+    'Investissement',
+    'Autre'
+] as const;
+
+export const CATEGORIES = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES] as const;
+
 export type Category = typeof CATEGORIES[number];
+export type ExpenseCategory = typeof EXPENSE_CATEGORIES[number];
+export type IncomeCategory = typeof INCOME_CATEGORIES[number];

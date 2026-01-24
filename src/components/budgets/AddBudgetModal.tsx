@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Check, Target } from 'lucide-react';
-import { CATEGORIES, type Category } from '../../types';
+import { EXPENSE_CATEGORIES, type Category } from '../../types';
 import { useBudget } from '../../context/BudgetContext';
 
 interface AddBudgetModalProps {
@@ -10,7 +10,7 @@ interface AddBudgetModalProps {
 
 const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ isOpen, onClose }) => {
     const { updateBudget, currency } = useBudget();
-    const [category, setCategory] = useState<Category>(CATEGORIES[0]);
+    const [category, setCategory] = useState<Category>(EXPENSE_CATEGORIES[0]);
     const [limit, setLimit] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -62,17 +62,17 @@ const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ isOpen, onClose }) => {
 
                         {isDropdownOpen && (
                             <div className="absolute top-full left-0 right-0 mt-3 z-50 clay-card border-white/50 backdrop-blur-2xl p-2 max-h-60 overflow-y-auto animate-in slide-in-from-top-2 duration-200">
-                                {CATEGORIES.map(c => (
+                                {EXPENSE_CATEGORIES.map((c: string) => (
                                     <button
                                         key={c}
                                         type="button"
                                         onClick={() => {
-                                            setCategory(c);
+                                            setCategory(c as Category);
                                             setIsDropdownOpen(false);
                                         }}
                                         className={`w-full text-left p-4 rounded-xl font-bold transition-all ${category === c
-                                                ? 'bg-blue-500 text-white shadow-lg'
-                                                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                                            ? 'bg-blue-500 text-white shadow-lg'
+                                            : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
                                             }`}
                                     >
                                         {c}
