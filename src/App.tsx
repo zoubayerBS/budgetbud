@@ -52,7 +52,6 @@ function App() {
               </ProtectedRoute>
             }>
               <Route index element={<Dashboard />} />
-              <Route path="add" element={<AddTransaction />} />
               <Route path="history" element={<History />} />
               <Route path="budgets" element={<Budgets />} />
               <Route path="settings" element={<Settings />} />

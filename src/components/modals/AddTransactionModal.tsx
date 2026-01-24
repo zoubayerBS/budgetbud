@@ -118,7 +118,7 @@ const AddTransactionModal: React.FC = () => {
             <div className="relative w-full max-w-4xl h-full max-h-[85vh] md:max-h-[800px] flex flex-col md:flex-row bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl overflow-hidden border border-white/20 dark:border-slate-800 animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
 
                 {/* Left Side: Real-time Preview Card */}
-                <div className="md:w-2/5 p-10 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="md:w-1/3 p-8 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                         <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-500 rounded-full blur-[100px]"></div>
                     </div>
@@ -127,7 +127,7 @@ const AddTransactionModal: React.FC = () => {
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-6 text-center">Aperçu Quantum</p>
 
                         <div className={cn(
-                            "clay-card p-8 aspect-[4/5] flex flex-col justify-between transition-all duration-500 scale-100 group",
+                            "clay-card p-6 flex flex-col justify-between transition-all duration-500 scale-90 group",
                             type === 'income' ? 'bg-emerald-500 text-white' : 'bg-blue-600 text-white'
                         )}>
                             <div className="flex justify-between items-start">
