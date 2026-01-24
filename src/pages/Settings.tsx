@@ -50,30 +50,44 @@ const Settings: React.FC = () => {
     ];
 
     const handleSignOut = async () => {
-        console.log("Logout Process Started");
-
+        console.log("Multi-Method Logout Started");
         const baseURL = import.meta.env.VITE_NEON_AUTH_URL;
-        const logoutURL = `${baseURL}/sign-out?callbackURL=${encodeURIComponent(window.location.origin + '/login')}`;
+        const targetURL = `${baseURL}/sign-out`;
+        const callbackURL = window.location.origin + '/login';
 
+        // 1. Clear Local State
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // 2. Attempt API Sign-out (Fast path)
         try {
-            console.log("Attempting standard signOut API call...");
+            console.log("Attempting API sign-out...");
             await signOut({
                 fetchOptions: {
                     onSuccess: () => {
-                        console.log("API sign-out success, redirecting to /login");
-                        window.location.href = '/login';
-                    },
-                    onError: (ctx: any) => {
-                        console.warn("API sign-out returned error (likely 403), falling back to hosted logout...");
-                        console.error(ctx.error);
-                        window.location.href = logoutURL;
+                        console.log("API sign-out success");
                     }
                 }
             } as any);
-        } catch (error) {
-            console.error("Critical error during API sign-out, falling back to hosted logout:", error);
-            window.location.href = logoutURL;
+        } catch (e) {
+            console.warn("API sign-out failed (expected on Vercel), proceeding to Form POST...");
         }
+
+        // 3. Form POST Fallback (The "Vercel Fix")
+        // We use a form to bypass cross-origin restrictions on cookies (top-level navigation)
+        console.log("Executing Form POST to:", targetURL);
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = targetURL;
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'callbackURL';
+        input.value = callbackURL;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
     };
 
     return (
