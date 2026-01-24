@@ -52,17 +52,35 @@ const Settings: React.FC = () => {
     ];
 
     const handleSignOut = async () => {
-        console.log("Sign out triggered...");
+        console.log("Logout Process Started");
+        console.log("Current user state:", user);
+
+        // Safety timeout: if signOut takes too long or hangs, we redirect anyway
+        const timeout = setTimeout(() => {
+            console.warn("Sign out timed out, forcing redirection...");
+            window.location.href = '/login';
+        }, 5000);
+
         try {
-            console.log("Calling signOut with redirectTo: /login");
+            console.log("Executing signOut API call...");
             await signOut({
-                redirectTo: "/login"
+                fetchOptions: {
+                    onSuccess: () => {
+                        console.log("Sign out success callback triggered");
+                        clearTimeout(timeout);
+                        window.location.href = '/login';
+                    },
+                    onError: (ctx) => {
+                        console.error("Sign out error callback triggered:", ctx.error);
+                        clearTimeout(timeout);
+                        window.location.href = '/login';
+                    }
+                }
             } as any);
-            console.log("signOut call completed (redirection should have happened)");
         } catch (error) {
-            console.error("Sign out error caught:", error);
-            console.log("Attempting fallback navigate to /login");
-            navigate('/login');
+            console.error("Critical error during sign out:", error);
+            clearTimeout(timeout);
+            window.location.href = '/login';
         }
     };
 
