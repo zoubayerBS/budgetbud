@@ -51,15 +51,18 @@ const Settings: React.FC = () => {
 
     const handleSignOut = async () => {
         try {
+            console.log('[LOGOUT] Triggering signOut...');
             await signOut({
                 fetchOptions: {
                     onSuccess: () => {
+                        console.log('[LOGOUT] Success');
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
                     },
                     onError: (ctx) => {
-                        console.error('[LOGOUT] Error:', ctx.error.message);
+                        console.error('[LOGOUT] Error context:', ctx);
+                        alert('Erreur détaillée de déconnexion : ' + JSON.stringify(ctx.error));
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
@@ -67,6 +70,8 @@ const Settings: React.FC = () => {
                 }
             });
         } catch (err) {
+            console.error('[LOGOUT] Catch error:', err);
+            alert('Erreur catchée : ' + err);
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = '/login';
