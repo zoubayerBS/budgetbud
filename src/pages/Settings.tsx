@@ -17,10 +17,10 @@ import {
     Cpu,
     Database
 } from 'lucide-react';
-import { signOut } from '../lib/auth-client';
 import { cn } from '../lib/utils';
 import { formatCurrency } from '../lib/format';
 import AlertModal from '../components/common/AlertModal';
+import { signOut } from '../lib/auth-client';
 
 const Settings: React.FC = () => {
     const {
@@ -50,44 +50,15 @@ const Settings: React.FC = () => {
     ];
 
     const handleSignOut = async () => {
-        console.log("Multi-Method Logout Started");
-        const baseURL = import.meta.env.VITE_NEON_AUTH_URL;
-        const targetURL = `${baseURL}/sign-out`;
-        const callbackURL = window.location.origin + '/login';
-
-        // 1. Clear Local State
-        localStorage.clear();
-        sessionStorage.clear();
-
-        // 2. Attempt API Sign-out (Fast path)
-        try {
-            console.log("Attempting API sign-out...");
-            await signOut({
-                fetchOptions: {
-                    onSuccess: () => {
-                        console.log("API sign-out success");
-                    }
+        console.log('[LOGOUT] Triggering Neon Auth signOut...');
+        await signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    console.log('[LOGOUT] Redirecting to login...');
+                    window.location.href = '/login';
                 }
-            } as any);
-        } catch (e) {
-            console.warn("API sign-out failed (expected on Vercel), proceeding to Form POST...");
-        }
-
-        // 3. Form POST Fallback (The "Vercel Fix")
-        // We use a form to bypass cross-origin restrictions on cookies (top-level navigation)
-        console.log("Executing Form POST to:", targetURL);
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = targetURL;
-
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'callbackURL';
-        input.value = callbackURL;
-
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
+            }
+        });
     };
 
     return (
