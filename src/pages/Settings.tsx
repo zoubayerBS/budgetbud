@@ -50,15 +50,33 @@ const Settings: React.FC = () => {
     ];
 
     const handleSignOut = async () => {
-        console.log('[LOGOUT] Triggering Neon Auth signOut...');
-        await signOut({
-            fetchOptions: {
-                onSuccess: () => {
-                    console.log('[LOGOUT] Redirecting to login...');
-                    window.location.href = '/login';
+        try {
+            console.log('[LOGOUT] Triggering Neon Auth signOut...');
+            // We use signOut from better-auth
+            await signOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        console.log('[LOGOUT] Redirecting to login...');
+                        // Clear local storage as a safety measure
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        window.location.href = '/login';
+                    },
+                    onError: (ctx) => {
+                        console.error('[LOGOUT] Sign out request failed:', ctx.error);
+                        // Fallback: Clear local and redirect anyway
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        window.location.href = '/login';
+                    }
                 }
-            }
-        });
+            });
+        } catch (err) {
+            console.error('[LOGOUT] Unexpected error:', err);
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/login';
+        }
     };
 
     return (
