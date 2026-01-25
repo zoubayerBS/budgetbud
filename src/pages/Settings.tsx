@@ -50,40 +50,23 @@ const Settings: React.FC = () => {
     ];
 
     const handleSignOut = async () => {
-        alert('DEBUG: Déconnexion lancée. Ouvre ta console et l\'onglet Network maintenant.');
-        const authUrl = import.meta.env.VITE_NEON_AUTH_URL;
-        console.log('[LOGOUT] DEBUG - Auth URL:', authUrl);
-
         try {
-            console.log('[LOGOUT] Triggering Neon Auth signOut...');
-            const result = await signOut({
+            await signOut({
                 fetchOptions: {
                     onSuccess: () => {
-                        console.log('[LOGOUT] SUCCESS CALLBACK - Clearing storage...');
                         localStorage.clear();
                         sessionStorage.clear();
-                        console.log('[LOGOUT] Success! Moving to /login');
                         window.location.href = '/login';
                     },
                     onError: (ctx) => {
-                        console.error('[LOGOUT] ERROR CALLBACK - Details:', JSON.stringify(ctx.error));
-                        alert('Erreur API Neon Auth (Vercel) : ' + JSON.stringify(ctx.error));
+                        console.error('[LOGOUT] Error:', ctx.error.message);
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
                     }
                 }
             });
-            console.log('[LOGOUT] Promise Resolved with:', JSON.stringify(result));
-
-            // Safety timeout if redirection doesn't happen
-            setTimeout(() => {
-                console.log('[LOGOUT] Safety timeout reached, forcing /login');
-                window.location.href = '/login';
-            }, 2000);
-
         } catch (err) {
-            console.error('[LOGOUT] CRITICAL ERROR:', err);
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = '/login';
