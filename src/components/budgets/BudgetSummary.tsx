@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import type { Budget } from '../../types';
 import { formatCurrency } from '../../lib/format';
 import {
     History,
@@ -12,9 +13,17 @@ interface BudgetSummaryProps {
     totalBudget: number;
     totalSpent: number;
     currency: string;
+    budgets: Budget[];
+    spentByCategory: Record<string, number>;
 }
 
-const BudgetSummary: React.FC<BudgetSummaryProps> = ({ totalBudget, totalSpent, currency }) => {
+const BudgetSummary: React.FC<BudgetSummaryProps> = ({
+    totalBudget,
+    totalSpent,
+    currency,
+    budgets,
+    spentByCategory
+}) => {
     const percentage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
     const remaining = totalBudget - totalSpent;
 
@@ -72,23 +81,74 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({ totalBudget, totalSpent, 
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <div className="relative h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
-                            <div
-                                className={cn(
-                                    "h-full rounded-full transition-all duration-1000 ease-in-out",
-                                    percentage > 95 ? "bg-red-500" : percentage > 80 ? "bg-amber-500" : "bg-indigo-600"
-                                )}
-                                style={{ width: `${Math.min(percentage, 100)}%` }}
-                            />
+                    <div className="space-y-8">
+                        <div>
+                            <div className="flex justify-between items-end mb-3">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Répartition des Flux</span>
+                                <span className="text-[10px] font-bold text-slate-500">{budgets.length} Catégories Actives</span>
+                            </div>
+                            <div className="relative h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+                                {budgets.map((b, i) => {
+                                    const categorySpent = spentByCategory[b.category] || 0;
+                                    const share = totalSpent > 0 ? (categorySpent / totalSpent) * 100 : 0;
+                                    const colors = [
+                                        'bg-indigo-500', 'bg-emerald-500', 'bg-amber-500',
+                                        'bg-rose-500', 'bg-cyan-500', 'bg-violet-500',
+                                        'bg-sky-500', 'bg-teal-500'
+                                    ];
+                                    if (share === 0) return null;
+                                    return (
+                                        <div
+                                            key={b.category}
+                                            className={cn("h-full transition-all duration-1000", colors[i % colors.length])}
+                                            style={{ width: `${share}%` }}
+                                            title={`${b.category}: ${Math.round(share)}%`}
+                                        />
+                                    );
+                                })}
+                            </div>
+
+                            <div className="flex flex-wrap gap-4 mt-4">
+                                {budgets.slice(0, 4).map((b, i) => {
+                                    const colors = [
+                                        'bg-indigo-500', 'bg-emerald-500', 'bg-amber-500',
+                                        'bg-rose-500'
+                                    ];
+                                    return (
+                                        <div key={b.category} className="flex items-center gap-2">
+                                            <div className={cn("w-2 h-2 rounded-full", colors[i % colors.length])} />
+                                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">{b.category}</span>
+                                        </div>
+                                    );
+                                })}
+                                {budgets.length > 4 && <span className="text-[9px] font-bold text-slate-400">+{budgets.length - 4} autres</span>}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-end mb-1">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Utilisation Critique</span>
+                                <span className={cn("text-[10px] font-bold", percentage > 90 ? "text-red-500" : "text-slate-500")}>
+                                    {Math.round(percentage)}% du total
+                                </span>
+                            </div>
+                            <div className="relative h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                                <div
+                                    className={cn(
+                                        "h-full rounded-full transition-all duration-1000 ease-in-out",
+                                        percentage > 95 ? "bg-red-500" : percentage > 80 ? "bg-amber-500" : "bg-indigo-600"
+                                    )}
+                                    style={{ width: `${Math.min(percentage, 100)}%` }}
+                                />
+                            </div>
                         </div>
 
                         <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             <span className="flex items-center gap-2">
-                                <Activity className="w-3 h-3" /> Flux Décaissé: {formatCurrency(totalSpent, currency as any)}
+                                <Activity className="w-3 h-3" /> Décaissé: {formatCurrency(totalSpent, currency as any)}
                             </span>
                             <span className="flex items-center gap-2">
-                                <History className="w-3 h-3" /> Reliquat Mensuel: {formatCurrency(Math.max(0, remaining), currency as any)}
+                                <History className="w-3 h-3" /> Libre: {formatCurrency(Math.max(0, remaining), currency as any)}
                             </span>
                         </div>
                     </div>

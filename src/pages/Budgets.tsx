@@ -58,6 +58,8 @@ const Budgets: React.FC = () => {
                 totalBudget={stats.totalBudget}
                 totalSpent={stats.totalSpent}
                 currency={currency}
+                budgets={budgets} // [NEW] Pass for visualization
+                spentByCategory={spentByCategory} // [NEW] Pass for visualization
             />
 
             {/* --- Budget Center Controls --- */}
