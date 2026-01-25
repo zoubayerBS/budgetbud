@@ -50,6 +50,7 @@ const Settings: React.FC = () => {
     ];
 
     const handleSignOut = async () => {
+        alert('DEBUG: Déconnexion lancée. Ouvre ta console et l\'onglet Network maintenant.');
         const authUrl = import.meta.env.VITE_NEON_AUTH_URL;
         console.log('[LOGOUT] DEBUG - Auth URL:', authUrl);
 
@@ -66,6 +67,7 @@ const Settings: React.FC = () => {
                     },
                     onError: (ctx) => {
                         console.error('[LOGOUT] ERROR CALLBACK - Details:', JSON.stringify(ctx.error));
+                        alert('Erreur API Neon Auth (Vercel) : ' + JSON.stringify(ctx.error));
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
