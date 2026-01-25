@@ -18,7 +18,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }
 
   if (isPending) return <div className="min-h-screen flex items-center justify-center bg-[#eef2f6] dark:bg-[#111827]">Chargement...</div>;
 
-  console.log('[AUTH] ProtectedRoute Check - Session:', session ? 'Found' : 'Null');
+  console.log('[AUTH] ProtectedRoute Check - Session Found:', !!session);
+  if (session) console.log('[AUTH] Session Data:', JSON.stringify(session.user));
 
   if (!session) {
     console.log('[AUTH] No session, redirecting to /login');
@@ -32,7 +33,8 @@ const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) =
 
   if (isPending) return null;
 
-  console.log('[AUTH] PublicRoute Check - Session:', session ? 'Found' : 'Null');
+  console.log('[AUTH] PublicRoute Check - Session Found:', !!session);
+  if (session) console.log('[AUTH] Session Data:', JSON.stringify(session.user));
 
   if (session) {
     console.log('[AUTH] Session exists on public route, redirecting to /');

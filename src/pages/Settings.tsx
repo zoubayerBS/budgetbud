@@ -52,28 +52,26 @@ const Settings: React.FC = () => {
     const handleSignOut = async () => {
         const authUrl = import.meta.env.VITE_NEON_AUTH_URL;
         console.log('[LOGOUT] DEBUG - Auth URL:', authUrl);
-        console.log('[LOGOUT] DEBUG - Current Cookies:', document.cookie);
 
         try {
             console.log('[LOGOUT] Triggering Neon Auth signOut...');
-            await signOut({
+            const result = await signOut({
                 fetchOptions: {
                     onSuccess: () => {
-                        console.log('[LOGOUT] SUCCESS - Session cleared on provider');
+                        console.log('[LOGOUT] SUCCESS CALLBACK - Session cleared on provider');
                         localStorage.clear();
                         sessionStorage.clear();
-                        console.log('[LOGOUT] Redirecting to /login...');
                         window.location.href = '/login';
                     },
                     onError: (ctx) => {
-                        console.error('[LOGOUT] ERROR - Sign out request failed:', ctx.error);
-                        // Optional: alert('Logout Error: ' + JSON.stringify(ctx.error));
+                        console.error('[LOGOUT] ERROR CALLBACK - Sign out request failed:', JSON.stringify(ctx.error));
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
                     }
                 }
             });
+            console.log('[LOGOUT] UNWRAPPED RESULT:', result);
         } catch (err) {
             console.error('[LOGOUT] CRITICAL - Unexpected error:', err);
             localStorage.clear();
