@@ -51,19 +51,16 @@ const Settings: React.FC = () => {
 
     const handleSignOut = async () => {
         try {
-            console.log('[LOGOUT] Triggering signOut...');
-            console.log('[LOGOUT] Current Origin:', window.location.origin);
+            console.log('[LOGOUT] Triggering Neon Auth signOut...');
             await signOut({
                 fetchOptions: {
                     onSuccess: () => {
-                        console.log('[LOGOUT] Success');
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
                     },
                     onError: (ctx) => {
-                        console.error('[LOGOUT] Error context:', ctx);
-                        alert('Erreur détaillée de déconnexion : ' + JSON.stringify(ctx.error));
+                        console.error('[LOGOUT] Error during sign out:', ctx.error.message);
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
@@ -71,8 +68,7 @@ const Settings: React.FC = () => {
                 }
             });
         } catch (err) {
-            console.error('[LOGOUT] Catch error:', err);
-            alert('Erreur catchée : ' + err);
+            console.error('[LOGOUT] Unexpected error:', err);
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = '/login';
