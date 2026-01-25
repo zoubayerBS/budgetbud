@@ -48,7 +48,7 @@ const Settings: React.FC = () => {
                     }
                 }
             });
-        } catch (_) {
+        } catch {
             console.error('[LOGOUT] Unexpected error');
             localStorage.clear();
             sessionStorage.clear();

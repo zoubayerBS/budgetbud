@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import type { Budget } from '../../types';
+import React, { useState, useMemo } from 'react';
+import type { Budget, Transaction } from '../../types';
 import { useBudget } from '../../context/BudgetContext';
 import { formatCurrency } from '../../lib/format';
 import {
@@ -7,16 +7,56 @@ import {
     X,
     Target,
     ArrowUpRight,
-    ArrowDownRight
+    ArrowDownRight,
+    Activity
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface BudgetCardProps {
     budget: Budget;
     spent: number;
+    categoryTransactions: Transaction[];
 }
 
-const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent }) => {
+const Sparkline = ({ data }: { data: number[] }) => {
+    if (data.length < 2) return <div className="h-full w-full bg-slate-100 dark:bg-slate-800 rounded-lg opacity-20" />;
+
+    const max = Math.max(...data, 1);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+    const width = 100;
+    const height = 30;
+
+    const points = data.map((val, i) => {
+        const x = (i / (data.length - 1)) * width;
+        const y = height - ((val - min) / range) * height;
+        return `${x},${y}`;
+    }).join(' ');
+
+    return (
+        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-8 overflow-visible">
+            <polyline
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                points={points}
+                className="text-indigo-500/40 dark:text-indigo-400/30"
+            />
+            {/* Last point indicator */}
+            <circle
+                cx={width}
+                cy={height - ((data[data.length - 1] - min) / range) * height}
+                r="3"
+                fill="currentColor"
+                className="text-indigo-500"
+            />
+        </svg>
+    );
+};
+
+const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent, categoryTransactions }) => {
     const { updateBudget, currency } = useBudget();
     const [isEditing, setIsEditing] = useState(false);
     const [limit, setLimit] = useState(budget.limit.toString());
@@ -41,6 +81,21 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent }) => {
     // Daily Allowance
     const dailyAllowance = Math.max(0, (budget.limit - spent) / remainingDays);
 
+    // Sparkline Data: Daily spend over last 7 days
+    const weeklyData = useMemo(() => {
+        const last7Days = Array.from({ length: 7 }, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - (6 - i));
+            return date.toISOString().split('T')[0];
+        });
+
+        return last7Days.map(date => {
+            return categoryTransactions
+                .filter(t => t.date === date && t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+        });
+    }, [categoryTransactions]);
+
     const handleSave = () => {
         const newLimit = parseFloat(limit);
         if (!isNaN(newLimit) && newLimit > 0) {
@@ -60,7 +115,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent }) => {
                 isOverBudget ? "bg-red-500" : isPaceFast ? "bg-orange-500" : "bg-emerald-500"
             )} />
 
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-4">
                     <div className={cn(
                         "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm",
@@ -114,6 +169,18 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent }) => {
                 </div>
             ) : (
                 <div className="flex-1 flex flex-col">
+                    {/* Sparkline Visualization */}
+                    <div className="mb-6">
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <Activity className="w-3 h-3 text-slate-400" />
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Vitesse 7 Jours</span>
+                            </div>
+                            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Temps Réel</span>
+                        </div>
+                        <Sparkline data={weeklyData} />
+                    </div>
+
                     {/* Main Bar */}
                     <div className="relative h-2 bg-slate-100 dark:bg-slate-800 rounded-full mb-8 overflow-hidden">
                         <div

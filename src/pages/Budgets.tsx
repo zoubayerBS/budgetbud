@@ -78,6 +78,7 @@ const Budgets: React.FC = () => {
                                 key={budget.category}
                                 budget={budget}
                                 spent={spentByCategory[budget.category] || 0}
+                                categoryTransactions={transactions.filter(t => t.category === budget.category)}
                             />
                         ))
                     ) : (
