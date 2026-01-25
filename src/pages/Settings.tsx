@@ -52,6 +52,7 @@ const Settings: React.FC = () => {
     const handleSignOut = async () => {
         try {
             console.log('[LOGOUT] Triggering signOut...');
+            console.log('[LOGOUT] Current Origin:', window.location.origin);
             await signOut({
                 fetchOptions: {
                     onSuccess: () => {
