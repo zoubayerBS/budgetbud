@@ -74,7 +74,7 @@ const Settings: React.FC = () => {
                 </div>
                 <button
                     onClick={handleSignOut}
-                    className="clay-button-secondary text-sm px-6 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-colors"
+                    className="clay-button-secondary text-sm px-6 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-colors w-fit md:self-center"
                 >
                     <LogOut className="w-4 h-4" />
                     Se déconnecter
