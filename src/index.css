@@ -18,51 +18,57 @@ body {
 /* Claymorphism Utilities */
 @layer components {
     .clay-card {
-        @apply bg-white dark:bg-slate-800 border-none rounded-[2.5rem] transition-all duration-300 shadow-xl;
-        box-shadow: 12px 12px 24px #cbd5e1, -12px -12px 24px #ffffff;
+        @apply bg-[#fcfdfe] dark:bg-slate-800/80 border-none rounded-[2.5rem] transition-all duration-300;
+        box-shadow:
+            10px 10px 20px rgba(163, 177, 198, 0.4),
+            -10px -10px 20px rgba(255, 255, 255, 1);
     }
 
     .dark .clay-card {
-        box-shadow: 15px 15px 30px #0a0f1a, -15px -15px 30px #1c2535;
+        box-shadow:
+            10px 10px 20px rgba(0, 0, 0, 0.4),
+            -10px -10px 20px rgba(30, 41, 59, 1);
     }
 
-    .animate-shimmer {
-        animation: shimmer 2s infinite linear;
+    /* Executive Soft UI */
+    .executive-card {
+        @apply bg-white/70 dark:bg-slate-900/60 rounded-[2rem] border border-white/40 dark:border-white/5 backdrop-blur-md transition-all duration-500;
+        box-shadow:
+            15px 15px 35px rgba(163, 177, 198, 0.2),
+            -15px -15px 35px rgba(255, 255, 255, 0.8),
+            inset 2px 2px 4px rgba(255, 255, 255, 0.5);
     }
-}
 
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
+    .dark .executive-card {
+        box-shadow:
+            15px 15px 35px rgba(0, 0, 0, 0.3),
+            -15px -15px 35px rgba(30, 41, 59, 0.3),
+            inset 1px 1px 2px rgba(255, 255, 255, 0.05);
     }
 
-    100% {
-        transform: translateX(200%);
+    .soft-in {
+        @apply bg-slate-50/50 dark:bg-slate-900/40 border border-slate-200/10;
+        box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.3), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+    }
+
+    .dark .soft-in {
+        box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.5), inset -4px -4px 12px rgba(30, 41, 59, 0.5);
     }
 }
 
 .clay-button {
-    @apply rounded-2xl transition-transform active:scale-95 duration-200 font-bold;
+    @apply rounded-xl transition-all active:scale-[0.98] duration-200 font-bold px-5 py-2.5 flex items-center justify-center gap-2;
     box-shadow:
-        6px 6px 12px 0 rgba(0, 0, 0, 0.1),
-        inset -2px -2px 4px 0 rgba(0, 0, 0, 0.05),
-        inset 2px 2px 4px 0 rgba(255, 255, 255, 0.4);
+        4px 4px 8px rgba(163, 177, 198, 0.4),
+        -4px -4px 8px rgba(255, 255, 255, 1);
 }
 
 .clay-button-primary {
-    @apply bg-blue-500 text-white;
-    box-shadow:
-        6px 6px 12px 0 rgba(59, 130, 246, 0.3),
-        inset -3px -3px 6px 0 rgba(0, 0, 0, 0.1),
-        inset 3px 3px 6px 0 rgba(255, 255, 255, 0.3);
+    @apply bg-indigo-600 text-white border border-indigo-500/20 shadow-lg shadow-indigo-600/20;
 }
 
-.clay-button-danger {
-    @apply bg-red-500 text-white;
-    box-shadow:
-        6px 6px 12px 0 rgba(239, 68, 68, 0.3),
-        inset -3px -3px 6px 0 rgba(0, 0, 0, 0.1),
-        inset 3px 3px 6px 0 rgba(255, 255, 255, 0.3);
+.clay-button-secondary {
+    @apply bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700/50;
 }
 
 /* Custom scrollbar for webkit */

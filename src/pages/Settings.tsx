@@ -5,17 +5,12 @@ import {
     Moon,
     Sun,
     Trash2,
-    Globe,
     Check,
     LogOut,
     Repeat,
     User,
     ShieldCheck,
-    Zap,
-    Activity,
-    CreditCard,
-    Cpu,
-    Database
+    Zap
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { formatCurrency } from '../lib/format';
@@ -30,28 +25,14 @@ const Settings: React.FC = () => {
         setCurrency,
         recurringTemplates,
         deleteRecurringTemplate,
-        transactions,
-        budgets,
         user
     } = useBudget();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
     const currencies: Currency[] = ['EUR', 'USD', 'CHF', 'CAD', 'TND'];
 
-    const handleReset = () => {
-        // Feature disabled for now as it needs backend support
-        console.log("Reset project triggered");
-    };
-
-    const stats = [
-        { label: 'Transactions', value: transactions.length, icon: Activity, color: 'text-blue-500' },
-        { label: 'Budgets Actifs', value: budgets.length, icon: CreditCard, color: 'text-emerald-500' },
-        { label: 'Automatisations', value: recurringTemplates.length, icon: Zap, color: 'text-amber-500' },
-    ];
-
     const handleSignOut = async () => {
         try {
-            console.log('[LOGOUT] Triggering Neon Auth signOut...');
             await signOut({
                 fetchOptions: {
                     onSuccess: () => {
@@ -60,7 +41,7 @@ const Settings: React.FC = () => {
                         window.location.href = '/login';
                     },
                     onError: (ctx) => {
-                        console.error('[LOGOUT] Error during sign out:', ctx.error.message);
+                        console.error('[LOGOUT] Error:', ctx.error.message);
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = '/login';
@@ -68,7 +49,6 @@ const Settings: React.FC = () => {
                 }
             });
         } catch (err) {
-            console.error('[LOGOUT] Unexpected error:', err);
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = '/login';
@@ -76,251 +56,158 @@ const Settings: React.FC = () => {
     };
 
     return (
-        <div className="max-w-5xl mx-auto space-y-12 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700 p-4">
-
-            {/* 1. Profile Cockpit Header */}
-            <header className="relative mt-4">
-                <div className="clay-card p-10 bg-gradient-to-br from-slate-800 to-slate-900 dark:from-blue-600 dark:to-indigo-700 text-white overflow-hidden">
-                    <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                        <div className="w-24 h-24 bg-white/10 rounded-[2.5rem] flex items-center justify-center border border-white/20 shadow-2xl backdrop-blur-xl">
-                            <User className="w-12 h-12 text-blue-200" />
-                        </div>
-                        <div className="text-center md:text-left flex-1">
-                            <h2 className="text-4xl font-black tracking-tight mb-2">
-                                {user?.name || 'Commandant Budget'} 🛡️
-                            </h2>
-                            <p className="text-blue-100/60 font-bold uppercase tracking-[0.2em] text-xs">
-                                Gestionnaire de niveau 4 • {user?.email}
-                            </p>
-                        </div>
-                        <button
-                            onClick={handleSignOut}
-                            className="bg-red-500/20 hover:bg-red-500/40 border border-red-500/30 px-6 py-3 rounded-2xl font-black text-sm flex items-center gap-2 transition-all active:scale-95"
-                        >
-                            <LogOut className="w-4 h-4" /> Déconnexion
-                        </button>
+        <div className="max-w-4xl mx-auto py-10 px-6 space-y-12 animate-in fade-in duration-700">
+            {/* --- Executive Header --- */}
+            <header className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 pb-12 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex items-center gap-6">
+                    <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl executive-card flex items-center justify-center border border-slate-100 dark:border-slate-700 shadow-sm">
+                        <User className="w-10 h-10 text-slate-400" />
                     </div>
-
-                    <div className="grid grid-cols-3 gap-4 mt-10 pt-10 border-t border-white/10">
-                        {stats.map((stat, i) => (
-                            <div key={i} className="text-center md:text-left">
-                                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-1">{stat.label}</p>
-                                <div className="flex items-center justify-center md:justify-start gap-2">
-                                    <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                                    <span className="text-xl font-black">{stat.value}</span>
-                                </div>
-                            </div>
-                        ))}
+                    <div className="space-y-1 text-center md:text-left">
+                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                            Compte Personnel
+                        </h1>
+                        <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
+                            {user?.name || 'Utilisateur'} • {user?.email}
+                        </p>
                     </div>
                 </div>
+                <button
+                    onClick={handleSignOut}
+                    className="clay-button-secondary text-sm px-6 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-colors"
+                >
+                    <LogOut className="w-4 h-4" />
+                    Se déconnecter
+                </button>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* 2. Display Pod */}
-                <div className="lg:col-span-1 space-y-8">
-                    <div className="clay-card p-8 flex flex-col h-full bg-white dark:bg-slate-800">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="p-3 bg-blue-500 text-white rounded-2xl shadow-lg">
-                                <Zap className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-xl font-black text-slate-800 dark:text-white">Affichage</h3>
-                        </div>
-
-                        <div className="space-y-4 flex-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                {/* --- Preferences Section --- */}
+                <section className="space-y-8">
+                    <div>
+                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Préférences</h2>
+                        <div className="executive-card p-2 space-y-1">
                             <button
                                 onClick={() => theme === 'dark' && toggleTheme()}
                                 className={cn(
-                                    "w-full p-6 rounded-3xl flex items-center justify-between transition-all group",
-                                    theme === 'light'
-                                        ? "bg-blue-50 text-blue-600 shadow-inner"
-                                        : "bg-slate-50 dark:bg-slate-900 text-slate-400 hover:text-slate-600"
+                                    "w-full p-4 rounded-2xl flex items-center justify-between transition-all",
+                                    theme === 'light' ? "bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700" : "hover:bg-slate-50/50 dark:hover:bg-slate-800/50"
                                 )}
                             >
-                                <div className="flex items-center gap-4">
-                                    <Sun className="w-6 h-6" />
-                                    <span className="font-black text-lg">Mode Clair</span>
+                                <div className="flex items-center gap-3">
+                                    <Sun className={cn("w-5 h-5", theme === 'light' ? "text-amber-500" : "text-slate-400")} />
+                                    <span className={cn("text-sm font-semibold", theme === 'light' ? "text-slate-900 dark:text-white" : "text-slate-500")}>Mode Clair</span>
                                 </div>
-                                {theme === 'light' && <Check className="w-6 h-6" />}
+                                {theme === 'light' && <Check className="w-4 h-4 text-indigo-600" />}
                             </button>
-
                             <button
                                 onClick={() => theme === 'light' && toggleTheme()}
                                 className={cn(
-                                    "w-full p-6 rounded-3xl flex items-center justify-between transition-all group",
-                                    theme === 'dark'
-                                        ? "bg-blue-500 text-white shadow-xl shadow-blue-500/40"
-                                        : "bg-slate-50 dark:bg-slate-900 text-slate-400 hover:text-slate-200"
+                                    "w-full p-4 rounded-2xl flex items-center justify-between transition-all",
+                                    theme === 'dark' ? "bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700" : "hover:bg-slate-50/50 dark:hover:bg-slate-800/50"
                                 )}
                             >
-                                <div className="flex items-center gap-4">
-                                    <Moon className="w-6 h-6" />
-                                    <span className="font-black text-lg">Mode Sombre</span>
+                                <div className="flex items-center gap-3">
+                                    <Moon className={cn("w-5 h-5", theme === 'dark' ? "text-indigo-400" : "text-slate-400")} />
+                                    <span className={cn("text-sm font-semibold", theme === 'dark' ? "text-slate-900 dark:text-white" : "text-slate-500")}>Mode Sombre</span>
                                 </div>
-                                {theme === 'dark' && <Check className="w-6 h-6" />}
+                                {theme === 'dark' && <Check className="w-4 h-4 text-indigo-400" />}
                             </button>
                         </div>
                     </div>
-                </div>
 
-                {/* 3. Regional Hub */}
-                <div className="lg:col-span-1">
-                    <div className="clay-card p-8 flex flex-col h-full bg-white dark:bg-slate-800">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="p-3 bg-emerald-500 text-white rounded-2xl shadow-lg">
-                                <Globe className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-xl font-black text-slate-800 dark:text-white">Régional</h3>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
+                    <div>
+                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Unité Monétaire</h2>
+                        <div className="grid grid-cols-5 gap-2">
                             {currencies.map((c) => (
                                 <button
                                     key={c}
                                     onClick={() => setCurrency(c)}
                                     className={cn(
-                                        "p-4 rounded-2xl font-black text-sm transition-all shadow-sm border-2",
+                                        "py-3 rounded-xl text-xs font-bold transition-all border",
                                         currency === c
-                                            ? "bg-emerald-500 text-white border-emerald-400 shadow-lg scale-105"
-                                            : "bg-slate-50 dark:bg-slate-900 text-slate-400 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                                            ? "bg-white dark:bg-slate-800 border-indigo-500 text-indigo-600 shadow-sm"
+                                            : "bg-slate-50 dark:bg-slate-900/50 border-transparent text-slate-400 hover:border-slate-200"
                                     )}
                                 >
                                     {c}
                                 </button>
                             ))}
                         </div>
-                        <p className="mt-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center italic leading-relaxed">
-                            Les taux de change sont synchronisés via Neon Hub.
-                        </p>
                     </div>
-                </div>
+                </section>
 
-                {/* 4. Support & Security */}
-                <div className="lg:col-span-1">
-                    <div className="clay-card p-8 flex flex-col h-full bg-white dark:bg-slate-800">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="p-3 bg-red-500 text-white rounded-2xl shadow-lg">
-                                <ShieldCheck className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-xl font-black text-slate-800 dark:text-white">Laboratoire</h3>
-                        </div>
-
-                        <div className="space-y-4 flex-1">
-                            <div className="p-4 bg-red-50 dark:bg-red-900/10 rounded-2xl border-l-4 border-red-500">
-                                <p className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest">Zone de Danger</p>
-                                <p className="text-xs font-bold text-red-800 dark:text-red-200 mt-1">Les actions ici sont définitives.</p>
-                            </div>
-
-                            <button
-                                onClick={() => setIsResetModalOpen(true)}
-                                className="w-full py-5 rounded-3xl bg-slate-50 dark:bg-slate-900 text-red-500 font-black text-lg hover:bg-red-500 hover:text-white transition-all shadow-inner border border-transparent hover:border-red-200 group"
-                            >
-                                <Trash2 className="w-6 h-6 mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                                <span className="text-[10px] uppercase tracking-widest block">Réinitialiser l'Usine</span>
-                            </button>
-                        </div>
+                {/* --- Automation Section --- */}
+                <section className="space-y-6">
+                    <div className="flex items-center justify-between uppercase tracking-[0.2em]">
+                        <h2 className="text-xs font-bold text-slate-400 whitespace-nowrap">Automatisations</h2>
+                        <span className="h-px bg-slate-100 dark:bg-slate-800 w-full ml-4"></span>
                     </div>
-                </div>
+
+                    <div className="space-y-3">
+                        {recurringTemplates.length === 0 ? (
+                            <div className="p-12 text-center border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[2rem] flex flex-col items-center gap-4">
+                                <Zap className="w-8 h-8 text-slate-200" />
+                                <p className="text-slate-400 text-xs font-medium uppercase tracking-widest">Aucune règle active</p>
+                            </div>
+                        ) : (
+                            recurringTemplates.map((template: RecurringTemplate) => (
+                                <div key={template.id} className="executive-card p-5 group flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className={cn(
+                                            "w-10 h-10 rounded-xl flex items-center justify-center",
+                                            template.type === 'income' ? 'bg-emerald-50/50 text-emerald-600' : 'bg-red-50/50 text-red-600'
+                                        )}>
+                                            <Repeat className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <p className="text-slate-800 dark:text-zinc-100 text-sm font-bold">{template.category}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">{template.frequency}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-5">
+                                        <span className="text-sm font-black text-slate-900 dark:text-white">
+                                            {formatCurrency(template.amount, currency)}
+                                        </span>
+                                        <button
+                                            onClick={() => deleteRecurringTemplate(template.id)}
+                                            className="w-8 h-8 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-300 hover:text-red-500 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </section>
             </div>
 
-            {/* 5. Automation Lab Redesign */}
-            <section className="space-y-8">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                        <div className="p-4 bg-amber-500 text-white rounded-[2rem] shadow-lg shadow-amber-500/30">
-                            <Repeat className="w-8 h-8" />
-                        </div>
-                        <div>
-                            <h3 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none">Automation Lab</h3>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-2">Neural Link v1.2 Enabled</p>
-                        </div>
-                    </div>
+            {/* --- Data Management --- */}
+            <footer className="pt-12 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="flex items-center gap-4 text-slate-400">
+                    <ShieldCheck className="w-5 h-5" />
+                    <span className="text-xs font-semibold tracking-wider italic">Infrastructure Neon Cloud • v2.4.0</span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {recurringTemplates.length === 0 ? (
-                        <div className="col-span-full clay-card p-16 text-center bg-slate-50 dark:bg-slate-900/40 border-slate-200/50 border-dashed border-2 shadow-inner">
-                            <Repeat className="w-16 h-16 text-slate-200 dark:text-slate-800 mx-auto mb-4" />
-                            <p className="text-slate-400 font-black uppercase tracking-[0.3em]">Aucune règle active</p>
-                        </div>
-                    ) : (
-                        recurringTemplates.map((template: RecurringTemplate) => (
-                            <div key={template.id} className="clay-card p-8 group relative overflow-hidden transition-all hover:-translate-y-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50">
-                                <div className={cn(
-                                    "absolute top-0 right-0 w-32 h-32 opacity-10 -mr-10 -mt-10 rounded-full",
-                                    template.type === 'income' ? 'bg-emerald-500' : 'bg-red-500'
-                                )}></div>
-
-                                <div className="flex items-center justify-between mb-8">
-                                    <div className={cn(
-                                        "w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg",
-                                        template.type === 'income' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
-                                    )}>
-                                        <Repeat className="w-6 h-6 animate-pulse" />
-                                    </div>
-                                    <button
-                                        onClick={() => deleteRecurringTemplate(template.id)}
-                                        className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/40 rounded-2xl transition-all shadow-inner border border-transparent hover:border-red-200"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
-                                </div>
-
-                                <h4 className="font-black text-2xl text-slate-800 dark:text-white mb-2 leading-none uppercase tracking-tight">{template.category}</h4>
-                                <p className="text-4xl font-black text-slate-700 dark:text-slate-200 tracking-tighter mb-6">
-                                    {formatCurrency(template.amount, currency)}
-                                </p>
-
-                                <div className="flex items-center gap-2">
-                                    <div className="bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-300">
-                                        Frequence: {template.frequency}
-                                    </div>
-                                    <div className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 leading-none">
-                                        Actif 💎
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-            </section>
-
-            {/* 6. System Health Footer */}
-            <footer className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-12 border-t border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-4 text-slate-400 group">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
-                        <Database className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Database</p>
-                        <p className="text-xs font-bold text-slate-600 dark:text-slate-200">Neon Serverless • OK</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-4 text-slate-400 group">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
-                        <Cpu className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Engine</p>
-                        <p className="text-xs font-bold text-slate-600 dark:text-slate-200">Vite React SW • v4.2</p>
-                    </div>
-                </div>
-                <div className="md:col-span-2 text-center md:text-right self-center">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic leading-relaxed">
-                        BudgetBud Framework • High-End Financial Cockpit • © 2026
-                    </p>
-                </div>
+                <button
+                    onClick={() => setIsResetModalOpen(true)}
+                    className="text-[10px] font-black text-red-500 hover:text-red-600 uppercase tracking-[0.3em] flex items-center gap-2 group transition-all"
+                >
+                    <Trash2 className="w-3 h-3 group-hover:rotate-12 transition-transform" />
+                    Réinitialiser les données
+                </button>
             </footer>
 
             <AlertModal
                 isOpen={isResetModalOpen}
                 onClose={() => setIsResetModalOpen(false)}
-                onConfirm={handleReset}
-                title="Alerte Maximale ! 🔥"
-                message="Toutes vos transactions et budgets seront effacés définitivement du serveur Neon. Cette action est irréversible."
+                onConfirm={() => { }}
+                title="Suppression Définitive"
+                message="Cette action effacera l'ensemble de vos transactions et budgets stockés sur le serveur. Voulez-vous continuer ?"
                 type="error"
-                confirmText="Tout détruire"
-                cancelText="Ouf, annuler"
+                confirmText="Confirmer la suppression"
+                cancelText="Annuler"
             />
         </div>
     );
