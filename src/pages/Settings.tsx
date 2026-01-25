@@ -48,7 +48,8 @@ const Settings: React.FC = () => {
                     }
                 }
             });
-        } catch (err) {
+        } catch (_) {
+            console.error('[LOGOUT] Unexpected error');
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = '/login';
@@ -72,13 +73,15 @@ const Settings: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                <button
-                    onClick={handleSignOut}
-                    className="clay-button-secondary text-sm px-6 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-colors w-fit md:self-center"
-                >
-                    <LogOut className="w-4 h-4" />
-                    Se déconnecter
-                </button>
+                <div className="flex-shrink-0 w-full md:w-auto flex justify-center">
+                    <button
+                        onClick={handleSignOut}
+                        className="clay-button-secondary text-sm px-6 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-colors w-fit"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        Se déconnecter
+                    </button>
+                </div>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
