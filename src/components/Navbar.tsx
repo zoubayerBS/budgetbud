@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Plus, History, PiggyBank, Landmark, Settings, RefreshCw, Zap } from 'lucide-react';
+import { LayoutDashboard, Plus, History, PiggyBank, Landmark, Settings, RefreshCw, Zap, BrainCircuit } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useBudget } from '../context/BudgetContext';
 
@@ -21,6 +21,7 @@ const Navbar: React.FC = () => {
         { to: '/history', icon: History, label: 'Historique' },
         { to: '/budgets', icon: Landmark, label: 'Budgets' },
         { to: '/savings', icon: PiggyBank, label: 'Épargne' },
+        { to: '/advisor', icon: BrainCircuit, label: 'IA' },
         { to: '/settings', icon: Settings, label: 'Réglages' },
     ];
 

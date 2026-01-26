@@ -8,6 +8,7 @@ import History from './pages/History';
 import Budgets from './pages/Budgets';
 import Settings from './pages/Settings';
 import Savings from './pages/SavingsPage';
+import AIAdvisor from './pages/AIAdvisor';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { useSession } from './lib/auth-client';
@@ -56,6 +57,7 @@ function App() {
               <Route path="history" element={<History />} />
               <Route path="budgets" element={<Budgets />} />
               <Route path="savings" element={<Savings />} />
+              <Route path="advisor" element={<AIAdvisor />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
