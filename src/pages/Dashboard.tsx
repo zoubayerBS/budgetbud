@@ -184,7 +184,7 @@ const Dashboard: React.FC = () => {
                         <div className="flex items-center gap-3 shrink-0">
                             <Link
                                 to="/advisor"
-                                className="px-8 py-6 bg-white/10 backdrop-blur-md text-white rounded-[2.5rem] font-black text-xs shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border border-white/10 flex items-center gap-2 group/btn animate-blink-glow"
+                                className="px-8 py-6 bg-indigo-600/10 backdrop-blur-md text-indigo-600 dark:text-indigo-400 rounded-[2.5rem] font-black text-xs shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border border-indigo-500/20 flex items-center gap-2 group/btn animate-blink-glow"
                             >
                                 <Sparkles className="w-4 h-4 text-indigo-400 group-hover/btn:animate-pulse" />
                                 Simulation IA

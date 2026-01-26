@@ -91,10 +91,10 @@ const Navbar: React.FC = () => {
                                         )}
                                         {item.label === 'IA' && (
                                             <span className={cn(
-                                                "text-[7px] font-black uppercase tracking-tighter opacity-60",
-                                                aiStatus === 'live' ? "text-emerald-500" : aiStatus === 'offline' ? "text-red-500" : "text-slate-400"
+                                                "text-[8px] font-black uppercase tracking-widest leading-none bg-slate-100 dark:bg-slate-800/50 px-1.5 py-0.5 rounded-sm shadow-sm",
+                                                aiStatus === 'live' ? "text-emerald-600 dark:text-emerald-400" : aiStatus === 'offline' ? "text-rose-500" : "text-slate-400"
                                             )}>
-                                                {aiStatus === 'live' ? 'En marche' : aiStatus === 'offline' ? 'En arrêt' : 'Sync...'}
+                                                {aiStatus === 'live' ? 'On' : aiStatus === 'offline' ? 'Off' : '...'}
                                             </span>
                                         )}
                                     </span>
@@ -144,8 +144,8 @@ const Navbar: React.FC = () => {
 
                     {/* Nav Items (Animated width/opacity) */}
                     <div className={cn(
-                        "flex items-center gap-1 overflow-hidden transition-all duration-700 ease-in-out",
-                        isOpen ? "max-w-[400px] opacity-100 ml-2" : "max-w-0 opacity-0 ml-0"
+                        "flex items-center gap-1 overflow-x-auto scrollbar-hide transition-all duration-700 ease-in-out",
+                        isOpen ? "max-w-[70vw] opacity-100 ml-2" : "max-w-0 opacity-0 ml-0"
                     )}>
                         {navItems.map((item) => {
                             const Icon = item.icon;
@@ -173,8 +173,8 @@ const Navbar: React.FC = () => {
                                                 )}></span>
                                             </span>
                                             <span className={cn(
-                                                "text-[6px] font-black uppercase tracking-tighter",
-                                                aiStatus === 'live' ? (isActive ? "text-emerald-400" : "text-emerald-500") : "text-red-500"
+                                                "text-[7px] font-black uppercase tracking-widest leading-none",
+                                                aiStatus === 'live' ? (isActive ? "text-emerald-400" : "text-emerald-500") : "text-rose-500"
                                             )}>
                                                 {aiStatus === 'live' ? 'ON' : aiStatus === 'offline' ? 'OFF' : '...'}
                                             </span>
