@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
 
     const navItems = [
         { to: '/', icon: LayoutDashboard, label: 'Tableau' },
-        { to: '/history', icon: History, label: 'Journal' },
+        { to: '/history', icon: History, label: 'Historique' },
         { to: '/budgets', icon: Landmark, label: 'Budgets' },
         { to: '/savings', icon: PiggyBank, label: 'Épargne' },
         { to: '/settings', icon: Settings, label: 'Réglages' },
@@ -83,7 +83,7 @@ const Navbar: React.FC = () => {
                             className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-full font-black text-[10px] uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
                         >
                             <Plus className="w-4 h-4" />
-                            <span>Injecter</span>
+                            <span>Ajouter</span>
                         </button>
                     </div>
                 </nav>

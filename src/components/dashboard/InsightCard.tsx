@@ -35,7 +35,7 @@ const InsightCard: React.FC = () => {
                         <div className="p-2.5 bg-slate-900 dark:bg-white rounded-xl text-white dark:text-slate-900 shadow-xl shadow-slate-900/10">
                             <Zap className="w-5 h-5 fill-current" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Financial Pulse</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Santé financière</span>
                     </div>
                     <div className={cn(
                         "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5",
@@ -44,20 +44,20 @@ const InsightCard: React.FC = () => {
                             : "bg-red-500/10 text-red-600 dark:text-red-400"
                     )}>
                         <Activity className="w-3 h-3" />
-                        {isHealthy ? "Optimal" : "Check-up Needed"}
+                        {isHealthy ? "En forme" : "Attention"}
                     </div>
                 </div>
 
                 <div className="space-y-2">
                     <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight tracking-tighter">
                         {isHealthy
-                            ? "Votre capital est en phase de croissance."
-                            : "Attention à vos sorties de fonds ce mois-ci."}
+                            ? "Vous économisez de l'argent ce mois-ci."
+                            : "Vous dépensez beaucoup ce mois-ci."}
                     </h3>
                     <p className="text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed">
                         {isHealthy
-                            ? `Vous avez conservé ${Math.round(savingsRate)}% de vos revenus. Une performance robuste pour votre épargne.`
-                            : "Il est temps de réviser vos budgets discrétionnaires pour stabiliser votre balance."}
+                            ? `Vous avez gardé ${Math.round(savingsRate)}% de vos revenus. C'est très bien pour vos économies.`
+                            : "Il est temps de réduire quelques dépenses pour rééquilibrer votre budget."}
                     </p>
                 </div>
             </div>
@@ -65,7 +65,7 @@ const InsightCard: React.FC = () => {
             <div className="mt-8 relative z-10">
                 <div className="flex items-end justify-between">
                     <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Savings Velocity</p>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Taux d'épargne</p>
                         <div className="flex items-center gap-2">
                             <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                                 {Math.round(savingsRate)}%

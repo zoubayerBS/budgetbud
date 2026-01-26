@@ -31,14 +31,15 @@ const Savings: React.FC = () => {
         <div className="space-y-10 animate-in fade-in duration-1000 p-2 md:p-4 max-w-[1400px] mx-auto pb-24">
 
             {/* Header: Cinematic Status Bar */}
+            {/* Header: Cinematic Status Bar */}
             <div className="flex flex-col md:flex-row items-end justify-between gap-6 px-2">
                 <div className="space-y-1 text-center md:text-left">
                     <div className="flex items-center gap-3 justify-center md:justify-start">
                         <Sparkles className="w-5 h-5 text-indigo-500 animate-pulse" />
-                        <h1 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Propulseur de Rêves</h1>
+                        <h1 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Mes Projets</h1>
                     </div>
                     <h2 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
-                        Objectifs <span className="text-indigo-600 dark:text-indigo-400">Stratégiques</span>
+                        Objectifs <span className="text-indigo-600 dark:text-indigo-400">d'Épargne</span>
                     </h2>
                 </div>
 
@@ -61,19 +62,19 @@ const Savings: React.FC = () => {
                     <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
                         <div className="flex items-center gap-3 mb-8">
                             <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>
-                            <p className="text-indigo-200/50 font-black uppercase tracking-[0.2em] text-[10px]">Autonomie Globale</p>
+                            <p className="text-indigo-200/50 font-black uppercase tracking-[0.2em] text-[10px]">Progression Totale</p>
                         </div>
                         <h3 className="text-8xl md:text-9xl font-black text-white tracking-tighter mb-4 transition-all duration-700 group-hover:scale-105 origin-left">
                             {Math.round(globalProgress)}<span className="text-indigo-400">%</span>
                         </h3>
                         <p className="text-indigo-200/40 font-bold text-lg max-w-sm">
-                            Vous avez sécurisé <span className="text-white">{formatCurrency(totalCurrent, currency)}</span> sur un objectif total de {formatCurrency(totalTarget, currency)}.
+                            Vous avez déjà économisé <span className="text-white">{formatCurrency(totalCurrent, currency)}</span> sur un objectif de {formatCurrency(totalTarget, currency)}.
                         </p>
                     </div>
 
                     <div className="relative z-10 w-full mt-10">
                         <div className="flex justify-between items-end mb-4">
-                            <span className="text-[10px] font-black text-indigo-200/50 uppercase tracking-widest">Flux d'Épargne Actuel</span>
+                            <span className="text-[10px] font-black text-indigo-200/50 uppercase tracking-widest">Épargne actuelle</span>
                             <span className="text-xs font-black text-white">{formatCurrency(totalCurrent, currency)}</span>
                         </div>
                         <div className="h-4 bg-white/5 rounded-full overflow-hidden p-1 shadow-inner border border-white/10 backdrop-blur-xl">
@@ -91,7 +92,7 @@ const Savings: React.FC = () => {
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                             <Activity className="w-16 h-16" />
                         </div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Cible Brute</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Objectif total</p>
                         <h4 className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
                             {formatCurrency(totalTarget, currency)}
                         </h4>
@@ -101,7 +102,7 @@ const Savings: React.FC = () => {
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                             <TrendingUp className="w-16 h-16" />
                         </div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Capital Mobilité</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Épargne réelle</p>
                         <h4 className="text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-tighter">
                             {formatCurrency(totalCurrent, currency)}
                         </h4>
@@ -112,7 +113,7 @@ const Savings: React.FC = () => {
                 <div className="md:col-span-12 space-y-8 mt-4">
                     <div className="flex items-center gap-4 px-2">
                         <div className="w-1.5 h-6 bg-slate-900 dark:bg-white rounded-full"></div>
-                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Matrice des Projets</h3>
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Liste des projets</h3>
                     </div>
 
                     {savingsGoals.length === 0 ? (
@@ -121,10 +122,10 @@ const Savings: React.FC = () => {
                                 <Target className="w-12 h-12" />
                             </div>
                             <div className="space-y-2">
-                                <h4 className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter uppercase">Aucune Vision Active</h4>
-                                <p className="text-slate-500 font-bold text-sm max-w-xs mx-auto italic">Commencez à structurer vos ambitions financières aujourd'hui.</p>
+                                <h4 className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter uppercase">Aucun objectif</h4>
+                                <p className="text-slate-500 font-bold text-sm max-w-xs mx-auto italic">Commencez à économiser pour vos projets dès aujourd'hui.</p>
                             </div>
-                            <button onClick={handleAdd} className="p-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">Initialiser</button>
+                            <button onClick={handleAdd} className="p-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">Ajouter</button>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -177,7 +178,7 @@ const Savings: React.FC = () => {
                                         <div className="space-y-8 relative z-10 mt-auto pt-6">
                                             <div className="flex justify-between items-end">
                                                 <div className="space-y-1">
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Réalisé</p>
+                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Économisé</p>
                                                     <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
                                                         {formatCurrency(goal.current_amount, currency)}
                                                     </p>
@@ -201,7 +202,7 @@ const Savings: React.FC = () => {
                                                     ></div>
                                                 </div>
                                                 <div className="flex justify-between items-center">
-                                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">{isCompleted ? 'Mission Accomplie' : 'Progression Tactique'}</span>
+                                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">{isCompleted ? 'Terminé' : 'Progrès'}</span>
                                                     <span className={cn("text-xs font-black", isCompleted ? "text-emerald-500" : "text-indigo-500")}>{Math.round(progress)}%</span>
                                                 </div>
                                             </div>
@@ -227,11 +228,11 @@ const Savings: React.FC = () => {
                     if (goalToDelete) deleteSavingsGoal(goalToDelete.id);
                     setGoalToDelete(null);
                 }}
-                title="Suppression Définitive"
-                message={`Êtes-vous sûr de vouloir supprimer "${goalToDelete?.name}" ? Cette action est irréversible.`}
+                title="Supprimer l'objectif"
+                message={`Voulez-vous supprimer "${goalToDelete?.name}" ?`}
                 type="error"
-                confirmText="Détruire"
-                cancelText="Maintenir"
+                confirmText="Supprimer"
+                cancelText="Annuler"
             />
         </div>
     );

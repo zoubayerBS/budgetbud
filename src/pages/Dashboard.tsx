@@ -45,12 +45,12 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-1">
                     <div className="flex items-center gap-2 text-indigo-500 font-black text-[10px] uppercase tracking-[0.3em] opacity-80 mb-2">
                         <Sparkles className="w-3 h-3" />
-                        <span>Intelligence Intégrée</span>
+                        <span>État du compte</span>
                     </div>
                     <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
-                        Bonjour, <span className="text-indigo-600 dark:text-indigo-400">{user?.name || 'Vénéré User'}</span>
+                        Bonjour, <span className="text-indigo-600 dark:text-indigo-400">{user?.name || 'Utilisateur'}</span>
                     </h1>
-                    <p className="text-slate-500 font-bold text-base opacity-80">Votre écosystème financier est optimisé.</p>
+                    <p className="text-slate-500 font-bold text-base opacity-80">Tout est sous contrôle aujourd'hui.</p>
                 </div>
 
                 <div className="flex items-center gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 dark:border-slate-800 shadow-sm">
@@ -73,7 +73,7 @@ const Dashboard: React.FC = () => {
                                     <AlertTriangle className="w-6 h-6" />
                                 </div>
                                 <p className="text-sm font-bold text-slate-700 dark:text-red-200">
-                                    <span className="font-black uppercase text-[10px] tracking-widest block text-red-500 mb-0.5">Alerte Stratégique</span>
+                                    <span className="font-black uppercase text-[10px] tracking-widest block text-red-500 mb-0.5">Alerte Budget</span>
                                     {alerts.length} budgets dépassent vos limites de sécurité.
                                 </p>
                             </div>
@@ -92,7 +92,7 @@ const Dashboard: React.FC = () => {
                     <div className="relative z-10 w-full h-full">
                         <div className="flex items-center gap-3 mb-10">
                             <div className="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
-                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Positions Actuelles</h3>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Solde Total</h3>
                         </div>
                         <FinancialOverview />
                     </div>
@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-3">
                                 <div className="w-1.5 h-6 bg-blue-500 rounded-full"></div>
-                                <h3 className="text-xl font-black tracking-tighter">Dynamique de Trésorerie</h3>
+                                <h3 className="text-xl font-black tracking-tighter">Comparaison Mensuelle</h3>
                             </div>
                             <Calendar className="w-5 h-5 opacity-40" />
                         </div>
@@ -125,7 +125,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex items-center justify-between mb-10">
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-6 bg-purple-500 rounded-full"></div>
-                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Répartition Tactique</h3>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Où va votre argent</h3>
                         </div>
                         <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
                     </div>
@@ -140,7 +140,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex items-center justify-between mb-8 relative z-10">
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-5 bg-orange-500 rounded-full"></div>
-                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Flux Stratégiques</h3>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Dernières transactions</h3>
                         </div>
                         <Link to="/history" className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-orange-500 hover:text-white dark:hover:bg-orange-400 dark:hover:text-black transition-all">
                             <ChevronRight className="w-4 h-4" />
@@ -161,16 +161,16 @@ const Dashboard: React.FC = () => {
                                 <Target className="w-10 h-10 text-indigo-500 group-hover:text-emerald-400" />
                             </div>
                             <div className="space-y-1 text-center md:text-left">
-                                <h3 className="text-4xl font-black tracking-tighter">Objectifs de Vision</h3>
+                                <h3 className="text-4xl font-black tracking-tighter">Objectifs d'Épargne</h3>
                                 <p className="text-slate-500 dark:text-slate-400 font-bold text-lg group-hover:text-white/60">
-                                    {Math.round(savingsProgress)}% de votre autonomie financière réalisée.
+                                    {Math.round(savingsProgress)}% de vos objectifs atteints.
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex-1 max-w-2xl w-full">
                             <div className="flex justify-between items-end mb-4">
-                                <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Capital Mobilisé</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Économisé</span>
                                 <span className="text-3xl font-black tracking-tighter">{formatCurrency(totalCurrentSavings, currency)}</span>
                             </div>
                             <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-1 shadow-inner group-hover:bg-white/10">
@@ -185,7 +185,7 @@ const Dashboard: React.FC = () => {
                             to="/savings"
                             className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-12 py-6 rounded-[2.5rem] font-black text-sm shadow-2xl hover:scale-105 active:scale-95 transition-all shrink-0 uppercase tracking-widest border border-white/10"
                         >
-                            Piloter
+                            Gérer
                         </Link>
                     </div>
                 </div>
