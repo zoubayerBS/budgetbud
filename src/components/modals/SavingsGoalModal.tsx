@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useBudget } from '../../context/BudgetContext';
 import type { SavingsGoal, Category } from '../../types';
-import { X, Target, Info, Calendar } from 'lucide-react';
+import { X, Target, Info, Calendar, Sparkles, ChevronRight, Check } from 'lucide-react';
 import { CATEGORIES } from '../../types';
+import { cn } from '../../lib/utils';
 
 interface SavingsGoalModalProps {
     isOpen: boolean;
@@ -58,65 +59,75 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-8">
             <div
-                className="absolute inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md animate-in fade-in duration-300"
+                className="absolute inset-0 bg-slate-900/40 dark:bg-black/80 backdrop-blur-2xl animate-in fade-in duration-700"
                 onClick={onClose}
             />
 
-            <div className="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl border border-white/20 dark:border-slate-800 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
-                <div className="p-10">
-                    <div className="flex items-center justify-between mb-10">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
-                                <Target className="w-6 h-6" />
+            <div className="relative w-full max-w-2xl bg-white dark:bg-[#0c0e12] rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border border-white/10 dark:border-slate-800/50 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 flex flex-col noise-texture">
+
+                {/* Visual Flair: Abstract Orb */}
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+                <div className="p-10 md:p-14 relative z-10 flex flex-col h-full">
+
+                    {/* Header Section */}
+                    <div className="flex items-center justify-between mb-12">
+                        <div className="space-y-1">
+                            <div className="flex items-center gap-3">
+                                <Sparkles className="w-5 h-5 text-indigo-500 animate-pulse" />
+                                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Nouvelle Vision</h3>
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                                    {goal ? 'Modifier l\'objectif' : 'Nouvel Objectif'}
-                                </h2>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Épargne Stratégique</p>
-                            </div>
+                            <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+                                {goal ? 'Éditer le' : 'Créer un'} <span className="text-indigo-600 dark:text-indigo-400">Projet</span>
+                            </h2>
                         </div>
                         <button
                             onClick={onClose}
-                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-all"
+                            className="w-14 h-14 flex items-center justify-center rounded-[1.5rem] bg-slate-50 dark:bg-slate-800/50 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:scale-110 active:scale-95 transition-all shadow-inner border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="w-6 h-6" />
                         </button>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="space-y-6">
-                            {/* Name Input */}
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Nom du projet</label>
-                                <input
-                                    required
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    placeholder="Ex: Voyage au Japon, Nouvelle Voiture..."
-                                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-bold text-slate-800 dark:text-white"
-                                />
-                            </div>
-
-                            {/* Amount Grid */}
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Montant Cible ({currency})</label>
+                    <form onSubmit={handleSubmit} className="space-y-10">
+                        <div className="space-y-8">
+                            {/* Project Name: High-Impact Input */}
+                            <div className="space-y-3 group">
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block group-focus-within:text-indigo-500 transition-colors">Nom du projet d'avenir</label>
+                                <div className="relative">
+                                    <Target className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 dark:text-slate-600 group-focus-within:text-indigo-500 transition-colors" />
                                     <input
                                         required
-                                        type="number"
-                                        step="0.01"
-                                        value={targetAmount}
-                                        onChange={(e) => setTargetAmount(e.target.value)}
-                                        placeholder="0.00"
-                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-black text-slate-900 dark:text-white"
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder="Ex: Villa en bord de mer, Nouvelle Tesla..."
+                                        className="w-full pl-16 pr-8 py-6 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[2rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-bold text-lg text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 shadow-inner"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Déjà Épargné</label>
+                            </div>
+
+                            {/* Double Grid: Amounts */}
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                <div className="md:col-span-7 space-y-3 group">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block">Montant Cible ({currency})</label>
+                                    <div className="relative">
+                                        <input
+                                            required
+                                            type="number"
+                                            step="0.01"
+                                            value={targetAmount}
+                                            onChange={(e) => setTargetAmount(e.target.value)}
+                                            placeholder="0.00"
+                                            className="w-full px-8 py-6 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[2rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-black text-3xl text-slate-900 dark:text-white tracking-tighter shadow-inner"
+                                        />
+                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-600 font-black">{currency}</div>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-5 space-y-3 group">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block">Déjà Économisé</label>
                                     <input
                                         required
                                         type="number"
@@ -124,55 +135,61 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                                         value={currentAmount}
                                         onChange={(e) => setCurrentAmount(e.target.value)}
                                         placeholder="0.00"
-                                        className="w-full px-6 py-4 bg-slate-100 dark:bg-slate-800 border border-transparent rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-black text-slate-600 dark:text-slate-300 shadow-inner"
+                                        className="w-full px-8 py-6 bg-indigo-500/[0.03] dark:bg-indigo-500/[0.05] border border-indigo-500/10 rounded-[2rem] focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-black text-2xl text-indigo-600 dark:text-indigo-400 tracking-tighter"
                                     />
                                 </div>
                             </div>
 
-                            {/* Settings Grid */}
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Date Limite (Optionnel)</label>
+                            {/* Split Grid: Meta */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-3 group">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block text-center md:text-left">Échéance souhaitée</label>
                                     <div className="relative">
-                                        <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                                        <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 dark:text-slate-600 group-focus-within:text-indigo-500 transition-colors" />
                                         <input
                                             type="date"
                                             value={deadline}
                                             onChange={(e) => setDeadline(e.target.value)}
-                                            className="w-full pl-14 pr-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-bold text-slate-800 dark:text-white"
+                                            className="w-full pl-16 pr-8 py-5 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[1.5rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none"
                                         />
                                     </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Catégorie</label>
-                                    <select
-                                        value={category}
-                                        onChange={(e) => setCategory(e.target.value as Category)}
-                                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none"
-                                    >
-                                        <option value="">Sélectionner...</option>
-                                        {CATEGORIES.map(c => (
-                                            <option key={c} value={c}>{c}</option>
-                                        ))}
-                                    </select>
+                                <div className="space-y-3 group">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block text-center md:text-left">Catégorie du projet</label>
+                                    <div className="relative">
+                                        <select
+                                            value={category}
+                                            onChange={(e) => setCategory(e.target.value as Category)}
+                                            className="w-full px-8 py-5 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[1.5rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none cursor-pointer"
+                                        >
+                                            <option value="">Sélectionner...</option>
+                                            {CATEGORIES.map(c => (
+                                                <option key={c} value={c}>{c}</option>
+                                            ))}
+                                        </select>
+                                        <ChevronRight className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 dark:text-slate-600 rotate-90" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="pt-4 flex items-center gap-4">
-                            <div className="p-4 bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl flex-1 border border-indigo-100 dark:border-indigo-500/20">
-                                <div className="flex items-start gap-3">
-                                    <Info className="w-4 h-4 text-indigo-500 mt-0.5" />
-                                    <p className="text-[10px] font-bold text-indigo-600/80 dark:text-indigo-400 leading-relaxed">
-                                        Fixer une date limite vous aide à maintenir votre discipline financière et à visualiser votre succès.
-                                    </p>
+                        {/* Summary & Actions */}
+                        <div className="flex flex-col md:flex-row items-center gap-8 pt-4">
+                            <div className="flex-1 flex gap-4 p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2rem] border border-emerald-500/10 group hover:bg-emerald-500/10 transition-colors">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                                    <Info className="w-5 h-5" />
                                 </div>
+                                <p className="text-[10px] font-bold text-emerald-600/80 dark:text-emerald-400/80 leading-relaxed uppercase tracking-widest italic">
+                                    Épargner régulièrement est la clé du succès. Nous suivrons votre progression en temps réel.
+                                </p>
                             </div>
+
                             <button
                                 type="submit"
-                                className="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all shrink-0"
+                                className="w-full md:w-auto px-12 py-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shrink-0"
                             >
-                                {goal ? 'Mettre à jour' : 'Confirmer le projet'}
+                                {goal ? 'Confirmer les modifs' : 'Lancer le projet'}
+                                <Check className="w-5 h-5" />
                             </button>
                         </div>
                     </form>
