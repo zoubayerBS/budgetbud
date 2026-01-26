@@ -9,6 +9,20 @@ const Navbar: React.FC = () => {
     const location = useLocation();
     const [scrolled, setScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [aiStatus, setAiStatus] = useState<'live' | 'offline' | 'loading'>('loading');
+
+    useEffect(() => {
+        const checkAIStatus = async () => {
+            try {
+                const res = await fetch('/api/ai/status');
+                const data = await res.json();
+                setAiStatus(data.status);
+            } catch (err) {
+                setAiStatus('offline');
+            }
+        };
+        checkAIStatus();
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -62,7 +76,20 @@ const Navbar: React.FC = () => {
                                         <div className="absolute inset-0 bg-white dark:bg-slate-800 shadow-sm animate-in zoom-in duration-500 rounded-full"></div>
                                     )}
                                     <Icon className={cn("w-4.5 h-4.5 relative z-10 transition-transform duration-500 group-hover:scale-110", isActive && "text-indigo-500")} />
-                                    <span className="text-xs font-black relative z-10 uppercase tracking-widest">{item.label}</span>
+                                    <span className="text-xs font-black relative z-10 uppercase tracking-widest flex items-center gap-1.5">
+                                        {item.label}
+                                        {item.label === 'IA' && (
+                                            <span className="relative flex h-2 w-2">
+                                                {aiStatus === 'live' && (
+                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                                )}
+                                                <span className={cn(
+                                                    "relative inline-flex rounded-full h-2 w-2",
+                                                    aiStatus === 'live' ? "bg-emerald-500" : aiStatus === 'offline' ? "bg-red-500" : "bg-slate-400"
+                                                )}></span>
+                                            </span>
+                                        )}
+                                    </span>
                                 </NavLink>
                             );
                         })}

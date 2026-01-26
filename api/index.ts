@@ -373,4 +373,14 @@ app.post('/api/ai/simulate', authenticateToken, async (req, res) => {
     }
 });
 
+// --- Gemini AI Status Endpoint ---
+app.get('/api/ai/status', authenticateToken, (req, res) => {
+    const isConfigured = !!process.env.GEMINI_API_KEY;
+    res.json({
+        status: isConfigured ? 'live' : 'offline',
+        engine: 'Gemini 1.5 Flash',
+        version: '1.0.0'
+    });
+});
+
 export default app;
