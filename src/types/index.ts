@@ -52,6 +52,16 @@ export const INCOME_CATEGORIES = [
 
 export const CATEGORIES = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES] as const;
 
+export interface SavingsGoal {
+    id: string;
+    name: string;
+    target_amount: number;
+    current_amount: number;
+    category?: string;
+    deadline?: string; // ISO string
+    created_at?: string; // ISO string
+}
+
 export type Category = typeof CATEGORIES[number];
 export type ExpenseCategory = typeof EXPENSE_CATEGORIES[number];
 export type IncomeCategory = typeof INCOME_CATEGORIES[number];

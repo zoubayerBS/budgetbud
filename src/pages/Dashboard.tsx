@@ -3,18 +3,24 @@ import { useBudget } from '../context/BudgetContext';
 import FinancialOverview from '../components/dashboard/FinancialOverview';
 import RecentActivity from '../components/dashboard/RecentActivity';
 import ExpensePieChart from '../components/dashboard/ExpensePieChart';
-import RecentTrendsChart from '../components/dashboard/RecentTrendsChart';
+import MonthlyComparisonChart from '../components/dashboard/MonthlyComparisonChart';
+import InsightCard from '../components/dashboard/InsightCard';
 import { Link } from 'react-router-dom';
-import { AlertTriangle, ArrowRight } from 'lucide-react';
+import { AlertTriangle, Target, TrendingUp, Sparkles, ChevronRight, Calendar } from 'lucide-react';
+import { formatCurrency } from '../lib/format';
 
 const Dashboard: React.FC = () => {
-    const { transactions, budgets, user } = useBudget();
+    const { transactions, budgets, user, savingsGoals, currency } = useBudget();
+
+    const totalSavingsTarget = savingsGoals.reduce((sum, g) => sum + g.target_amount, 0);
+    const totalCurrentSavings = savingsGoals.reduce((sum, g) => sum + g.current_amount, 0);
+    const savingsProgress = totalSavingsTarget > 0 ? (totalCurrentSavings / totalSavingsTarget) * 100 : 0;
 
     const alerts = useMemo(() => {
         const expensesByCategory = transactions
             .filter(t => t.type === 'expense')
             .reduce((acc, t) => {
-                acc[t.category] = (acc[t.category] || 0) + t.amount;
+                acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
                 return acc;
             }, {} as Record<string, number>);
 
@@ -24,8 +30,7 @@ const Dashboard: React.FC = () => {
                 return {
                     category: budget.category,
                     spent,
-                    limit: budget.limit,
-                    type: 'danger' as const
+                    limit: budget.limit
                 };
             }
             return null;
@@ -33,118 +38,154 @@ const Dashboard: React.FC = () => {
     }, [transactions, budgets]);
 
     return (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 p-4 max-w-7xl mx-auto">
-            {/* Dashboard Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="space-y-10 animate-in fade-in duration-1000 p-2 md:p-4 max-w-[1400px] mx-auto pb-24">
+
+            {/* Header: Executive Status Bar */}
+            <div className="flex flex-col md:flex-row items-end justify-between gap-6 px-2">
                 <div className="space-y-1">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 text-white transition-transform duration-500 hover:scale-110">
-                            <span className="font-black text-sm">B</span>
-                        </div>
-                        <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter">
-                            Bonjour {user?.name || ''} 👋
-                        </h2>
+                    <div className="flex items-center gap-2 text-indigo-500 font-black text-[10px] uppercase tracking-[0.3em] opacity-80 mb-2">
+                        <Sparkles className="w-3 h-3" />
+                        <span>Intelligence Intégrée</span>
                     </div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-11 opacity-70">Aperçu financier mis à jour</p>
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+                        Bonjour, <span className="text-indigo-600 dark:text-indigo-400">{user?.name || 'Vénéré User'}</span>
+                    </h1>
+                    <p className="text-slate-500 font-bold text-base opacity-80">Votre écosystème financier est optimisé.</p>
                 </div>
-                <div className="flex items-center gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-6 py-3 rounded-2xl shadow-inner border border-white/20 dark:border-slate-800">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
-                    <span className="text-xs font-black text-slate-500 uppercase tracking-widest leading-none">
+
+                <div className="flex items-center gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 dark:border-slate-800 shadow-sm">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50"></div>
+                    <span className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                         {new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
                     </span>
                 </div>
             </div>
 
-            {/* System Notifications (Alerts) */}
-            {alerts.length > 0 && (
-                <div className="grid gap-4">
-                    {alerts.map((alert, idx) => (
-                        <div
-                            key={alert.category}
-                            style={{ animationDelay: `${idx * 150}ms` }}
-                            className="bg-red-500/5 dark:bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-[2rem] p-6 flex items-center justify-between group animate-in slide-in-from-top-4 duration-700"
-                        >
-                            <div className="flex items-center gap-6">
-                                <div className="p-4 bg-red-500 text-white rounded-2xl shadow-xl shadow-red-500/40 group-hover:scale-110 transition-transform">
+            {/* BENTO GRID INFRASTRUCTURE */}
+            <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[minmax(180px,_auto)] gap-6 px-2">
+
+                {/* 1. Critical Feed: Alerts (Conditional Span) */}
+                {alerts.length > 0 && (
+                    <div className="md:col-span-12 animate-in slide-in-from-top-4 duration-700">
+                        <div className="bg-red-500/5 dark:bg-red-500/10 border border-red-500/20 rounded-[2rem] p-6 flex flex-wrap items-center justify-between gap-4">
+                            <div className="flex items-center gap-5">
+                                <div className="p-3 bg-red-500 text-white rounded-2xl shadow-xl shadow-red-500/20">
                                     <AlertTriangle className="w-6 h-6" />
                                 </div>
-                                <div>
-                                    <h4 className="text-red-600 dark:text-red-400 font-black text-sm uppercase tracking-widest mb-1">Budget Dépassé</h4>
-                                    <p className="text-slate-600 dark:text-slate-400 font-bold text-sm">
-                                        Vous avez dépassé votre limite pour <strong>{alert.category}</strong>.
-                                    </p>
-                                </div>
+                                <p className="text-sm font-bold text-slate-700 dark:text-red-200">
+                                    <span className="font-black uppercase text-[10px] tracking-widest block text-red-500 mb-0.5">Alerte Stratégique</span>
+                                    {alerts.length} budgets dépassent vos limites de sécurité.
+                                </p>
                             </div>
-                            <Link to="/budgets" className="px-6 py-3 bg-red-500/10 text-red-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
-                                Ajuster
+                            <Link to="/budgets" className="px-6 py-2.5 bg-red-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-red-500/20">
+                                Agir
                             </Link>
                         </div>
-                    ))}
+                    </div>
+                )}
+
+                {/* 2. Global Vision: Financial Overview (8 cols) */}
+                <div className="md:col-span-8 md:row-span-2 bento-tile flex flex-col justify-between group overflow-hidden border-none shadow-2xl shadow-indigo-500/10 active:scale-[0.99] transition-transform border-l-4 border-emerald-500/20">
+                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <TrendingUp className="w-48 h-48 rotate-12" />
+                    </div>
+                    <div className="relative z-10 w-full h-full">
+                        <div className="flex items-center gap-3 mb-10">
+                            <div className="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Positions Actuelles</h3>
+                        </div>
+                        <FinancialOverview />
+                    </div>
                 </div>
-            )}
 
-            {/* Layer 1: Cinematic Overview */}
-            <div className="animate-in zoom-in-95 duration-700 delay-200">
-                <FinancialOverview />
-            </div>
+                {/* 3. Smart Pulse: Insight Card (4 cols) */}
+                <div className="md:col-span-4 md:row-span-2">
+                    <InsightCard />
+                </div>
 
-            {/* Layer 2: Strategic Bento Hub */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                {/* Evolution Matrix */}
-                <div className="lg:col-span-8 clay-card p-10 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border-white/20 animate-in slide-in-from-left-4 duration-700 delay-300">
+                {/* 4. Temporal Stream: Monthly Comparison (12 cols) */}
+                <div className="md:col-span-12 md:row-span-2 bento-tile bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-none relative overflow-hidden group border-r-4 border-blue-500/20">
+                    <div className="absolute inset-0 bg-blue-600/10 dark:bg-blue-500/5"></div>
+                    <div className="relative z-10 h-full flex flex-col">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-3">
+                                <div className="w-1.5 h-6 bg-blue-500 rounded-full"></div>
+                                <h3 className="text-xl font-black tracking-tighter">Dynamique de Trésorerie</h3>
+                            </div>
+                            <Calendar className="w-5 h-5 opacity-40" />
+                        </div>
+                        <div className="flex-1 min-h-[220px]">
+                            <MonthlyComparisonChart />
+                        </div>
+                    </div>
+                </div>
+
+                {/* 5. Sectorial Matrix: Distribution (5 cols) */}
+                <div className="md:col-span-5 md:row-span-3 bento-tile border-l-4 border-purple-500/20">
                     <div className="flex items-center justify-between mb-10">
-                        <div className="flex items-center gap-4">
-                            <div className="w-1.5 h-8 bg-blue-500 rounded-full"></div>
-                            <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter">Évolution Temporelle</h3>
+                        <div className="flex items-center gap-3">
+                            <div className="w-1.5 h-6 bg-purple-500 rounded-full"></div>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Répartition Tactique</h3>
                         </div>
-                        <div className="bg-slate-100/50 dark:bg-slate-950/50 px-4 py-2 rounded-xl text-[10px] font-black text-slate-500 uppercase tracking-widest border border-slate-200/50 dark:border-slate-800">
-                            7 derniers jours
-                        </div>
+                        <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
                     </div>
-                    <div className="h-[320px]">
-                        <RecentTrendsChart />
-                    </div>
-                </div>
-
-                {/* Tactical activity Feed */}
-                <div className="lg:col-span-4 clay-card p-10 animate-in slide-in-from-right-4 duration-700 delay-400">
-                    <RecentActivity />
-                </div>
-            </div>
-
-            {/* Layer 3: Distribution & Objectives */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-12">
-                {/* Distribution Matrix */}
-                <div className="lg:col-span-5 clay-card p-10 animate-in slide-in-from-bottom-4 duration-700 delay-500">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="w-1.5 h-8 bg-purple-500 rounded-full"></div>
-                        <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter">Répartition Sectorielle</h3>
-                    </div>
-                    <div className="h-[320px]">
+                    <div className="h-[360px]">
                         <ExpensePieChart />
                     </div>
                 </div>
 
-                {/* Call to Action: Target Pod */}
-                <div className="lg:col-span-7 clay-card p-12 bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-950 text-white flex flex-col items-start justify-center overflow-hidden relative border-none shadow-2xl animate-in slide-in-from-bottom-4 duration-700 delay-600 group">
-                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-400/10 rounded-full -mr-32 -mt-32 blur-[100px] transition-transform duration-1000 group-hover:scale-125"></div>
-                    <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px]"></div>
-
-                    <div className="relative z-10 max-w-lg">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-3 bg-white/10 rounded-2xl border border-white/20">
-                                <span className="text-2xl">🎯</span>
-                            </div>
-                            <span className="text-[10px] font-black text-blue-200/50 uppercase tracking-[0.2em]">Mes Objectifs</span>
+                {/* 6. Execution Stream: Recent Activity (7 cols) */}
+                <div className="md:col-span-7 md:row-span-3 bento-tile bg-white dark:bg-slate-900/40 relative overflow-hidden border-orange-500/10 dark:border-orange-400/10">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl"></div>
+                    <div className="flex items-center justify-between mb-8 relative z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-1.5 h-5 bg-orange-500 rounded-full"></div>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Flux Stratégiques</h3>
                         </div>
-                        <h3 className="text-4xl font-black mb-4 tracking-tighter group-hover:translate-x-2 transition-transform duration-500">Prêt pour la suite ?</h3>
-                        <p className="text-indigo-100/60 font-bold mb-10 max-w-sm text-lg leading-relaxed">Une bonne gestion commence par des objectifs clairs. Ajustez vos budgets dès maintenant.</p>
+                        <Link to="/history" className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-orange-500 hover:text-white dark:hover:bg-orange-400 dark:hover:text-black transition-all">
+                            <ChevronRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+                    <div className="relative z-10">
+                        <RecentActivity />
+                    </div>
+                </div>
+
+                {/* 7. Strategic Target: Savings (12 cols) */}
+                <div className="md:col-span-12 md:row-span-2 spatial-card group h-full">
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                    <div className="relative z-10 p-10 h-full flex flex-col md:flex-row items-center justify-between gap-10 group-hover:text-white transition-colors">
+
+                        <div className="flex items-center gap-6 flex-wrap justify-center md:justify-start">
+                            <div className="w-20 h-20 bg-indigo-500/10 rounded-[2.5rem] border border-indigo-500/20 flex items-center justify-center group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-700 group-hover:rotate-[360deg]">
+                                <Target className="w-10 h-10 text-indigo-500 group-hover:text-emerald-400" />
+                            </div>
+                            <div className="space-y-1 text-center md:text-left">
+                                <h3 className="text-4xl font-black tracking-tighter">Objectifs de Vision</h3>
+                                <p className="text-slate-500 dark:text-slate-400 font-bold text-lg group-hover:text-white/60">
+                                    {Math.round(savingsProgress)}% de votre autonomie financière réalisée.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex-1 max-w-2xl w-full">
+                            <div className="flex justify-between items-end mb-4">
+                                <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Capital Mobilisé</span>
+                                <span className="text-3xl font-black tracking-tighter">{formatCurrency(totalCurrentSavings, currency)}</span>
+                            </div>
+                            <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-1 shadow-inner group-hover:bg-white/10">
+                                <div
+                                    className="h-full bg-indigo-600 dark:bg-indigo-400 group-hover:bg-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                                    style={{ width: `${Math.min(savingsProgress, 100)}%` }}
+                                ></div>
+                            </div>
+                        </div>
+
                         <Link
-                            to="/budgets"
-                            className="bg-white text-slate-900 px-10 py-5 rounded-[2rem] font-black text-sm shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                            to="/savings"
+                            className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-12 py-6 rounded-[2.5rem] font-black text-sm shadow-2xl hover:scale-105 active:scale-95 transition-all shrink-0 uppercase tracking-widest border border-white/10"
                         >
-                            <span>Gérer mes budgets</span>
-                            <ArrowRight className="w-5 h-5" />
+                            Piloter
                         </Link>
                     </div>
                 </div>

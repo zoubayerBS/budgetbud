@@ -32,18 +32,42 @@ body {
 
     /* Executive Soft UI */
     .executive-card {
-        @apply bg-white/70 dark:bg-slate-900/60 rounded-[2rem] border border-white/40 dark:border-white/5 backdrop-blur-md transition-all duration-500;
+        @apply bg-white/70 dark:bg-slate-900/60 rounded-[2rem] border border-white/40 dark:border-white/5 backdrop-blur-md transition-all duration-500 overflow-hidden relative;
         box-shadow:
-            15px 15px 35px rgba(163, 177, 198, 0.2),
-            -15px -15px 35px rgba(255, 255, 255, 0.8),
-            inset 2px 2px 4px rgba(255, 255, 255, 0.5);
+            0 10px 15px -3px rgba(0, 0, 0, 0.1),
+            0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
 
-    .dark .executive-card {
-        box-shadow:
-            15px 15px 35px rgba(0, 0, 0, 0.3),
-            -15px -15px 35px rgba(30, 41, 59, 0.3),
-            inset 1px 1px 2px rgba(255, 255, 255, 0.05);
+    /* Spatial Depth Design */
+    .spatial-card {
+        @apply bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-[2.5rem] transition-all duration-500 relative overflow-hidden;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+
+    .spatial-card:hover {
+        @apply border-slate-300 dark:border-slate-700 shadow-2xl;
+        transform: translateY(-4px) translateZ(10px);
+    }
+
+    /* Glass Bento Tile */
+    .bento-tile {
+        @apply bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 dark:border-slate-800/50 rounded-[2rem] p-5 sm:p-7 transition-all duration-500 hover:bg-white/60 dark:hover:bg-slate-800/60;
+    }
+
+    /* Noise Texture Overlay */
+    .noise-texture {
+        position: relative;
+    }
+
+    .noise-texture::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        opacity: 0.03;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Cfilter id='noiseFilter'%3%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
     .soft-in {

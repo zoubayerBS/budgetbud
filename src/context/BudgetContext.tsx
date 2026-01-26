@@ -1,16 +1,20 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useSession } from '../lib/auth-client';
-import type { Transaction, Budget, Category, Currency, RecurringTemplate } from '../types';
+import type { Transaction, Budget, Category, Currency, RecurringTemplate, SavingsGoal } from '../types';
 
 interface BudgetContextType {
     transactions: Transaction[];
     budgets: Budget[];
     recurringTemplates: RecurringTemplate[];
+    savingsGoals: SavingsGoal[];
     addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
     addRecurringTemplate: (template: Omit<RecurringTemplate, 'id'>) => Promise<void>;
+    addSavingsGoal: (goal: Omit<SavingsGoal, 'id'>) => Promise<void>;
     deleteTransaction: (id: string) => Promise<void>;
     deleteRecurringTemplate: (id: string) => Promise<void>;
+    deleteSavingsGoal: (id: string) => Promise<void>;
     updateBudget: (category: Category, limit: number) => Promise<void>;
+    updateSavingsGoal: (goal: SavingsGoal) => Promise<void>;
     refresh: () => Promise<void>;
     isAddModalOpen: boolean;
     openAddModal: () => void;
@@ -30,6 +34,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [budgets, setBudgets] = useState<Budget[]>([]);
     const [recurringTemplates, setRecurringTemplates] = useState<RecurringTemplate[]>([]);
+    const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>([]);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [currency, setCurrency] = useState<Currency>('TND');
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -80,16 +85,18 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         if (showLoading) setLoading(true);
         try {
             const headers = getHeaders();
-            const [resTrans, resBudgets, resRecurring] = await Promise.all([
+            const [resTrans, resBudgets, resRecurring, resSavings] = await Promise.all([
                 fetch(`${API_URL}/transactions`, { headers }),
                 fetch(`${API_URL}/budgets`, { headers }),
-                fetch(`${API_URL}/recurring`, { headers })
+                fetch(`${API_URL}/recurring`, { headers }),
+                fetch(`${API_URL}/savings`, { headers })
             ]);
 
-            if (resTrans.ok && resBudgets.ok && resRecurring.ok) {
+            if (resTrans.ok && resBudgets.ok && resRecurring.ok && resSavings.ok) {
                 const tData = await resTrans.json();
                 const bData = await resBudgets.json();
                 const rData = await resRecurring.json();
+                const sData = await resSavings.json();
 
                 setTransactions(tData.map((t: any) => ({
                     ...t,
@@ -104,6 +111,12 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 setRecurringTemplates(rData.map((r: any) => ({
                     ...r,
                     amount: parseFloat(r.amount) || 0
+                })));
+
+                setSavingsGoals(sData.map((s: any) => ({
+                    ...s,
+                    target_amount: parseFloat(s.target_amount) || 0,
+                    current_amount: parseFloat(s.current_amount) || 0
                 })));
             } else if (retries > 0) {
                 throw new Error("Fetch failed");
@@ -171,6 +184,48 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         } catch (err) { console.error(err); }
     };
 
+    const addSavingsGoal = async (goal: Omit<SavingsGoal, 'id'>) => {
+        try {
+            const res = await fetch(`${API_URL}/savings`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(goal)
+            });
+            const newG = await res.json();
+            setSavingsGoals(prev => [{
+                ...newG,
+                target_amount: parseFloat(newG.target_amount) || 0,
+                current_amount: parseFloat(newG.current_amount) || 0
+            }, ...prev]);
+        } catch (err) { console.error(err); }
+    };
+
+    const deleteSavingsGoal = async (id: string) => {
+        try {
+            await fetch(`${API_URL}/savings/${id}`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            setSavingsGoals(prev => prev.filter(g => g.id !== id));
+        } catch (err) { console.error(err); }
+    };
+
+    const updateSavingsGoal = async (goal: SavingsGoal) => {
+        try {
+            const res = await fetch(`${API_URL}/savings`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(goal)
+            });
+            const updatedG = await res.json();
+            setSavingsGoals(prev => prev.map(g => g.id === updatedG.id ? {
+                ...updatedG,
+                target_amount: parseFloat(updatedG.target_amount) || 0,
+                current_amount: parseFloat(updatedG.current_amount) || 0
+            } : g));
+        } catch (err) { console.error(err); }
+    };
+
     const updateBudget = async (category: Category, limit: number) => {
         try {
             const res = await fetch(`${API_URL}/budgets`, {
@@ -201,11 +256,15 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             transactions,
             budgets,
             recurringTemplates,
+            savingsGoals,
             addTransaction,
             addRecurringTemplate,
+            addSavingsGoal,
             deleteTransaction,
             deleteRecurringTemplate,
+            deleteSavingsGoal,
             updateBudget,
+            updateSavingsGoal,
             refresh,
             isAddModalOpen,
             openAddModal,

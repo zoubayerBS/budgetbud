@@ -2,7 +2,7 @@ import React from 'react';
 import type { Transaction } from '../../types';
 import { useBudget } from '../../context/BudgetContext';
 import { formatCurrency, formatDate } from '../../lib/format';
-import { Trash2, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { Trash2, ArrowUpRight, Receipt, ChevronRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import AlertModal from '../common/AlertModal';
 
@@ -18,38 +18,63 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
 
     return (
         <>
-            <div className="clay-card flex items-center justify-between p-6 hover:translate-x-2 transition-all duration-300 group mb-4 cursor-default">
-                <div className="flex items-center gap-6">
+            <div className="group relative bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-4 sm:p-5 rounded-2xl hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-xl hover:shadow-slate-200/20 dark:hover:shadow-black/20 transition-all duration-300 flex items-start sm:items-center justify-between cursor-pointer gap-4">
+
+                <div className="flex items-start sm:items-center gap-4 sm:gap-5 flex-1 min-w-0">
+                    {/* Minimalist Icon Wrapper */}
                     <div className={cn(
-                        "w-14 h-14 rounded-[1.5rem] flex items-center justify-center shadow-inner transition-transform group-hover:scale-110",
-                        isIncome ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30" : "bg-red-100 text-red-600 dark:bg-red-900/30"
+                        "w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 shrink-0",
+                        isIncome
+                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+                            : "bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                     )}>
-                        {isIncome ? <ArrowUpRight className="w-7 h-7" /> : <ArrowDownLeft className="w-7 h-7" />}
+                        {isIncome ? <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" /> : <Receipt className="w-5 h-5 sm:w-6 sm:h-6" />}
                     </div>
-                    <div>
-                        <h4 className="font-black text-slate-800 dark:text-white text-lg tracking-tight">{transaction.category}</h4>
-                        <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs font-bold text-slate-400 capitalize">{formatDate(transaction.date)}</span>
-                            {transaction.note && <span className="text-xs font-bold text-slate-300">•</span>}
-                            {transaction.note && <span className="text-xs font-medium text-slate-500 italic max-w-[150px] truncate">{transaction.note}</span>}
+
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center flex-wrap gap-2">
+                            <h4 className="font-bold text-slate-900 dark:text-white tracking-tight truncate sm:text-lg">
+                                {transaction.category}
+                            </h4>
+                            {!isIncome && (
+                                <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-md">
+                                    Débit
+                                </span>
+                            )}
+                        </div>
+                        <div className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-1">
+                            <p>{formatDate(transaction.date)}</p>
+                            {transaction.note && (
+                                <p className="italic mt-1.5 text-slate-500/80 dark:text-slate-400/80 break-words whitespace-normal leading-relaxed max-w-full">
+                                    "{transaction.note}"
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-8">
-                    <span className={cn(
-                        "font-black text-xl tracking-tight",
-                        isIncome ? "text-emerald-600" : "text-slate-700 dark:text-slate-200"
-                    )}>
-                        {isIncome ? '+' : '-'} {formatCurrency(transaction.amount, currency)}
-                    </span>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/40 rounded-2xl transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 shadow-sm hover:shadow-lg"
-                        aria-label="Supprimer"
-                    >
-                        <Trash2 className="w-5 h-5" />
-                    </button>
+                <div className="flex items-center gap-4 sm:gap-8 ml-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800/50 shrink-0">
+                    <div className="text-right">
+                        <span className={cn(
+                            "block font-black text-lg sm:text-xl tracking-tighter",
+                            isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-slate-900 dark:text-white"
+                        )}>
+                            {isIncome ? '+' : ''}{formatCurrency(transaction.amount, currency)}
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsModalOpen(true);
+                            }}
+                            className="w-9 h-9 flex items-center justify-center text-slate-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+                        <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-400 transition-colors" />
+                    </div>
                 </div>
             </div>
 
@@ -57,11 +82,11 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={() => deleteTransaction(transaction.id)}
-                title="Supprimer ?"
-                message={`Voulez-vous vraiment supprimer cette transaction de ${formatCurrency(transaction.amount, currency)} ?`}
+                title="Supprimer la transaction"
+                message={`Cette action est irréversible. Voulez-vous supprimer l'entrée de ${formatCurrency(transaction.amount, currency)} ?`}
                 type="error"
-                confirmText="Supprimer"
-                cancelText="Annuler"
+                confirmText="Vider"
+                cancelText="Garder"
             />
         </>
     );

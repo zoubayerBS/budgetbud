@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import History from './pages/History';
 import Budgets from './pages/Budgets';
 import Settings from './pages/Settings';
+import Savings from './pages/SavingsPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { useSession } from './lib/auth-client';
@@ -54,6 +55,7 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="history" element={<History />} />
               <Route path="budgets" element={<Budgets />} />
+              <Route path="savings" element={<Savings />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>

@@ -31,7 +31,27 @@ const getUserId = (req: any) => {
 // Auto-initialize Schema
 const initDB = async () => {
     try {
+        // Essential tables
         await pool.query(`
+            CREATE TABLE IF NOT EXISTS transactions (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                user_id TEXT NOT NULL,
+                amount DECIMAL(12,2) NOT NULL,
+                type TEXT NOT NULL,
+                category TEXT NOT NULL,
+                date DATE NOT NULL,
+                note TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS budgets (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                user_id TEXT NOT NULL,
+                category TEXT NOT NULL,
+                limit_amount DECIMAL(12,2) NOT NULL,
+                UNIQUE(user_id, category)
+            );
+
             CREATE TABLE IF NOT EXISTS recurring_templates (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 user_id TEXT NOT NULL,
@@ -45,10 +65,25 @@ const initDB = async () => {
                 active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+
+            CREATE TABLE IF NOT EXISTS savings_goals (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                user_id TEXT NOT NULL,
+                name TEXT NOT NULL,
+                target_amount DECIMAL(12,2) NOT NULL,
+                current_amount DECIMAL(12,2) DEFAULT 0,
+                category TEXT,
+                deadline DATE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id);
+            CREATE INDEX IF NOT EXISTS idx_budgets_user_id ON budgets(user_id);
+            CREATE INDEX IF NOT EXISTS idx_recurring_user_id ON recurring_templates(user_id);
         `);
-        console.log("DB Schema Initialized");
+        console.log("✅ DB Tables & Indices Verified");
     } catch (err) {
-        console.error("DB Init Error:", err);
+        console.error("❌ DB Init Error:", err);
     }
 };
 initDB();
@@ -136,11 +171,14 @@ const processRecurrences = async (userId: string) => {
 
 app.get('/api/transactions', authenticateToken, async (req: any, res) => {
     const userId = getUserId(req);
+    console.log(`[GET] /api/transactions - Fetching for user: ${userId}`);
     try {
         await processRecurrences(userId);
         const result = await pool.query('SELECT * FROM transactions WHERE user_id = $1 ORDER BY date DESC', [userId]);
+        console.log(`[GET] /api/transactions - Found ${result.rowCount} transactions`);
         res.json(result.rows);
     } catch (err) {
+        console.error("Error fetching transactions:", err);
         res.status(500).json({ error: 'Error fetching transactions' });
     }
 });
@@ -199,5 +237,53 @@ app.post('/api/budgets', authenticateToken, async (req: any, res) => {
     }
 });
 
-// For local development, use server-local.ts
+// Savings Goals
+app.get('/api/savings', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    try {
+        const result = await pool.query('SELECT * FROM savings_goals WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching savings goals' });
+    }
+});
+
+app.post('/api/savings', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    const { id, name, target_amount, current_amount, category, deadline } = req.body;
+    try {
+        if (id) {
+            // Update
+            const result = await pool.query(
+                `UPDATE savings_goals 
+                 SET name = $1, target_amount = $2, current_amount = $3, category = $4, deadline = $5 
+                 WHERE id = $6 AND user_id = $7 
+                 RETURNING *`,
+                [name, target_amount, current_amount, category, deadline, id, userId]
+            );
+            res.json(result.rows[0]);
+        } else {
+            // Create
+            const result = await pool.query(
+                'INSERT INTO savings_goals (user_id, name, target_amount, current_amount, category, deadline) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                [userId, name, target_amount, current_amount, category, deadline]
+            );
+            res.json(result.rows[0]);
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error saving goal' });
+    }
+});
+
+app.delete('/api/savings/:id', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    try {
+        await pool.query('DELETE FROM savings_goals WHERE id = $1 AND user_id = $2', [req.params.id, userId]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Error deleting goal' });
+    }
+});
+
 export default app;

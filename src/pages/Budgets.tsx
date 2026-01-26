@@ -49,7 +49,7 @@ const Budgets: React.FC = () => {
                     <div className="p-1 bg-white/20 rounded-lg">
                         <Plus className="w-5 h-5" />
                     </div>
-                    <span className="font-black text-sm uppercase tracking-widest">Nouveau Centre</span>
+                    <span className="font-black text-sm uppercase tracking-widest">Nouveau Budget</span>
                 </button>
             </header>
 
@@ -67,7 +67,7 @@ const Budgets: React.FC = () => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <LayoutList className="w-5 h-5 text-slate-400" />
-                        <h2 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Centres de Coûts Actifs</h2>
+                        <h2 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Budgets Actifs</h2>
                     </div>
                 </div>
 
@@ -86,9 +86,9 @@ const Budgets: React.FC = () => {
                             <div className="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-[3rem] flex items-center justify-center mb-8 soft-in border border-white/50 dark:border-slate-800 shadow-xl">
                                 <Target className="w-10 h-10 text-slate-300 dark:text-slate-700" />
                             </div>
-                            <h3 className="text-xl font-black text-slate-800 dark:text-white mb-3 uppercase tracking-tighter">Infrastucture Budgétaire Vide</h3>
+                            <h3 className="text-xl font-black text-slate-800 dark:text-white mb-3 uppercase tracking-tighter">Aucun Budget Défini</h3>
                             <p className="text-slate-400 dark:text-slate-500 font-bold text-sm max-w-sm mx-auto leading-relaxed">
-                                Définissez votre premier centre de coûts pour débloquer les analyses prévisionnelles et le score de santé.
+                                Définissez votre premier budget pour débloquer les analyses prévisionnelles et le suivi de santé.
                             </p>
                         </div>
                     )}
