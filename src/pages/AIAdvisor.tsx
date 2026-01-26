@@ -1,12 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../lib/format';
 import { Sparkles, TrendingUp, TrendingDown, Target, Zap, Waves, BrainCircuit, Info, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { subMonths, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
+import AISimulationModal from '../components/modals/AISimulationModal';
 
 const AIAdvisor: React.FC = () => {
     const { transactions, savingsGoals, currency } = useBudget();
+    const [isSimModalOpen, setIsSimModalOpen] = useState(false);
 
     // --- Neural Predictive Engine ---
     const analysis = useMemo(() => {
@@ -207,8 +209,20 @@ const AIAdvisor: React.FC = () => {
                     <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">Besoin d'une Simulation ?</h3>
                     <p className="text-slate-500 font-bold text-lg max-w-xl mx-auto italic">"Je peux simuler l'achat d'une maison ou d'un voyage selon vos flux actuels."</p>
                 </div>
-                <button className="px-12 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all">Lancer Simulation</button>
+                <button
+                    onClick={() => setIsSimModalOpen(true)}
+                    className="px-12 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all"
+                >
+                    Lancer Simulation
+                </button>
             </div>
+
+            <AISimulationModal
+                isOpen={isSimModalOpen}
+                onClose={() => setIsSimModalOpen(false)}
+                baseIncome={analysis.avgIncome}
+                baseExpense={analysis.avgExpense}
+            />
         </div>
     );
 };
