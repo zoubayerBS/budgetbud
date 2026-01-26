@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import { Pool } from 'pg';
@@ -7,9 +6,14 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import { addDays, addWeeks, addMonths, addYears, isBefore, isSameDay, parseISO, format } from 'date-fns';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 dotenv.config();
 
 const app = express();
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse form data
@@ -301,6 +305,37 @@ app.delete('/api/user/reset', authenticateToken, async (req: any, res) => {
         await pool.query('ROLLBACK');
         console.error("Error resetting user data:", err);
         res.status(500).json({ error: 'Error resetting your data' });
+    }
+});
+// --- Gemini AI Insights Endpoint ---
+app.post('/api/ai/insights', authenticateToken, async (req, res) => {
+    const { financialData } = req.body;
+
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "Gemini API Key missing" });
+    }
+
+    try {
+        const prompt = `
+            Tu es un expert financier neural et motivant. Analyse ces données financières de l'utilisateur :
+            ${JSON.stringify(financialData)}
+
+            Règles strictes :
+            1. Donne exactement 3 conseils ultra-courts (maximum 15 mots par conseil).
+            2. Sois percutant, moderne et utilise un ton "Executive".
+            3. Réponds uniquement en JSON avec ce format : {"insights": ["conseil 1", "conseil 2", "conseil 3"]}
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        // Clean potential markdown from Gemini
+        const cleanedJson = text.replace(/```json|```/g, "").trim();
+        res.json(JSON.parse(cleanedJson));
+    } catch (err) {
+        console.error("AI Insights Error:", err);
+        res.status(500).json({ error: "Error generating AI insights" });
     }
 });
 

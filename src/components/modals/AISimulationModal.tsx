@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { useBudget } from '../../context/BudgetContext';
-import { X, Sparkles, TrendingUp, Target, Calendar, Check, Info, ArrowRight, Zap } from 'lucide-react';
+import { X, Sparkles, TrendingUp, Target, Calendar, Check, Info, Zap } from 'lucide-react';
 import { formatCurrency } from '../../lib/format';
 import { addMonths, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn } from '../../lib/utils';
 
 interface AISimulationModalProps {
     isOpen: boolean;

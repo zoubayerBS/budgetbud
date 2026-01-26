@@ -1,14 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../lib/format';
-import { Sparkles, TrendingUp, TrendingDown, Target, Zap, Waves, BrainCircuit, Info, ChevronRight } from 'lucide-react';
+import { Sparkles, TrendingUp, TrendingDown, Target, Zap, Waves, BrainCircuit, Info, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { subMonths, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
 import AISimulationModal from '../components/modals/AISimulationModal';
 
 const AIAdvisor: React.FC = () => {
-    const { transactions, savingsGoals, currency } = useBudget();
+    const { transactions, savingsGoals, budgets, currency } = useBudget();
     const [isSimModalOpen, setIsSimModalOpen] = useState(false);
+    const [aiInsights, setAiInsights] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     // --- Neural Predictive Engine ---
     const analysis = useMemo(() => {
@@ -46,6 +48,36 @@ const AIAdvisor: React.FC = () => {
     }, [transactions]);
 
     const activeGoals = savingsGoals.filter(g => g.current_amount < g.target_amount);
+
+    useEffect(() => {
+        const fetchAIInsights = async () => {
+            if (transactions.length === 0) return;
+            setIsLoading(true);
+            try {
+                const financialData = {
+                    balance: analysis.predictedBalance,
+                    income: analysis.avgIncome,
+                    expenses: analysis.avgExpense,
+                    recentTransactions: transactions.slice(0, 20).map(t => ({ cat: t.category, amt: t.amount, type: t.type })),
+                    budgets: budgets.map(b => ({ cat: b.category, lim: b.limit })),
+                    goals: savingsGoals.map(g => ({ name: g.name, target: g.target_amount, curr: g.current_amount }))
+                };
+
+                const res = await fetch('/api/ai/insights', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ financialData })
+                });
+                const data = await res.json();
+                if (data.insights) setAiInsights(data.insights);
+            } catch (err) {
+                console.error("AI Advisor Error:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchAIInsights();
+    }, [transactions.length, budgets.length, savingsGoals.length, analysis.avgIncome, analysis.avgExpense]);
 
     return (
         <div className="space-y-12 animate-in fade-in duration-1000 p-2 md:p-4 max-w-[1400px] mx-auto pb-24">
@@ -159,43 +191,36 @@ const AIAdvisor: React.FC = () => {
                     <div className="flex items-center gap-4">
                         <div className="w-1.5 h-6 bg-slate-900 dark:bg-white rounded-full"></div>
                         <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Algorithmes de Richesse</h3>
+                        {isLoading && <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            {
-                                title: "Optimisation du Capital",
-                                desc: `Vos revenus sont ${analysis.avgIncome > analysis.avgExpense ? 'supérieurs' : 'inférieurs'} à vos dépenses moyennes. On peut encore optimiser.`,
-                                icon: Sparkles,
-                                color: "text-amber-500",
-                                bg: "bg-amber-500/5"
-                            },
-                            {
-                                title: "Analyse de Catégories",
-                                desc: "Plusieurs budgets sont proches de leur limite. Vérifiez vos dépenses récurrentes sur Vercel/Adobe.",
-                                icon: Info,
-                                color: "text-blue-500",
-                                bg: "bg-blue-500/5"
-                            },
-                            {
-                                title: "Prévision de Sécurité",
-                                desc: `Votre fonds d'urgence actuel couvre environ ${Math.round(transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0) / Math.max(1, analysis.avgExpense))} mois de vie.`,
-                                icon: Waves,
-                                color: "text-indigo-500",
-                                bg: "bg-indigo-500/5"
-                            }
-                        ].map((tip, i) => (
-                            <div key={i} className="bento-tile p-8 group hover:border-indigo-500/30 transition-all active:scale-95">
-                                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-8 shadow-sm transition-all group-hover:scale-110", tip.bg)}>
-                                    <tip.icon className={cn("w-6 h-6", tip.color)} />
+                        {isLoading ? (
+                            Array.from({ length: 3 }).map((_, i) => (
+                                <div key={i} className="bento-tile p-8 animate-pulse bg-slate-50 dark:bg-slate-800/20 h-[250px] border-dashed border-slate-200 dark:border-slate-800" />
+                            ))
+                        ) : (
+                            aiInsights.length > 0 ? aiInsights.map((insight, i) => {
+                                const icons = [Sparkles, Info, Waves];
+                                const colors = ["text-amber-500", "text-blue-500", "text-indigo-500"];
+                                const bgs = ["bg-amber-500/5", "bg-blue-500/5", "bg-indigo-500/5"];
+                                const Icon = icons[i % 3];
+                                return (
+                                    <div key={i} className="bento-tile p-8 group hover:border-indigo-500/30 transition-all active:scale-95 min-h-[250px] flex flex-col justify-center">
+                                        <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm transition-all group-hover:scale-110", bgs[i % 3])}>
+                                            <Icon className={cn("w-6 h-6", colors[i % 3])} />
+                                        </div>
+                                        <h4 className="text-lg font-black text-slate-900 dark:text-white tracking-tighter mb-2 italic">Analyse Neurale #{i + 1}</h4>
+                                        <p className="text-slate-500 text-sm font-bold leading-relaxed">{insight}</p>
+                                    </div>
+                                );
+                            }) : (
+                                <div className="col-span-full p-20 text-center bg-slate-50 dark:bg-slate-900/40 rounded-[3rem] border border-dashed border-slate-200 dark:border-slate-800">
+                                    <BrainCircuit className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                                    <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">Intelligence contextuelle en attente de données...</p>
                                 </div>
-                                <h4 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">{tip.title}</h4>
-                                <p className="text-slate-500 text-sm font-bold leading-relaxed">{tip.desc}</p>
-                                <div className="mt-6 flex items-center gap-2 text-indigo-500 font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 cursor-pointer">
-                                    En savoir plus <ChevronRight className="w-3 h-3" />
-                                </div>
-                            </div>
-                        ))}
+                            )
+                        )}
                     </div>
                 </div>
             </div>
