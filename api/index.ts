@@ -338,5 +338,39 @@ app.post('/api/ai/insights', authenticateToken, async (req, res) => {
         res.status(500).json({ error: "Error generating AI insights" });
     }
 });
+// --- Gemini AI Simulation Endpoint ---
+app.post('/api/ai/simulate', authenticateToken, async (req, res) => {
+    const { simulationData, financialContext } = req.body;
+
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "Gemini API Key missing" });
+    }
+
+    try {
+        const prompt = `
+            Tu es un oracle financier neural. Analyse ce projet de simulation :
+            Projet: ${simulationData.name}
+            Coût: ${simulationData.target}
+            Effort supplémentaire: ${simulationData.effort} /mois
+            
+            Contexte financier actuel de l'utilisateur :
+            ${JSON.stringify(financialContext)}
+
+            Règles strictes :
+            1. Donne un score de faisabilité de 0 à 100 (basé sur le temps et l'effort).
+            2. Donne un conseil tactique unique de maximum 20 mots.
+            3. Réponds uniquement en JSON : {"score": number, "advice": "ton conseil"}
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        const cleanedJson = text.replace(/```json|```/g, "").trim();
+        res.json(JSON.parse(cleanedJson));
+    } catch (err) {
+        console.error("AI Simulation Error:", err);
+        res.status(500).json({ error: "Error generating simulation analysis" });
+    }
+});
 
 export default app;

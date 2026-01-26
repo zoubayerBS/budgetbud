@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useBudget } from '../../context/BudgetContext';
-import { X, Sparkles, TrendingUp, Target, Calendar, Check, Info, Zap } from 'lucide-react';
+import { X, Sparkles, TrendingUp, Target, Calendar, Check, Info, Zap, Loader2, BrainCircuit } from 'lucide-react';
 import { formatCurrency } from '../../lib/format';
 import { addMonths, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -13,15 +13,17 @@ interface AISimulationModalProps {
 }
 
 const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, baseIncome, baseExpense }) => {
-    const { currency } = useBudget();
+    const { currency, transactions, budgets, savingsGoals } = useBudget();
 
     const [projectName, setProjectName] = useState('');
     const [targetAmount, setTargetAmount] = useState('');
     const [extraEffort, setExtraEffort] = useState('0');
+    const [aiResult, setAiResult] = useState<{ score: number, advice: string } | null>(null);
+    const [isAiLoading, setIsAiLoading] = useState(false);
 
     const monthlySavings = baseIncome - baseExpense;
 
-    const result = useMemo(() => {
+    const mathResult = useMemo(() => {
         const goal = parseFloat(targetAmount) || 0;
         const effort = parseFloat(extraEffort) || 0;
         const totalMonthly = monthlySavings + effort;
@@ -31,20 +33,46 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
         const monthsNeeded = Math.ceil(goal / totalMonthly);
         const achievementDate = addMonths(new Date(), monthsNeeded);
 
-        // Feasibility Score Logic
-        let score = 0;
-        if (monthsNeeded <= 6) score = 95;
-        else if (monthsNeeded <= 12) score = 80;
-        else if (monthsNeeded <= 24) score = 60;
-        else score = 40;
-
         return {
             monthsNeeded,
             achievementDate,
-            totalMonthly,
-            score
+            totalMonthly
         };
     }, [targetAmount, extraEffort, monthlySavings]);
+
+    useEffect(() => {
+        const fetchAISimulation = async () => {
+            if (!mathResult || !projectName) return;
+            setIsAiLoading(true);
+            try {
+                const financialContext = {
+                    income: baseIncome,
+                    expenses: baseExpense,
+                    recentTransactions: transactions.slice(0, 10).map(t => ({ cat: t.category, amt: t.amount, type: t.type })),
+                    budgets: budgets.map(b => ({ cat: b.category, lim: b.limit })),
+                    goals: savingsGoals.map(g => ({ name: g.name, target: g.target_amount, curr: g.current_amount }))
+                };
+
+                const res = await fetch('/api/ai/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        simulationData: { name: projectName, target: targetAmount, effort: extraEffort },
+                        financialContext
+                    })
+                });
+                const data = await res.json();
+                if (data.score !== undefined) setAiResult(data);
+            } catch (err) {
+                console.error("AI Simulation Error:", err);
+            } finally {
+                setIsAiLoading(false);
+            }
+        };
+
+        const timer = setTimeout(fetchAISimulation, 1500);
+        return () => clearTimeout(timer);
+    }, [projectName, targetAmount, extraEffort, mathResult]);
 
     if (!isOpen) return null;
 
@@ -63,7 +91,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                     <div className="flex items-center justify-between mb-12">
                         <div className="space-y-1">
                             <div className="flex items-center gap-3">
-                                <Zap className="w-5 h-5 text-indigo-500 animate-pulse" />
+                                {isAiLoading ? <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" /> : <Zap className="w-5 h-5 text-indigo-500 animate-pulse" />}
                                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Simulateur Neural</h3>
                             </div>
                             <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
@@ -119,7 +147,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                         </div>
 
                         {/* RESULTS */}
-                        {result ? (
+                        {mathResult ? (
                             <div className="space-y-8 animate-in slide-in-from-top-4 duration-500">
                                 <div className="p-10 bg-slate-900 text-white rounded-[3rem] relative overflow-hidden group border border-white/5">
                                     <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
@@ -128,20 +156,33 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                                         <div className="space-y-4 text-center md:text-left">
                                             <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Date d'Accomplissement</p>
                                             <h4 className="text-5xl font-black tracking-tighter">
-                                                {format(result.achievementDate, 'MMMM yyyy', { locale: fr })}
+                                                {format(mathResult.achievementDate, 'MMMM yyyy', { locale: fr })}
                                             </h4>
                                             <div className="flex items-center gap-3 justify-center md:justify-start">
                                                 <Calendar className="w-4 h-4 text-indigo-400" />
-                                                <span className="text-indigo-200/50 font-bold">Dans environ {result.monthsNeeded} mois</span>
+                                                <span className="text-indigo-200/50 font-bold">Dans environ {mathResult.monthsNeeded} mois</span>
                                             </div>
                                         </div>
 
                                         <div className="flex flex-col items-center gap-2 shrink-0">
-                                            <div className="w-20 h-20 rounded-[1.5rem] bg-indigo-600 flex items-center justify-center text-3xl font-black shadow-2xl shadow-indigo-500/20">
-                                                {result.score}
+                                            <div className="w-20 h-20 rounded-[1.5rem] bg-indigo-600 flex items-center justify-center text-3xl font-black shadow-2xl shadow-indigo-500/20 relative">
+                                                {isAiLoading ? <Loader2 className="w-8 h-8 animate-spin" /> : (aiResult?.score || "??")}
                                             </div>
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-indigo-300/50">Score Faisabilité</span>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-indigo-300/50">Score Neurale</span>
                                         </div>
+                                    </div>
+                                </div>
+
+                                {/* AI Tactical Strategy */}
+                                <div className="p-8 bg-indigo-500/[0.03] dark:bg-indigo-500/[0.05] rounded-[2.5rem] border border-indigo-500/10 flex items-center gap-6 group hover:bg-indigo-500/[0.08] transition-all">
+                                    <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500 shrink-0 group-hover:rotate-12 transition-transform">
+                                        <BrainCircuit className="w-7 h-7" />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Stratégie AI Tactique</p>
+                                        <p className="text-slate-600 dark:text-slate-300 font-bold italic">
+                                            {isAiLoading ? "L'IA calibre votre stratégie..." : (aiResult?.advice || "En attente d'une configuration valide pour analyse...")}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -150,14 +191,14 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                                         <TrendingUp className="w-5 h-5 text-emerald-500 mt-1 shrink-0" />
                                         <div className="space-y-1">
                                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Épargne Totale / mois</p>
-                                            <p className="text-xl font-black text-slate-900 dark:text-white">{formatCurrency(result.totalMonthly, currency)}</p>
+                                            <p className="text-xl font-black text-slate-900 dark:text-white">{formatCurrency(mathResult.totalMonthly, currency)}</p>
                                         </div>
                                     </div>
                                     <div className="p-6 bg-indigo-500/5 rounded-3xl border border-indigo-500/10 flex items-start gap-4">
                                         <Target className="w-5 h-5 text-indigo-500 mt-1 shrink-0" />
                                         <div className="space-y-1">
                                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Effort Mensuel</p>
-                                            <p className="text-xl font-black text-slate-900 dark:text-white">{Math.round((parseFloat(extraEffort) || 0) / (result.totalMonthly) * 100)}% de l'effort</p>
+                                            <p className="text-xl font-black text-slate-900 dark:text-white">{Math.round((parseFloat(extraEffort) || 0) / (mathResult.totalMonthly) * 100)}% de l'effort</p>
                                         </div>
                                     </div>
                                 </div>
