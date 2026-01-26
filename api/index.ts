@@ -286,4 +286,22 @@ app.delete('/api/savings/:id', authenticateToken, async (req: any, res) => {
     }
 });
 
+// Reset Account Data
+app.delete('/api/user/reset', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    try {
+        await pool.query('BEGIN');
+        await pool.query('DELETE FROM transactions WHERE user_id = $1', [userId]);
+        await pool.query('DELETE FROM budgets WHERE user_id = $1', [userId]);
+        await pool.query('DELETE FROM recurring_templates WHERE user_id = $1', [userId]);
+        await pool.query('DELETE FROM savings_goals WHERE user_id = $1', [userId]);
+        await pool.query('COMMIT');
+        res.json({ success: true });
+    } catch (err) {
+        await pool.query('ROLLBACK');
+        console.error("Error resetting user data:", err);
+        res.status(500).json({ error: 'Error resetting your data' });
+    }
+});
+
 export default app;

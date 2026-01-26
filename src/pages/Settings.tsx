@@ -25,11 +25,17 @@ const Settings: React.FC = () => {
         setCurrency,
         recurringTemplates,
         deleteRecurringTemplate,
-        user
+        user,
+        resetAccount
     } = useBudget();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
     const currencies: Currency[] = ['EUR', 'USD', 'CHF', 'CAD', 'TND'];
+
+    const handleReset = async () => {
+        await resetAccount();
+        setIsResetModalOpen(false);
+    };
 
     const handleSignOut = async () => {
         try {
@@ -205,7 +211,7 @@ const Settings: React.FC = () => {
             <AlertModal
                 isOpen={isResetModalOpen}
                 onClose={() => setIsResetModalOpen(false)}
-                onConfirm={() => { }}
+                onConfirm={handleReset}
                 title="Suppression Définitive"
                 message="Cette action effacera l'ensemble de vos transactions et budgets stockés sur le serveur. Voulez-vous continuer ?"
                 type="error"

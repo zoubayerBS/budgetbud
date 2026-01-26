@@ -15,6 +15,7 @@ interface BudgetContextType {
     deleteSavingsGoal: (id: string) => Promise<void>;
     updateBudget: (category: Category, limit: number) => Promise<void>;
     updateSavingsGoal: (goal: SavingsGoal) => Promise<void>;
+    resetAccount: () => Promise<void>;
     refresh: () => Promise<void>;
     isAddModalOpen: boolean;
     openAddModal: () => void;
@@ -248,6 +249,18 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         } catch (err) { console.error(err); }
     };
 
+    const resetAccount = async () => {
+        try {
+            const res = await fetch(`${API_URL}/user/reset`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            if (res.ok) {
+                await fetchData();
+            }
+        } catch (err) { console.error(err); }
+    };
+
     const openAddModal = () => setIsAddModalOpen(true);
     const closeAddModal = () => setIsAddModalOpen(false);
 
@@ -265,6 +278,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             deleteSavingsGoal,
             updateBudget,
             updateSavingsGoal,
+            resetAccount,
             refresh,
             isAddModalOpen,
             openAddModal,
