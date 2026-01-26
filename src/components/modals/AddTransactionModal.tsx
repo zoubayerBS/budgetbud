@@ -119,7 +119,7 @@ const AddTransactionModal: React.FC = () => {
             ></div>
 
             {/* Zen Modal Container */}
-            <div className="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200/50 dark:border-slate-800 animate-in zoom-in-95 duration-500">
+            <div className="relative w-full max-w-xl max-h-[90vh] bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl overflow-y-auto border border-slate-200/50 dark:border-slate-800 animate-in zoom-in-95 duration-500 custom-scrollbar">
 
                 <button
                     onClick={resetAndClose}

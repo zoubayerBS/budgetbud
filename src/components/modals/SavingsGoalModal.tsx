@@ -65,12 +65,12 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                 onClick={onClose}
             />
 
-            <div className="relative w-full max-w-2xl bg-white dark:bg-[#0c0e12] rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border border-white/10 dark:border-slate-800/50 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 flex flex-col noise-texture">
+            <div className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-[#0c0e12] rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border border-white/10 dark:border-slate-800/50 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 flex flex-col noise-texture">
 
                 {/* Visual Flair: Abstract Orb */}
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none"></div>
 
-                <div className="p-10 md:p-14 relative z-10 flex flex-col h-full">
+                <div className="p-10 md:p-14 relative z-10 flex flex-col overflow-y-auto custom-scrollbar">
 
                     {/* Header Section */}
                     <div className="flex items-center justify-between mb-12">
