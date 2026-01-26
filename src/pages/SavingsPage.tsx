@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../lib/format';
-import { Target, Plus, Trash2, Edit3, TrendingUp, Calendar } from 'lucide-react';
+import { Target, Plus, Trash2, Edit3, TrendingUp, Calendar, Sparkles, Activity } from 'lucide-react';
 import { cn } from '../lib/utils';
 import SavingsGoalModal from '../components/modals/SavingsGoalModal';
 import AlertModal from '../components/common/AlertModal';
@@ -28,177 +28,190 @@ const Savings: React.FC = () => {
     };
 
     return (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 p-4 max-w-6xl mx-auto pb-20">
-            {/* Header Section */}
-            <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-10">
-                <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-indigo-600 dark:bg-indigo-500 rounded-xl flex items-center justify-center text-white shadow-2xl shadow-indigo-500/20">
-                            <Target className="w-5 h-5" />
-                        </div>
-                        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
-                            Objectifs <span className="text-slate-400 font-medium">d'Épargne</span>
-                        </h2>
+        <div className="space-y-10 animate-in fade-in duration-1000 p-2 md:p-4 max-w-[1400px] mx-auto pb-24">
+
+            {/* Header: Cinematic Status Bar */}
+            <div className="flex flex-col md:flex-row items-end justify-between gap-6 px-2">
+                <div className="space-y-1 text-center md:text-left">
+                    <div className="flex items-center gap-3 justify-center md:justify-start">
+                        <Sparkles className="w-5 h-5 text-indigo-500 animate-pulse" />
+                        <h1 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Propulseur de Rêves</h1>
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium text-lg lg:max-w-md">
-                        Planifiez l'avenir en suivant vos progrès vers vos ambitions financières.
-                    </p>
+                    <h2 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
+                        Objectifs <span className="text-indigo-600 dark:text-indigo-400">Stratégiques</span>
+                    </h2>
                 </div>
 
                 <button
                     onClick={handleAdd}
-                    className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-[1.5rem] font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-slate-900/10 dark:shadow-white/5"
+                    className="group flex items-center gap-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-10 py-5 rounded-[2rem] font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-slate-900/20 dark:shadow-white/5"
                 >
-                    <Plus className="w-5 h-5" />
-                    <span>Créer un objectif</span>
+                    <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
+                    <span>Nouveau Projet</span>
                 </button>
-            </header>
-
-            {/* Global Stats Matrix */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-[2.5rem] shadow-sm">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Total Cible</p>
-                    <h3 className="text-3xl font-black text-slate-900 dark:text-white">{formatCurrency(totalTarget, currency)}</h3>
-                </div>
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-[2.5rem] shadow-sm">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Épargne Actuelle</p>
-                    <h3 className="text-3xl font-black text-indigo-600 dark:text-indigo-400">{formatCurrency(totalCurrent, currency)}</h3>
-                </div>
-                <div className="bg-slate-900 dark:bg-white p-8 rounded-[2.5rem] border-none shadow-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 dark:bg-indigo-500/10 rounded-full -mr-16 -mt-16 blur-[40px]"></div>
-                    <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4 relative z-10">Progression Globale</p>
-                    <div className="flex items-end gap-3 relative z-10">
-                        <h3 className="text-5xl font-black text-white dark:text-slate-900 leading-none">{Math.round(globalProgress)}%</h3>
-                        <TrendingUp className="w-6 h-6 text-emerald-500 mb-1" />
-                    </div>
-                </div>
             </div>
 
-            {/* Goal Grid */}
-            <div className="space-y-6">
-                <div className="flex items-center justify-between px-2">
-                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Vos Projets</h3>
-                    <span className="text-xs font-black text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
-                        {savingsGoals.length} Objectifs
-                    </span>
-                </div>
+            {/* Matrix Bento Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
 
-                {savingsGoals.length === 0 ? (
-                    <div className="text-center py-24 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800">
-                        <div className="max-w-xs mx-auto space-y-6">
-                            <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-500/10 rounded-3xl flex items-center justify-center mx-auto text-indigo-500">
-                                <Target className="w-10 h-10" />
-                            </div>
-                            <div className="space-y-2">
-                                <h4 className="text-xl font-black text-slate-800 dark:text-white">Aucun objectif défini</h4>
-                                <p className="text-slate-500 font-bold text-sm leading-relaxed">
-                                    Commencez à planifier vos rêves dès aujourd'hui. Chaque grand projet commence par un premier pas.
-                                </p>
-                            </div>
-                            <button
-                                onClick={handleAdd}
-                                className="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all"
-                            >
-                                Créer mon premier objectif
-                            </button>
+                {/* 1. Global Vision: Immersive Hero (8 cols) */}
+                <div className="md:col-span-8 md:row-span-2 spatial-card bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 p-12 relative overflow-hidden group min-h-[400px] flex flex-col justify-between">
+                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500/10 rounded-full -mr-32 -mt-32 blur-[120px] group-hover:bg-indigo-500/20 transition-all duration-1000"></div>
+
+                    <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>
+                            <p className="text-indigo-200/50 font-black uppercase tracking-[0.2em] text-[10px]">Autonomie Globale</p>
+                        </div>
+                        <h3 className="text-8xl md:text-9xl font-black text-white tracking-tighter mb-4 transition-all duration-700 group-hover:scale-105 origin-left">
+                            {Math.round(globalProgress)}<span className="text-indigo-400">%</span>
+                        </h3>
+                        <p className="text-indigo-200/40 font-bold text-lg max-w-sm">
+                            Vous avez sécurisé <span className="text-white">{formatCurrency(totalCurrent, currency)}</span> sur un objectif total de {formatCurrency(totalTarget, currency)}.
+                        </p>
+                    </div>
+
+                    <div className="relative z-10 w-full mt-10">
+                        <div className="flex justify-between items-end mb-4">
+                            <span className="text-[10px] font-black text-indigo-200/50 uppercase tracking-widest">Flux d'Épargne Actuel</span>
+                            <span className="text-xs font-black text-white">{formatCurrency(totalCurrent, currency)}</span>
+                        </div>
+                        <div className="h-4 bg-white/5 rounded-full overflow-hidden p-1 shadow-inner border border-white/10 backdrop-blur-xl">
+                            <div
+                                className="h-full bg-gradient-to-r from-indigo-500 via-blue-400 to-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(99,102,241,0.5)]"
+                                style={{ width: `${Math.min(globalProgress, 100)}%` }}
+                            ></div>
                         </div>
                     </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {savingsGoals.map(goal => {
-                            const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
-                            const isCompleted = progress >= 100;
+                </div>
 
-                            return (
-                                <div key={goal.id} className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-[3rem] hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-black/50 transition-all duration-500 flex flex-col justify-between h-full overflow-hidden">
-                                    {/* Glass progress background */}
+                {/* 2. Tactical Metrics: Stats Cards (4 cols) */}
+                <div className="md:col-span-4 grid grid-cols-1 gap-6">
+                    <div className="bento-tile bg-white dark:bg-slate-900/40 p-8 flex flex-col justify-center gap-4 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <Activity className="w-16 h-16" />
+                        </div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Cible Brute</p>
+                        <h4 className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                            {formatCurrency(totalTarget, currency)}
+                        </h4>
+                    </div>
+
+                    <div className="bento-tile bg-white dark:bg-slate-900/40 p-8 flex flex-col justify-center gap-4 border-l-4 border-emerald-500/20 group relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <TrendingUp className="w-16 h-16" />
+                        </div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Capital Mobilité</p>
+                        <h4 className="text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-tighter">
+                            {formatCurrency(totalCurrent, currency)}
+                        </h4>
+                    </div>
+                </div>
+
+                {/* Vertical Stream: Projects (12 cols) */}
+                <div className="md:col-span-12 space-y-8 mt-4">
+                    <div className="flex items-center gap-4 px-2">
+                        <div className="w-1.5 h-6 bg-slate-900 dark:bg-white rounded-full"></div>
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Matrice des Projets</h3>
+                    </div>
+
+                    {savingsGoals.length === 0 ? (
+                        <div className="text-center py-32 bento-tile flex flex-col items-center justify-center gap-8 group">
+                            <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-[2.5rem] flex items-center justify-center text-slate-300 dark:text-slate-600 group-hover:scale-110 transition-all duration-700">
+                                <Target className="w-12 h-12" />
+                            </div>
+                            <div className="space-y-2">
+                                <h4 className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter uppercase">Aucune Vision Active</h4>
+                                <p className="text-slate-500 font-bold text-sm max-w-xs mx-auto italic">Commencez à structurer vos ambitions financières aujourd'hui.</p>
+                            </div>
+                            <button onClick={handleAdd} className="p-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">Initialiser</button>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {savingsGoals.map((goal, idx) => {
+                                const progress = goal.target_amount > 0 ? (goal.current_amount / goal.target_amount) * 100 : 0;
+                                const isCompleted = progress >= 100;
+
+                                return (
                                     <div
-                                        className="absolute inset-0 bg-indigo-500/[0.03] dark:bg-indigo-500/[0.05] transition-all duration-1000 origin-left"
-                                        style={{ width: `${Math.min(progress, 100)}%` }}
-                                    ></div>
+                                        key={goal.id}
+                                        style={{ animationDelay: `${idx * 100}ms` }}
+                                        className="bento-tile group relative overflow-hidden animate-in slide-in-from-bottom-6 duration-1000 p-8 flex flex-col justify-between h-[450px]"
+                                    >
+                                        <div className="absolute inset-0 bg-indigo-500/5 dark:bg-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
-                                    <div className="relative z-10">
-                                        <div className="flex items-start justify-between mb-8">
-                                            <div className="space-y-2">
+                                        <div>
+                                            <div className="flex justify-between items-start mb-10">
+                                                <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                                                    <Target className={cn("w-6 h-6", isCompleted ? "text-emerald-500" : "text-indigo-500")} />
+                                                </div>
+                                                <div className="flex gap-2 relative z-20">
+                                                    <button onClick={() => handleEdit(goal)} className="p-3 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 transition-all shadow-sm">
+                                                        <Edit3 className="w-4 h-4" />
+                                                    </button>
+                                                    <button onClick={() => setGoalToDelete(goal)} className="p-3 bg-white dark:bg-slate-800 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-4">
                                                 <div className="flex items-center gap-2">
-                                                    <h4 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{goal.name}</h4>
+                                                    <h4 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter truncate leading-tight">{goal.name}</h4>
                                                     {isCompleted && (
-                                                        <span className="bg-emerald-500/10 text-emerald-500 text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter ring-1 ring-emerald-500/20">Atteint</span>
+                                                        <div className="bg-emerald-500/20 text-emerald-500 p-1 rounded-full"><Plus className="w-3 h-3 rotate-45" /></div>
                                                     )}
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">
+                                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-100 dark:border-white/5">
                                                         <Calendar className="w-3 h-3 text-slate-400" />
-                                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">
+                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">
                                                             {goal.deadline ? new Date(goal.deadline).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }) : 'Indéfini'}
                                                         </span>
                                                     </div>
-                                                    {goal.category && (
-                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{goal.category}</span>
-                                                    )}
+                                                    {goal.category && <span className="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest">{goal.category}</span>}
                                                 </div>
-                                            </div>
-
-                                            <div className="flex gap-2">
-                                                <button
-                                                    onClick={() => handleEdit(goal)}
-                                                    className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"
-                                                >
-                                                    <Edit3 className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() => setGoalToDelete(goal)}
-                                                    className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-red-500 dark:hover:text-red-400 rounded-xl transition-all"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
                                             </div>
                                         </div>
 
-                                        <div className="space-y-6">
+                                        <div className="space-y-8 relative z-10 mt-auto pt-6">
                                             <div className="flex justify-between items-end">
                                                 <div className="space-y-1">
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Actuel</p>
-                                                    <p className="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tighter">
+                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Réalisé</p>
+                                                    <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
                                                         {formatCurrency(goal.current_amount, currency)}
                                                     </p>
                                                 </div>
-                                                <div className="text-right space-y-1">
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Cible</p>
-                                                    <p className="text-lg font-black text-slate-400 dark:text-slate-500 lining-nums leading-none">
+                                                <div className="text-right">
+                                                    <p className="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest">Cible</p>
+                                                    <p className="text-lg font-black text-slate-300 dark:text-slate-500 lining-nums leading-none">
                                                         {formatCurrency(goal.target_amount, currency)}
                                                     </p>
                                                 </div>
                                             </div>
 
-                                            <div className="relative h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-1 shadow-inner">
-                                                <div
-                                                    className={cn(
-                                                        "h-full rounded-full transition-all duration-1000 shadow-lg",
-                                                        isCompleted ? "bg-emerald-500 shadow-emerald-500/20" : "bg-gradient-to-r from-indigo-500 to-blue-500 shadow-indigo-500/20"
-                                                    )}
-                                                    style={{ width: `${Math.min(progress, 100)}%` }}
-                                                ></div>
-                                            </div>
-
-                                            <div className="flex items-center justify-between">
-                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Compteur de réussite</p>
-                                                <p className={cn(
-                                                    "text-sm font-black",
-                                                    isCompleted ? "text-emerald-500" : "text-indigo-500"
-                                                )}>{Math.round(progress)}%</p>
+                                            <div className="space-y-4">
+                                                <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5">
+                                                    <div
+                                                        className={cn(
+                                                            "h-full rounded-full transition-all duration-1000",
+                                                            isCompleted ? "bg-emerald-500" : "bg-gradient-to-r from-indigo-500 via-blue-500 to-emerald-500"
+                                                        )}
+                                                        style={{ width: `${Math.min(progress, 100)}%` }}
+                                                    ></div>
+                                                </div>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">{isCompleted ? 'Mission Accomplie' : 'Progression Tactique'}</span>
+                                                    <span className={cn("text-xs font-black", isCompleted ? "text-emerald-500" : "text-indigo-500")}>{Math.round(progress)}%</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    {isCompleted && (
-                                        <div className="absolute -right-8 -top-8 w-24 h-24 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl"></div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <SavingsGoalModal
@@ -214,11 +227,11 @@ const Savings: React.FC = () => {
                     if (goalToDelete) deleteSavingsGoal(goalToDelete.id);
                     setGoalToDelete(null);
                 }}
-                title="Supprimer l'objectif"
-                message={`Êtes-vous sûr de vouloir supprimer "${goalToDelete?.name}" ? Toutes les données de progression seront perdues.`}
+                title="Suppression Définitive"
+                message={`Êtes-vous sûr de vouloir supprimer "${goalToDelete?.name}" ? Cette action est irréversible.`}
                 type="error"
-                confirmText="Supprimer"
-                cancelText="Annuler"
+                confirmText="Détruire"
+                cancelText="Maintenir"
             />
         </div>
     );
