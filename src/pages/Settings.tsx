@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useBudget } from '../context/BudgetContext';
-import type { Currency, RecurringTemplate } from '../types';
+import type { Currency } from '../types';
 import {
-    Moon, Sun, Trash2, Check, LogOut, Repeat, User, ShieldCheck, Zap,
-    Bell, Fingerprint, FileDown, Lock, Smartphone, Mail, ChevronRight, HelpCircle
+    Moon, Sun, Trash2, LogOut, Repeat, User, ShieldCheck, Zap,
+    Bell, Fingerprint, FileDown, Lock, Smartphone, Mail, ChevronRight
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { formatCurrency } from '../lib/format';
@@ -15,7 +15,7 @@ import { isBiometricSupported, registerBiometric, verifyBiometric } from '../lib
 const Settings: React.FC = () => {
     const {
         theme, toggleTheme, currency, setCurrency, recurringTemplates,
-        deleteRecurringTemplate, user, resetAccount, transactions
+        user, resetAccount, transactions
     } = useBudget();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
