@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../lib/format';
-import { Target, Plus, Trash2, Edit3, TrendingUp, Calendar, AlertCircle } from 'lucide-react';
+import { Target, Plus, Trash2, Edit3, TrendingUp, Calendar } from 'lucide-react';
 import { cn } from '../lib/utils';
 import SavingsGoalModal from '../components/modals/SavingsGoalModal';
 import AlertModal from '../components/common/AlertModal';
