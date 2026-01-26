@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { Budget } from '../../types';
 import { formatCurrency } from '../../lib/format';
 import {
@@ -8,6 +8,7 @@ import {
     ArrowRight
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import BudgetAnalysisModal from './BudgetAnalysisModal';
 
 interface BudgetSummaryProps {
     totalBudget: number;
@@ -54,6 +55,7 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
     };
 
     const status = getHealthStatus();
+    const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
@@ -172,11 +174,19 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
                     </p>
                 </div>
 
-                <button className="clay-button-secondary py-5 rounded-3xl flex items-center justify-center gap-3 group">
+                <button
+                    onClick={() => setIsAnalysisModalOpen(true)}
+                    className="clay-button-secondary py-5 rounded-3xl flex items-center justify-center gap-3 group"
+                >
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Analyses Détaillées</span>
                     <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
                 </button>
             </div>
+
+            <BudgetAnalysisModal
+                isOpen={isAnalysisModalOpen}
+                onClose={() => setIsAnalysisModalOpen(false)}
+            />
         </div>
     );
 };
