@@ -3,7 +3,6 @@ import { useBudget } from '../../context/BudgetContext';
 import type { SavingsGoal, Category } from '../../types';
 import { X, Target, Info, Calendar, Sparkles, ChevronRight, Check } from 'lucide-react';
 import { CATEGORIES } from '../../types';
-import { cn } from '../../lib/utils';
 
 interface SavingsGoalModalProps {
     isOpen: boolean;
