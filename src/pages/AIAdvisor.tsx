@@ -95,9 +95,18 @@ const AIAdvisor: React.FC = () => {
                     <h2 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tighter">
                         Votre <span className="text-indigo-600 dark:text-indigo-400">Assistant</span> Propulsé par IA
                     </h2>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold text-lg max-w-2xl">
-                        Analyse prédictive de vos flux financiers et stratégies d'optimisation de capital.
-                    </p>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <p className="text-slate-500 dark:text-slate-400 font-bold text-lg max-w-2xl">
+                            Analyse prédictive de vos flux financiers et stratégies d'optimisation de capital.
+                        </p>
+                        <button
+                            onClick={() => setIsSimModalOpen(true)}
+                            className="w-fit px-8 py-3 bg-indigo-600 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 animate-blink-glow"
+                        >
+                            <Sparkles className="w-3 h-3" />
+                            Lancer Simulation
+                        </button>
+                    </div>
                 </div>
             </div>
 

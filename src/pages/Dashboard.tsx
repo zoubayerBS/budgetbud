@@ -181,12 +181,21 @@ const Dashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        <Link
-                            to="/savings"
-                            className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-12 py-6 rounded-[2.5rem] font-black text-sm shadow-2xl hover:scale-105 active:scale-95 transition-all shrink-0 uppercase tracking-widest border border-white/10"
-                        >
-                            Gérer
-                        </Link>
+                        <div className="flex items-center gap-3 shrink-0">
+                            <Link
+                                to="/advisor"
+                                className="px-8 py-6 bg-white/10 backdrop-blur-md text-white rounded-[2.5rem] font-black text-xs shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border border-white/10 flex items-center gap-2 group/btn animate-blink-glow"
+                            >
+                                <Sparkles className="w-4 h-4 text-indigo-400 group-hover/btn:animate-pulse" />
+                                Simulation IA
+                            </Link>
+                            <Link
+                                to="/savings"
+                                className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-12 py-6 rounded-[2.5rem] font-black text-xs shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border border-white/10"
+                            >
+                                Gérer
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

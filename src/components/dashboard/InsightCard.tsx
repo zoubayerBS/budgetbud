@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Sparkles, TrendingUp, TrendingDown, Activity, Zap, Loader2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useBudget } from '../../context/BudgetContext';
+import { Link } from 'react-router-dom';
 
 const InsightCard: React.FC = () => {
     const { transactions, budgets, savingsGoals } = useBudget();
@@ -116,9 +117,12 @@ const InsightCard: React.FC = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                         <span className="text-[8px] font-black text-indigo-500 uppercase tracking-widest animate-pulse">Powered by Gemini 1.5</span>
-                        <button className="p-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm">
-                            <Sparkles className="w-4 h-4" />
-                        </button>
+                        <Link
+                            to="/advisor"
+                            className="p-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-indigo-500 hover:border-indigo-500/30 transition-all shadow-sm group/ai"
+                        >
+                            <Sparkles className="w-4 h-4 group-hover/ai:animate-pulse" />
+                        </Link>
                     </div>
                 </div>
             </div>

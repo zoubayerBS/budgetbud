@@ -89,6 +89,14 @@ const Navbar: React.FC = () => {
                                                 )}></span>
                                             </span>
                                         )}
+                                        {item.label === 'IA' && (
+                                            <span className={cn(
+                                                "text-[7px] font-black uppercase tracking-tighter opacity-60",
+                                                aiStatus === 'live' ? "text-emerald-500" : aiStatus === 'offline' ? "text-red-500" : "text-slate-400"
+                                            )}>
+                                                {aiStatus === 'live' ? 'En marche' : aiStatus === 'offline' ? 'En arrêt' : 'Sync...'}
+                                            </span>
+                                        )}
                                     </span>
                                 </NavLink>
                             );
@@ -148,11 +156,30 @@ const Navbar: React.FC = () => {
                                     to={item.to}
                                     onClick={() => setIsOpen(false)}
                                     className={cn(
-                                        "p-4 rounded-full transition-all duration-500",
+                                        "p-4 rounded-full transition-all duration-500 relative flex flex-col items-center gap-1",
                                         isActive ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-lg" : "text-slate-500"
                                     )}
                                 >
                                     <Icon className="w-5 h-5" />
+                                    {item.label === 'IA' && (
+                                        <>
+                                            <span className="absolute top-3 right-3 flex h-2 w-2">
+                                                {aiStatus === 'live' && (
+                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                                )}
+                                                <span className={cn(
+                                                    "relative inline-flex rounded-full h-2 w-2",
+                                                    aiStatus === 'live' ? "bg-emerald-500" : aiStatus === 'offline' ? "bg-red-500" : "bg-slate-400"
+                                                )}></span>
+                                            </span>
+                                            <span className={cn(
+                                                "text-[6px] font-black uppercase tracking-tighter",
+                                                aiStatus === 'live' ? (isActive ? "text-emerald-400" : "text-emerald-500") : "text-red-500"
+                                            )}>
+                                                {aiStatus === 'live' ? 'ON' : aiStatus === 'offline' ? 'OFF' : '...'}
+                                            </span>
+                                        </>
+                                    )}
                                 </NavLink>
                             );
                         })}

@@ -20,6 +20,16 @@ app.use(express.urlencoded({ extended: true })); // Parse form data
 app.use(cors());
 app.use(morgan('dev')); // Log requests
 
+// --- Gemini AI Status Endpoint ---
+app.get('/api/ai/status', (req, res) => {
+    const isConfigured = !!process.env.GEMINI_API_KEY;
+    res.json({
+        status: isConfigured ? 'live' : 'offline',
+        engine: 'Gemini 1.5 Flash',
+        version: '1.0.0'
+    });
+});
+
 const pool = new Pool({
     connectionString: 'postgresql://neondb_owner:npg_zXATiY0Bt9vH@ep-super-bar-ahzmhpl6-pooler.c-3.us-east-1.aws.neon.tech/budgetdb?sslmode=require&channel_binding=require',
     ssl: { rejectUnauthorized: false }
@@ -371,16 +381,6 @@ app.post('/api/ai/simulate', authenticateToken, async (req, res) => {
         console.error("AI Simulation Error:", err);
         res.status(500).json({ error: "Error generating simulation analysis" });
     }
-});
-
-// --- Gemini AI Status Endpoint ---
-app.get('/api/ai/status', authenticateToken, (req, res) => {
-    const isConfigured = !!process.env.GEMINI_API_KEY;
-    res.json({
-        status: isConfigured ? 'live' : 'offline',
-        engine: 'Gemini 1.5 Flash',
-        version: '1.0.0'
-    });
 });
 
 export default app;
