@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, BrainCircuit, X, Loader2, TrendingUp, Landmark } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useLanguage } from '../../context/LanguageContext';
 
 import { useBudget } from '../../context/BudgetContext';
 
@@ -11,6 +12,7 @@ interface Message {
 
 const NeuralButler: React.FC = () => {
     const { user, refresh } = useBudget();
+    const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState<Message[]>([
@@ -58,7 +60,7 @@ const NeuralButler: React.FC = () => {
             setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, j'ai rencontré un problème pour accéder au réseau neural." }]);
         } finally {
             setIsLoading(false);
-            setStatusText("Le Butler réfléchit...");
+            setStatusText(t('neuralButlerThink'));
         }
     };
 

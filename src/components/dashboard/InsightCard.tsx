@@ -4,8 +4,11 @@ import { cn } from '../../lib/utils';
 import { useBudget } from '../../context/BudgetContext';
 import { Link } from 'react-router-dom';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 const InsightCard: React.FC = () => {
     const { transactions, budgets, savingsGoals } = useBudget();
+    const { t, language } = useLanguage();
     const [aiInsights, setAiInsights] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -41,7 +44,7 @@ const InsightCard: React.FC = () => {
                 const res = await fetch('/api/ai/insights', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ financialData })
+                    body: JSON.stringify({ financialData, language })
                 });
                 const data = await res.json();
                 if (data.insights) setAiInsights(data.insights);
@@ -70,7 +73,7 @@ const InsightCard: React.FC = () => {
                             {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5 fill-current" />}
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                            {isLoading ? "Synchronisation neurale..." : "Santé financière"}
+                            {isLoading ? t('syncing') : t('financialHealth')}
                         </span>
                     </div>
                     <div className={cn(
@@ -80,22 +83,22 @@ const InsightCard: React.FC = () => {
                             : "bg-red-500/10 text-red-600 dark:text-red-400"
                     )}>
                         <Activity className="w-3 h-3" />
-                        {isHealthy ? "En forme" : "Attention"}
+                        {isHealthy ? t('healthy') : t('warning')}
                     </div>
                 </div>
 
                 <div className="space-y-2">
                     <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight tracking-tighter min-h-[50px] flex items-center">
                         {isLoading ? (
-                            <span className="animate-pulse text-slate-400">L'IA analyse vos flux...</span>
+                            <span className="animate-pulse text-slate-400">{t('analyzing')}</span>
                         ) : aiInsights[0] || (
                             isHealthy
-                                ? "Analyse structurelle en cours..."
-                                : "Alerte de flux détectée."
+                                ? t('analysisInProgress')
+                                : t('fluxAlert')
                         )}
                     </h3>
                     <p className="text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed">
-                        {aiInsights[1] || "Configurez vos transactions pour activer l'intelligence prédictive de BudgetBud."}
+                        {aiInsights[1] || t('configureForAi')}
                     </p>
                 </div>
             </div>
@@ -103,7 +106,7 @@ const InsightCard: React.FC = () => {
             <div className="mt-8 relative z-10">
                 <div className="flex items-end justify-between">
                     <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Taux d'épargne</p>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('savingsRate')}</p>
                         <div className="flex items-center gap-2">
                             <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                                 {Math.round(savingsRate)}%

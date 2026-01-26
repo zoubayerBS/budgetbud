@@ -1,40 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useBudget } from '../context/BudgetContext';
 import type { Currency, RecurringTemplate } from '../types';
 import {
-    Moon,
-    Sun,
-    Trash2,
-    Check,
-    LogOut,
-    Repeat,
-    User,
-    ShieldCheck,
-    Zap
+    Moon, Sun, Trash2, Check, LogOut, Repeat, User, ShieldCheck, Zap,
+    Bell, Fingerprint, FileDown, Lock, Smartphone, Mail, ChevronRight, HelpCircle
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { formatCurrency } from '../lib/format';
 import AlertModal from '../components/common/AlertModal';
 import { signOut } from '../lib/auth-client';
+// Use require or ignore if module resolution issue, but biometrics file exists
+import { isBiometricSupported, registerBiometric, verifyBiometric } from '../lib/biometrics';
 
 const Settings: React.FC = () => {
     const {
-        theme,
-        toggleTheme,
-        currency,
-        setCurrency,
-        recurringTemplates,
-        deleteRecurringTemplate,
-        user,
-        resetAccount
+        theme, toggleTheme, currency, setCurrency, recurringTemplates,
+        deleteRecurringTemplate, user, resetAccount, transactions
     } = useBudget();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+
+    // Notifications State
+    const [notifications, setNotifications] = useState({ push: true, email: false, weekly: true });
+
+    // Biometric State
+    const [biometricEnabled, setBiometricEnabled] = useState(false);
+    const [isBioSupported, setIsBioSupported] = useState(false);
+
+    useEffect(() => {
+        const checkSupport = async () => {
+            try {
+                const supported = await isBiometricSupported();
+                setIsBioSupported(supported);
+                const stored = localStorage.getItem('biometric_enabled') === 'true';
+                setBiometricEnabled(supported && stored);
+            } catch (e) {
+                console.warn("Biometric check failed", e);
+            }
+        };
+        checkSupport();
+    }, []);
 
     const currencies: Currency[] = ['EUR', 'USD', 'CHF', 'CAD', 'TND'];
 
     const handleReset = async () => {
+        if (biometricEnabled) {
+            try {
+                const verified = await verifyBiometric();
+                if (!verified) return;
+            } catch {
+                alert("Authentification biométrique échouée.");
+                return;
+            }
+        }
         await resetAccount();
         setIsResetModalOpen(false);
+    };
+
+    const handleBiometricToggle = async () => {
+        if (biometricEnabled) {
+            setBiometricEnabled(false);
+            localStorage.setItem('biometric_enabled', 'false');
+        } else {
+            try {
+                await registerBiometric();
+                setBiometricEnabled(true);
+                localStorage.setItem('biometric_enabled', 'true');
+            } catch (err) {
+                console.error("Biometric registration failed", err);
+                alert("Impossible d'activer la biométrie. Vérifiez que votre appareil supporte FaceID/TouchID.");
+            }
+        }
+    };
+
+    const handleExport = () => {
+        const csvContent = "data:text/csv;charset=utf-8,"
+            + "Date,Type,Category,Amount,Note\n"
+            + transactions.map(t => `${t.date},${t.type},${t.category},${t.amount},${t.note || ''}`).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `budgetbud_export_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     const handleSignOut = async () => {
@@ -55,7 +103,6 @@ const Settings: React.FC = () => {
                 }
             });
         } catch {
-            console.error('[LOGOUT] Unexpected error');
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = '/login';
@@ -63,150 +110,244 @@ const Settings: React.FC = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto py-10 px-6 space-y-12 animate-in fade-in duration-700">
-            {/* --- Executive Header --- */}
-            <header className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 pb-12 border-b border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-6">
-                    <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl executive-card flex items-center justify-center border border-slate-100 dark:border-slate-700 shadow-sm">
-                        <User className="w-10 h-10 text-slate-400" />
-                    </div>
-                    <div className="space-y-1 text-center md:text-left">
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                            Compte Personnel
-                        </h1>
-                        <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
-                            {user?.name || 'Utilisateur'} • {user?.email}
-                        </p>
-                    </div>
-                </div>
-                <div className="flex-shrink-0 w-full md:w-auto flex justify-center">
-                    <button
-                        onClick={handleSignOut}
-                        className="clay-button-secondary text-sm px-6 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-colors w-fit"
-                    >
-                        <LogOut className="w-4 h-4" />
-                        Se déconnecter
-                    </button>
-                </div>
-            </header>
+        <div className="max-w-5xl mx-auto py-8 px-4 md:px-8 space-y-10 animate-in fade-in duration-700 pb-32">
+            {/* --- Profile Header (Glass Card) --- */}
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 dark:bg-white text-white dark:text-slate-900 p-8 md:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 group">
+                {/* Abstract Backgrounds */}
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-500/30 rounded-full blur-[100px] -mr-20 -mt-20 group-hover:bg-indigo-500/40 transition-all duration-1000"></div>
+                <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-500/20 rounded-full blur-[80px] -ml-20 -mb-20"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                {/* --- Preferences Section --- */}
-                <section className="space-y-8">
-                    <div>
-                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Préférences</h2>
-                        <div className="executive-card p-2 space-y-1">
-                            <button
-                                onClick={() => theme === 'dark' && toggleTheme()}
-                                className={cn(
-                                    "w-full p-4 rounded-2xl flex items-center justify-between transition-all",
-                                    theme === 'light' ? "bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700" : "hover:bg-slate-50/50 dark:hover:bg-slate-800/50"
-                                )}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <Sun className={cn("w-5 h-5", theme === 'light' ? "text-amber-500" : "text-slate-400")} />
-                                    <span className={cn("text-sm font-semibold", theme === 'light' ? "text-slate-900 dark:text-white" : "text-slate-500")}>Mode Clair</span>
-                                </div>
-                                {theme === 'light' && <Check className="w-4 h-4 text-indigo-600" />}
-                            </button>
-                            <button
-                                onClick={() => theme === 'light' && toggleTheme()}
-                                className={cn(
-                                    "w-full p-4 rounded-2xl flex items-center justify-between transition-all",
-                                    theme === 'dark' ? "bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700" : "hover:bg-slate-50/50 dark:hover:bg-slate-800/50"
-                                )}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <Moon className={cn("w-5 h-5", theme === 'dark' ? "text-indigo-400" : "text-slate-400")} />
-                                    <span className={cn("text-sm font-semibold", theme === 'dark' ? "text-slate-900 dark:text-white" : "text-slate-500")}>Mode Sombre</span>
-                                </div>
-                                {theme === 'dark' && <Check className="w-4 h-4 text-indigo-400" />}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Unité Monétaire</h2>
-                        <div className="grid grid-cols-5 gap-2">
-                            {currencies.map((c) => (
-                                <button
-                                    key={c}
-                                    onClick={() => setCurrency(c)}
-                                    className={cn(
-                                        "py-3 rounded-xl text-xs font-bold transition-all border",
-                                        currency === c
-                                            ? "bg-white dark:bg-slate-800 border-indigo-500 text-indigo-600 shadow-sm"
-                                            : "bg-slate-50 dark:bg-slate-900/50 border-transparent text-slate-400 hover:border-slate-200"
-                                    )}
-                                >
-                                    {c}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* --- Automation Section --- */}
-                <section className="space-y-6">
-                    <div className="flex items-center justify-between uppercase tracking-[0.2em]">
-                        <h2 className="text-xs font-bold text-slate-400 whitespace-nowrap">Automatisations</h2>
-                        <span className="h-px bg-slate-100 dark:bg-slate-800 w-full ml-4"></span>
-                    </div>
-
-                    <div className="space-y-3">
-                        {recurringTemplates.length === 0 ? (
-                            <div className="p-12 text-center border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[2rem] flex flex-col items-center gap-4">
-                                <Zap className="w-8 h-8 text-slate-200" />
-                                <p className="text-slate-400 text-xs font-medium uppercase tracking-widest">Aucune règle active</p>
-                            </div>
+                <div className="relative z-10 flex items-center gap-6">
+                    <div className="w-24 h-24 rounded-[2rem] bg-white/10 dark:bg-slate-900/10 backdrop-blur-md border border-white/20 dark:border-slate-900/10 flex items-center justify-center shadow-2xl">
+                        {user?.image ? (
+                            <img src={user.image} alt="Profile" className="w-full h-full object-cover rounded-[2rem]" />
                         ) : (
-                            recurringTemplates.map((template: RecurringTemplate) => (
-                                <div key={template.id} className="executive-card p-5 group flex items-center justify-between">
-                                    <div className="flex items-center gap-4">
-                                        <div className={cn(
-                                            "w-10 h-10 rounded-xl flex items-center justify-center",
-                                            template.type === 'income' ? 'bg-emerald-50/50 text-emerald-600' : 'bg-red-50/50 text-red-600'
-                                        )}>
-                                            <Repeat className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <p className="text-slate-800 dark:text-zinc-100 text-sm font-bold">{template.category}</p>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">{template.frequency}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-5">
-                                        <span className="text-sm font-black text-slate-900 dark:text-white">
-                                            {formatCurrency(template.amount, currency)}
-                                        </span>
-                                        <button
-                                            onClick={() => deleteRecurringTemplate(template.id)}
-                                            className="w-8 h-8 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-300 hover:text-red-500 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
+                            <User className="w-10 h-10 text-white dark:text-slate-900" />
                         )}
                     </div>
-                </section>
-            </div>
-
-            {/* --- Data Management --- */}
-            <footer className="pt-12 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8">
-                <div className="flex items-center gap-4 text-slate-400">
-                    <ShieldCheck className="w-5 h-5" />
-                    <span className="text-xs font-semibold tracking-wider italic">Infrastructure Neon Cloud • v2.4.0</span>
+                    <div className="text-center md:text-left space-y-1">
+                        <div className="flex items-center gap-3 justify-center md:justify-start">
+                            <h1 className="text-3xl md:text-4xl font-black tracking-tighter">{user?.name || 'Utilisateur'}</h1>
+                            <span className="px-2 py-0.5 bg-indigo-500 rounded-md text-[10px] font-black uppercase tracking-widest text-white">Pro</span>
+                        </div>
+                        <p className="text-white/60 dark:text-slate-900/60 font-medium">{user?.email}</p>
+                    </div>
                 </div>
 
-                <button
-                    onClick={() => setIsResetModalOpen(true)}
-                    className="text-[10px] font-black text-red-500 hover:text-red-600 uppercase tracking-[0.3em] flex items-center gap-2 group transition-all"
-                >
-                    <Trash2 className="w-3 h-3 group-hover:rotate-12 transition-transform" />
-                    Réinitialiser les données
-                </button>
-            </footer>
+                <div className="relative z-10 flex gap-3">
+                    <button onClick={handleSignOut} className="p-4 bg-white/10 dark:bg-slate-900/5 hover:bg-red-500/20 dark:hover:bg-red-500/10 backdrop-blur-md rounded-2xl transition-all group/btn border border-white/10">
+                        <LogOut className="w-5 h-5 text-red-300 dark:text-red-500" />
+                    </button>
+                    <button className="px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                        Éditer
+                    </button>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* --- Left Column: Settings (7 cols) --- */}
+                <div className="lg:col-span-7 space-y-8">
+                    {/* Preferences */}
+                    <section className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                                <Zap className="w-5 h-5 text-indigo-500" />
+                                Préférences
+                            </h2>
+                        </div>
+
+                        <div className="space-y-6">
+                            {/* Theme Toggle */}
+                            <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                        {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-slate-900 dark:text-white">Apparence</p>
+                                        <p className="text-xs text-slate-500 font-medium">Mode {theme === 'dark' ? 'Sombre' : 'Clair'} activé</p>
+                                    </div>
+                                </div>
+                                <button onClick={toggleTheme} className="w-14 h-8 bg-slate-200 dark:bg-slate-700 rounded-full relative transition-colors">
+                                    <div className={cn("absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow-sm transition-transform duration-300", theme === 'dark' && "translate-x-6")}></div>
+                                </button>
+                            </div>
+
+                            {/* Currency Selection */}
+                            <div>
+                                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Devise Principale</h3>
+                                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                    {currencies.map((c) => (
+                                        <button
+                                            key={c}
+                                            onClick={() => setCurrency(c)}
+                                            className={cn(
+                                                "px-5 py-3 rounded-xl text-xs font-bold transition-all border shrink-0",
+                                                currency === c
+                                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-500/30"
+                                                    : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                            )}
+                                        >
+                                            {c}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Security & Notifications */}
+                    <section className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                                <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                                Sécurité & Alertes
+                            </h2>
+                        </div>
+
+                        <div className="space-y-2 divide-y divide-slate-100 dark:divide-slate-800">
+                            <div className="flex items-center justify-between py-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 bg-emerald-50 dark:bg-emerald-900/10 rounded-lg text-emerald-600"><Fingerprint className="w-5 h-5" /></div>
+                                    <div className="space-y-0.5">
+                                        <p className="font-bold text-slate-900 dark:text-white">Biométrie</p>
+                                        <p className="text-xs text-slate-500">
+                                            {isBioSupported ? "Connexion par FaceID/TouchID" : "Non supporté sur cet appareil"}
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={handleBiometricToggle}
+                                    disabled={!isBioSupported}
+                                    className={cn("w-12 h-6 rounded-full relative transition-colors duration-300 disabled:opacity-50", biometricEnabled ? "bg-emerald-500" : "bg-slate-200 dark:bg-slate-700")}
+                                >
+                                    <div className={cn("absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300", biometricEnabled && "translate-x-6")}></div>
+                                </button>
+                            </div>
+
+                            <div className="flex items-center justify-between py-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 bg-blue-50 dark:bg-blue-900/10 rounded-lg text-blue-600"><Bell className="w-5 h-5" /></div>
+                                    <div className="space-y-0.5">
+                                        <p className="font-bold text-slate-900 dark:text-white">Notifications Push</p>
+                                        <p className="text-xs text-slate-500">Alertes de dépenses</p>
+                                    </div>
+                                </div>
+                                <button onClick={() => setNotifications(p => ({ ...p, push: !p.push }))} className={cn("w-12 h-6 rounded-full relative transition-colors duration-300", notifications.push ? "bg-blue-500" : "bg-slate-200 dark:bg-slate-700")}>
+                                    <div className={cn("absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300", notifications.push && "translate-x-6")}></div>
+                                </button>
+                            </div>
+
+                            <div className="flex items-center justify-between py-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 bg-purple-50 dark:bg-purple-900/10 rounded-lg text-purple-600"><Mail className="w-5 h-5" /></div>
+                                    <div className="space-y-0.5">
+                                        <p className="font-bold text-slate-900 dark:text-white">Rapport Hebdomadaire</p>
+                                        <p className="text-xs text-slate-500">Résumé par email</p>
+                                    </div>
+                                </div>
+                                <button onClick={() => setNotifications(p => ({ ...p, weekly: !p.weekly }))} className={cn("w-12 h-6 rounded-full relative transition-colors duration-300", notifications.weekly ? "bg-purple-500" : "bg-slate-200 dark:bg-slate-700")}>
+                                    <div className={cn("absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300", notifications.weekly && "translate-x-6")}></div>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                {/* --- Right Column: Data & System (5 cols) --- */}
+                <div className="lg:col-span-5 space-y-8">
+                    {/* Data Management */}
+                    <section className="bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-800 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-indigo-900 transition-colors duration-1000"></div>
+                        <div className="relative z-10 space-y-8">
+                            <div>
+                                <h2 className="text-xl font-bold flex items-center gap-3 mb-2">
+                                    <Lock className="w-5 h-5 text-indigo-400" />
+                                    Coffre-fort
+                                </h2>
+                                <p className="text-slate-400 text-sm">Gestion de vos données privées.</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <button
+                                    onClick={handleExport}
+                                    className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 transition-all group/item"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-2 bg-indigo-500/20 rounded-lg text-indigo-400 group-hover/item:text-white transition-colors"><FileDown className="w-5 h-5" /></div>
+                                        <div className="text-left">
+                                            <p className="font-bold">Exporter les données</p>
+                                            <p className="text-xs text-slate-400">Format CSV</p>
+                                        </div>
+                                    </div>
+                                    <ChevronRight className="w-5 h-5 text-slate-500 group-hover/item:translate-x-1 transition-transform" />
+                                </button>
+
+                                <button
+                                    onClick={() => setIsResetModalOpen(true)}
+                                    className="w-full flex items-center justify-between p-4 bg-red-500/10 hover:bg-red-500/20 rounded-2xl border border-red-500/20 transition-all group/item"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-2 bg-red-500/20 rounded-lg text-red-500"><Trash2 className="w-5 h-5" /></div>
+                                        <div className="text-left">
+                                            <p className="font-bold text-red-400">Zone de Danger</p>
+                                            <p className="text-xs text-red-400/60">Réinitialiser le compte</p>
+                                        </div>
+                                    </div>
+                                    <ChevronRight className="w-5 h-5 text-red-500/50 group-hover/item:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Automations (Simplified View) */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-bold text-slate-900 dark:text-white">Règles Actives</h2>
+                            <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-black">{recurringTemplates.length}</span>
+                        </div>
+                        {recurringTemplates.length === 0 ? (
+                            <div className="text-center py-8 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-2xl">
+                                <Zap className="w-6 h-6 text-slate-300 mx-auto mb-2" />
+                                <p className="text-xs text-slate-400 uppercase tracking-widest">Aucune règle</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {recurringTemplates.slice(0, 3).map(r => (
+                                    <div key={r.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                                                <Repeat className="w-3 h-3 text-slate-400" />
+                                            </div>
+                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{r.category}</span>
+                                        </div>
+                                        <span className="text-xs font-black">{formatCurrency(r.amount, currency)}</span>
+                                    </div>
+                                ))}
+                                {recurringTemplates.length > 3 && (
+                                    <p className="text-center text-xs font-bold text-slate-400 mt-2">et {recurringTemplates.length - 3} autres...</p>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* System Info */}
+                    <div className="flex flex-col items-center justify-center text-center p-6 space-y-4 opacity-60">
+                        <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                            <Smartphone className="w-5 h-5 text-slate-400" />
+                        </div>
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-widest text-slate-400">BudgetBud iOS v2.4.0</p>
+                            <p className="text-[10px] text-slate-400 mt-1">Build 2024.10.25 • Neon Engine</p>
+                        </div>
+                        <div className="flex gap-4">
+                            <a href="#" className="text-[10px] font-bold text-indigo-500 hover:underline">Conditions</a>
+                            <a href="#" className="text-[10px] font-bold text-indigo-500 hover:underline">Confidentialité</a>
+                            <a href="#" className="text-[10px] font-bold text-indigo-500 hover:underline">Support</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <AlertModal
                 isOpen={isResetModalOpen}

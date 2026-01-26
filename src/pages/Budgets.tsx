@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useBudget } from '../context/BudgetContext';
 import BudgetCard from '../components/budgets/BudgetCard';
 import BudgetSummary from '../components/budgets/BudgetSummary';
@@ -7,6 +8,7 @@ import { Plus, Target, PieChart, LayoutList } from 'lucide-react';
 
 const Budgets: React.FC = () => {
     const { budgets, transactions, currency } = useBudget();
+    const { t } = useLanguage();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const spentByCategory = useMemo(() => {
@@ -34,7 +36,7 @@ const Budgets: React.FC = () => {
                     </div>
                     <div className="text-center md:text-left">
                         <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
-                            Gestion Budgétaire
+                            {t('budgets')}
                         </h1>
                         <p className="text-slate-500 dark:text-slate-400 font-bold text-sm mt-1 uppercase tracking-widest flex items-center gap-2 justify-center md:justify-start italic">
                             Suivi de vos dépenses mensuelles

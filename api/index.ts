@@ -52,13 +52,14 @@ app.get('/api/ai/status', (req, res) => {
 app.post('/api/ai/chat', authenticateToken, async (req: any, res) => {
     const userId = getUserId(req);
     // console.log("Received Headers:", req.headers); // Debug headers if needed
-    const { messages } = req.body;
+    const { messages, language } = req.body;
 
     if (!process.env.GROQ_API_KEY) {
         return res.status(500).json({ error: "AI key not configured" });
     }
 
     try {
+        // ... (existing context fetching logic) ... 
         // 1. Fetch deep context
         const [transactions, budgets, goals] = await Promise.all([
             pool.query('SELECT amount, type, category, date, note FROM transactions WHERE user_id = $1 ORDER BY date DESC', [userId]),
@@ -81,6 +82,12 @@ app.post('/api/ai/chat', authenticateToken, async (req: any, res) => {
         // 2. Build conversation history
         const conversationHistory = messages.map((m: any) => `${m.role === 'user' ? 'Utilisateur' : 'Butler'}: ${m.content}`).join('\n\n');
         const lastUserMessage = messages[messages.length - 1].content;
+
+        let toneInstruction = "- Utilise un ton de majordome de luxe (ex: 'Bien sûr, Monsieur/Madame', 'Je vous suggère...').\n- Réponds en FRANÇAIS soutenu.";
+
+        if (language === 'tn') {
+            toneInstruction = "- Réponds en TOUNSI (dialecte tunisien) écrit en LETTRES ARABES (Script Arabe).\n- Sois cool, proche, un peu comme un pote sage qui gère l'argent.\n- Utilise des mots comme: 'فلوس', 'مصروف', 'دينار', 'يا معلم'.";
+        }
 
         const fullPrompt = `
 Tu es le "Neural Butler", un majordome financier d'élite, sophistiqué, poli et extrêmement perspicace.
@@ -109,6 +116,12 @@ ${conversationHistory}
 
 QUESTION ACTUELLE DE L'UTILISATEUR :
 ${lastUserMessage}
+
+DIRECTIVES DE PERSONNALITÉ :
+${toneInstruction}
+- Sois concis (max 3-4 phrases par réponse).
+- Donne des conseils basés strictement sur les données fournies.
+- N'invente pas de transactions.
 
 Réponds en tant que Neural Butler. Si l'utilisateur demande une action (créer/supprimer/ajouter), utilise l'outil approprié.
 `;
@@ -496,21 +509,21 @@ app.delete('/api/user/reset', authenticateToken, async (req: any, res) => {
     }
 });
 // --- Gemini AI Insights Endpoint ---
-app.post('/api/ai/insights', authenticateToken, async (req, res) => {
+app.post('/api/ai/insights', authenticateToken, async (req: any, res) => {
     const { financialData } = req.body;
 
-    if (!process.env.GEMINI_API_KEY) {
-        return res.status(500).json({ error: "Gemini API Key missing" });
+    if (!process.env.GROQ_API_KEY) {
+        return res.status(500).json({ error: "AI key not configured" });
     }
 
     try {
         const prompt = `
-            Tu es un expert financier neural et motivant. Analyse ces données financières de l'utilisateur :
+            Tu es un expert financier neural et motivant. Réponds uniquement en FRANÇAIS. Analyse ces données financières de l'utilisateur :
             ${JSON.stringify(financialData)}
 
             Règles strictes :
             1. Donne exactement 3 conseils ultra-courts (maximum 15 mots par conseil).
-            2. Sois percutant, moderne et utilise un ton "Executive".
+            2. Sois percutant, moderne et utilise un ton "Executive" (ou sage en dialecte).
             3. Réponds uniquement en JSON avec ce format : {"insights": ["conseil 1", "conseil 2", "conseil 3"]}
         `;
 

@@ -4,14 +4,17 @@ import { formatCurrency, formatDate } from '../../lib/format';
 import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 const RecentActivity: React.FC = () => {
     const { transactions, currency } = useBudget();
+    const { t } = useLanguage();
     const recent = transactions.slice(0, 6);
 
     if (recent.length === 0) {
         return (
             <div className="py-12 text-center bg-slate-50 dark:bg-slate-900/40 rounded-[2rem] border-dashed border-2 border-slate-200 dark:border-slate-800 animate-in fade-in duration-700">
-                <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Aucune activité récente</p>
+                <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">{t('noTransactions')}</p>
             </div>
         );
     }

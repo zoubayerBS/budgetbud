@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../lib/format';
 import { Target, Plus, Trash2, Edit3, TrendingUp, Calendar, Sparkles, Activity } from 'lucide-react';
@@ -9,6 +10,7 @@ import type { SavingsGoal } from '../types';
 
 const Savings: React.FC = () => {
     const { savingsGoals, deleteSavingsGoal, currency } = useBudget();
+    const { t } = useLanguage();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingGoal, setEditingGoal] = useState<SavingsGoal | undefined>(undefined);
     const [goalToDelete, setGoalToDelete] = useState<SavingsGoal | null>(null);
@@ -39,7 +41,7 @@ const Savings: React.FC = () => {
                         <h1 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Mes Projets</h1>
                     </div>
                     <h2 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
-                        Objectifs <span className="text-indigo-600 dark:text-indigo-400">d'Épargne</span>
+                        {t('savings')} <span className="text-indigo-600 dark:text-indigo-400">Stratégie</span>
                     </h2>
                 </div>
 

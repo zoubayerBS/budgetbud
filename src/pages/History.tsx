@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useBudget } from '../context/BudgetContext';
 import Dropdown from '../components/common/Dropdown';
 import TransactionItem from '../components/history/TransactionItem';
@@ -10,6 +11,7 @@ import { formatCurrency } from '../lib/format';
 
 const History: React.FC = () => {
     const { transactions, currency } = useBudget();
+    const { t } = useLanguage();
 
     // Filter States
     const [filterType, setFilterType] = useState<TransactionType | 'all'>('all');
@@ -64,7 +66,7 @@ const History: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="space-y-1">
                         <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                            Journal des Entrées
+                            {t('history')}
                         </h2>
                         <p className="text-slate-500 font-medium">Historique complet de vos activités financières.</p>
                     </div>

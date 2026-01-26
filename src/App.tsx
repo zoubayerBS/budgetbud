@@ -37,31 +37,35 @@ const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) =
   return children;
 };
 
+import { LanguageProvider } from './context/LanguageContext';
+
 function App() {
   return (
     <>
       <SplashScreen />
       <BudgetProvider>
-        <AddTransactionModal />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <LanguageProvider>
+          <AddTransactionModal />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+              <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<Dashboard />} />
-              <Route path="history" element={<History />} />
-              <Route path="budgets" element={<Budgets />} />
-              <Route path="savings" element={<Savings />} />
-              <Route path="advisor" element={<AIAdvisor />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<Dashboard />} />
+                <Route path="history" element={<History />} />
+                <Route path="budgets" element={<Budgets />} />
+                <Route path="savings" element={<Savings />} />
+                <Route path="advisor" element={<AIAdvisor />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </LanguageProvider>
       </BudgetProvider>
     </>
   );

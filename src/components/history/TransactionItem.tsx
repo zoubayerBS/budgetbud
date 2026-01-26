@@ -6,12 +6,15 @@ import { Trash2, ArrowUpRight, Receipt, ChevronRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import AlertModal from '../common/AlertModal';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 interface TransactionItemProps {
     transaction: Transaction;
 }
 
 const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
     const { deleteTransaction, currency } = useBudget();
+    const { t } = useLanguage();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
     const isIncome = transaction.type === 'income';
@@ -38,7 +41,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
                             </h4>
                             {!isIncome && (
                                 <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-md">
-                                    Débit
+                                    {t('expenses')}
                                 </span>
                             )}
                         </div>
@@ -82,11 +85,11 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={() => deleteTransaction(transaction.id)}
-                title="Supprimer la transaction"
-                message={`Cette action est irréversible. Voulez-vous supprimer l'entrée de ${formatCurrency(transaction.amount, currency)} ?`}
+                title={t('confirmDelete')}
+                message={t('confirmDelete')}
                 type="error"
-                confirmText="Vider"
-                cancelText="Garder"
+                confirmText={t('delete')}
+                cancelText={t('cancel')}
             />
         </>
     );

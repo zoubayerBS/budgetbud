@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useBudget } from '../context/BudgetContext';
 import FinancialOverview from '../components/dashboard/FinancialOverview';
 import RecentActivity from '../components/dashboard/RecentActivity';
@@ -11,6 +12,7 @@ import { formatCurrency } from '../lib/format';
 
 const Dashboard: React.FC = () => {
     const { transactions, budgets, user, savingsGoals, currency } = useBudget();
+    const { t } = useLanguage();
 
     const totalSavingsTarget = savingsGoals.reduce((sum, g) => sum + g.target_amount, 0);
     const totalCurrentSavings = savingsGoals.reduce((sum, g) => sum + g.current_amount, 0);
@@ -92,7 +94,7 @@ const Dashboard: React.FC = () => {
                     <div className="relative z-10 w-full h-full">
                         <div className="flex items-center gap-3 mb-10">
                             <div className="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
-                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Solde Total</h3>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('totalBalance')}</h3>
                         </div>
                         <FinancialOverview />
                     </div>
@@ -140,7 +142,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex items-center justify-between mb-8 relative z-10">
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-5 bg-orange-500 rounded-full"></div>
-                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Dernières transactions</h3>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('recentActivity')}</h3>
                         </div>
                         <Link to="/history" className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-orange-500 hover:text-white dark:hover:bg-orange-400 dark:hover:text-black transition-all">
                             <ChevronRight className="w-4 h-4" />
