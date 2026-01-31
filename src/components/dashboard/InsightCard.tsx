@@ -63,7 +63,7 @@ const InsightCard: React.FC = () => {
         <div className="bento-tile noise-texture group h-full flex flex-col justify-between relative overflow-hidden">
             <div className={cn(
                 "absolute -right-20 -top-20 w-64 h-64 blur-[100px] opacity-20 transition-all duration-1000 group-hover:opacity-40",
-                isHealthy ? "bg-emerald-500" : "bg-red-500"
+                isHealthy ? "bg-lime-500" : "bg-red-500"
             )}></div>
 
             <div className="relative z-10">
@@ -79,7 +79,7 @@ const InsightCard: React.FC = () => {
                     <div className={cn(
                         "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5",
                         isHealthy
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            ? "bg-lime-500/10 text-lime-600 dark:text-lime-400"
                             : "bg-red-500/10 text-red-600 dark:text-red-400"
                     )}>
                         <Activity className="w-3 h-3" />
@@ -112,17 +112,17 @@ const InsightCard: React.FC = () => {
                                 {Math.round(savingsRate)}%
                             </span>
                             {isHealthy ? (
-                                <TrendingUp className="w-5 h-5 text-emerald-500" />
+                                <TrendingUp className="w-5 h-5 text-lime-500" />
                             ) : (
                                 <TrendingDown className="w-5 h-5 text-red-500" />
                             )}
                         </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                        <span className="text-[8px] font-black text-indigo-500 uppercase tracking-widest animate-pulse">Powered by Gemini 1.5</span>
+                        <span className="text-[8px] font-black text-lime-500 uppercase tracking-widest animate-pulse">Powered by Gemini 1.5</span>
                         <Link
                             to="/advisor"
-                            className="p-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-indigo-500 hover:border-indigo-500/30 transition-all shadow-sm group/ai"
+                            className="p-3 bg-white dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-lime-500 hover:border-lime-500/30 transition-all shadow-sm group/ai"
                         >
                             <Sparkles className="w-4 h-4 group-hover/ai:animate-pulse" />
                         </Link>

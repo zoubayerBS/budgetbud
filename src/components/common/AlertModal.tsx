@@ -28,21 +28,21 @@ const AlertModal: React.FC<AlertModalProps> = ({
 
     const getIcon = () => {
         switch (type) {
-            case 'success': return <CheckCircle2 className="w-10 h-10 text-emerald-500" />;
+            case 'success': return <CheckCircle2 className="w-10 h-10 text-lime-500" />;
             case 'error': return <AlertCircle className="w-10 h-10 text-red-500" />;
-            case 'warning': return <AlertCircle className="w-10 h-10 text-orange-500" />;
-            case 'confirm': return <HelpCircle className="w-10 h-10 text-blue-500" />;
-            default: return <Info className="w-10 h-10 text-cyan-500" />;
+            case 'warning': return <AlertCircle className="w-10 h-10 text-lime-400" />;
+            case 'confirm': return <HelpCircle className="w-10 h-10 text-lime-500" />;
+            default: return <Info className="w-10 h-10 text-slate-400" />;
         }
     };
 
     const getBgColor = () => {
         switch (type) {
-            case 'success': return 'bg-emerald-50 dark:bg-emerald-500/10';
+            case 'success': return 'bg-lime-50 dark:bg-lime-500/10';
             case 'error': return 'bg-red-50 dark:bg-red-500/10';
-            case 'warning': return 'bg-orange-50 dark:bg-orange-500/10';
-            case 'confirm': return 'bg-blue-50 dark:bg-blue-500/10';
-            default: return 'bg-cyan-50 dark:bg-cyan-500/10';
+            case 'warning': return 'bg-lime-50 dark:bg-lime-400/10';
+            case 'confirm': return 'bg-lime-50 dark:bg-lime-500/10';
+            default: return 'bg-white dark:bg-white0/10';
         }
     };
 
@@ -75,7 +75,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
 
                         <button
                             onClick={onClose}
-                            className="w-full py-4 rounded-2xl bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 font-black text-lg hover:bg-slate-200 transition-colors"
+                            className="w-full py-4 rounded-2xl bg-white dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 font-black text-lg hover:bg-slate-200 transition-colors"
                         >
                             {onConfirm ? cancelText : 'Fermer'}
                         </button>

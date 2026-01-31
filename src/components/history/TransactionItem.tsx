@@ -2,7 +2,7 @@ import React from 'react';
 import type { Transaction } from '../../types';
 import { useBudget } from '../../context/BudgetContext';
 import { formatCurrency, formatDate } from '../../lib/format';
-import { Trash2, ArrowUpRight, Receipt, ChevronRight } from 'lucide-react';
+import { Trash2, ArrowUpRight, Receipt, Shuffle, ArrowRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import AlertModal from '../common/AlertModal';
 
@@ -13,56 +13,84 @@ interface TransactionItemProps {
 }
 
 const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
-    const { deleteTransaction, currency } = useBudget();
+    const { deleteTransaction, currency, accounts } = useBudget();
     const { t } = useLanguage();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
     const isIncome = transaction.type === 'income';
+    const isTransfer = transaction.type === 'transfer';
+
+    const sourceAccount = accounts.find(a => a.id === transaction.account_id);
+    const targetAccount = accounts.find(a => a.id === transaction.target_account_id);
 
     return (
         <>
-            <div className="group relative bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-4 sm:p-5 rounded-2xl hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-xl hover:shadow-slate-200/20 dark:hover:shadow-black/20 transition-all duration-300 flex items-start sm:items-center justify-between cursor-pointer gap-4">
+            <div
+                className="group relative bg-white dark:bg-black border border-slate-200/60 dark:border-slate-800/60 p-4 sm:p-5 rounded-[2rem] hover:border-lime-500/50 dark:hover:border-lime-500/30 hover:shadow-2xl hover:shadow-lime-500/10 transition-all duration-500 flex items-center justify-between cursor-pointer gap-3 sm:gap-6"
+            >
+                {/* Visual Accent */}
+                {isIncome && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-lime-500 rounded-r-full"></div>}
+                {isTransfer && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-500 rounded-r-full"></div>}
 
-                <div className="flex items-start sm:items-center gap-4 sm:gap-5 flex-1 min-w-0">
-                    {/* Minimalist Icon Wrapper */}
+                <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
                     <div className={cn(
-                        "w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 shrink-0",
+                        "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 shrink-0",
                         isIncome
-                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
-                            : "bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                            ? "bg-lime-500 text-black shadow-lg shadow-lime-500/20"
+                            : isTransfer
+                                ? "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 shadow-lg shadow-blue-500/5"
+                                : "bg-red-500/10 text-red-500 dark:bg-red-500/20 shadow-lg shadow-red-500/5"
                     )}>
-                        {isIncome ? <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" /> : <Receipt className="w-5 h-5 sm:w-6 sm:h-6" />}
+                        {isIncome ? <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" /> : isTransfer ? <Shuffle className="w-5 h-5 sm:w-6 sm:h-6" /> : <Receipt className="w-5 h-5 sm:w-6 sm:h-6" />}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-center flex-wrap gap-2">
-                            <h4 className="font-bold text-slate-900 dark:text-white tracking-tight truncate sm:text-lg">
-                                {transaction.category}
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="font-black text-slate-900 dark:text-white tracking-tight truncate text-lg">
+                                {isTransfer ? 'Virement Interne' : transaction.category}
                             </h4>
-                            {!isIncome && (
-                                <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-md">
-                                    {t('expenses')}
+                            {isTransfer ? (
+                                <span className="px-2 py-0.5 bg-blue-500/5 dark:bg-blue-500/10 text-[8px] font-black uppercase tracking-[0.2em] text-blue-500/80 rounded-lg">
+                                    Neutre
+                                </span>
+                            ) : !isIncome && (
+                                <span className="px-2 py-0.5 bg-red-500/5 dark:bg-red-500/10 text-[8px] font-black uppercase tracking-[0.2em] text-red-500/80 rounded-lg">
+                                    Flux Sortant
                                 </span>
                             )}
                         </div>
-                        <div className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-1">
-                            <p>{formatDate(transaction.date)}</p>
-                            {transaction.note && (
-                                <p className="italic mt-1.5 text-slate-500/80 dark:text-slate-400/80 break-words whitespace-normal leading-relaxed max-w-full">
-                                    "{transaction.note}"
-                                </p>
+
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                {formatDate(transaction.date)}
+                            </p>
+                            {sourceAccount && (
+                                <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md flex items-center gap-1">
+                                    {sourceAccount.name}
+                                    {isTransfer && targetAccount && (
+                                        <>
+                                            <ArrowRight className="w-2 h-2" />
+                                            {targetAccount.name}
+                                        </>
+                                    )}
+                                </span>
                             )}
                         </div>
+                        {transaction.note && (
+                            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 line-clamp-2 italic opacity-60 break-words">
+                                {transaction.note}
+                            </p>
+                        )}
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4 sm:gap-8 ml-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800/50 shrink-0">
-                    <div className="text-right">
+                <div className="flex items-center gap-3 sm:gap-6 shrink-0 min-w-[80px] sm:min-w-fit">
+                    <div className="text-right w-full">
                         <span className={cn(
                             "block font-black text-lg sm:text-xl tracking-tighter",
-                            isIncome ? "text-emerald-600 dark:text-emerald-400" : "text-slate-900 dark:text-white"
+                            isIncome ? "text-lime-600 dark:text-lime-400" : isTransfer ? "text-slate-500" : "text-red-600 dark:text-red-400"
                         )}>
-                            {isIncome ? '+' : ''}{formatCurrency(transaction.amount, currency)}
+                            {isIncome ? '+' : isTransfer ? '' : '-'}{formatCurrency(transaction.amount, currency)}
                         </span>
                     </div>
 
@@ -72,11 +100,10 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
                                 e.stopPropagation();
                                 setIsModalOpen(true);
                             }}
-                            className="w-9 h-9 flex items-center justify-center text-slate-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                            className="w-10 h-10 flex items-center justify-center text-slate-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
                         >
                             <Trash2 className="w-4 h-4" />
                         </button>
-                        <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-400 transition-colors" />
                     </div>
                 </div>
             </div>

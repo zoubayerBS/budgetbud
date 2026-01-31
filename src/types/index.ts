@@ -1,4 +1,4 @@
-export type TransactionType = 'income' | 'expense';
+export type TransactionType = 'income' | 'expense' | 'transfer';
 
 export interface Transaction {
     id: string;
@@ -7,11 +7,23 @@ export interface Transaction {
     category: string;
     date: string; // ISO string
     note?: string;
+    account_id: string;
+    target_account_id?: string; // For transfers
+}
+
+export interface Account {
+    id: string;
+    name: string;
+    type: 'checking' | 'savings' | 'cash' | 'other';
+    balance: number;
+    last_updated?: string;
 }
 
 export interface Budget {
+    id?: string;
     category: Category;
     limit: number;
+    account_id?: string; // Optional: specific to an account
 }
 
 export type Currency = 'EUR' | 'USD' | 'CHF' | 'CAD' | 'TND';

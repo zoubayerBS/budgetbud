@@ -64,10 +64,10 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                 onClick={onClose}
             />
 
-            <div className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-[#0c0e12] rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border border-white/10 dark:border-slate-800/50 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 flex flex-col noise-texture">
+            <div className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-black rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border border-white/10 dark:border-slate-800/50 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 flex flex-col noise-texture">
 
                 {/* Visual Flair: Abstract Orb */}
-                <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-lime-500/10 rounded-full blur-[80px] pointer-events-none"></div>
 
                 <div className="p-10 md:p-14 relative z-10 flex flex-col overflow-y-auto custom-scrollbar">
 
@@ -75,16 +75,16 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                     <div className="flex items-center justify-between mb-12">
                         <div className="space-y-1">
                             <div className="flex items-center gap-3">
-                                <Sparkles className="w-5 h-5 text-indigo-500 animate-pulse" />
+                                <Sparkles className="w-5 h-5 text-lime-500 animate-pulse" />
                                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Nouvelle Vision</h3>
                             </div>
                             <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
-                                {goal ? 'Éditer le' : 'Créer un'} <span className="text-indigo-600 dark:text-indigo-400">Projet</span>
+                                {goal ? 'Éditer le' : 'Créer un'} <span className="text-lime-600 dark:text-lime-400">Projet</span>
                             </h2>
                         </div>
                         <button
                             onClick={onClose}
-                            className="w-14 h-14 flex items-center justify-center rounded-[1.5rem] bg-slate-50 dark:bg-slate-800/50 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:scale-110 active:scale-95 transition-all shadow-inner border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                            className="w-14 h-14 flex items-center justify-center rounded-[1.5rem] bg-white dark:bg-white/5/50 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:scale-110 active:scale-95 transition-all shadow-inner border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                         >
                             <X className="w-6 h-6" />
                         </button>
@@ -94,16 +94,16 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                         <div className="space-y-8">
                             {/* Project Name: High-Impact Input */}
                             <div className="space-y-3 group">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block group-focus-within:text-indigo-500 transition-colors">Nom du projet d'avenir</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block group-focus-within:text-lime-500 transition-colors">Nom du projet d'avenir</label>
                                 <div className="relative">
-                                    <Target className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 dark:text-slate-600 group-focus-within:text-indigo-500 transition-colors" />
+                                    <Target className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 dark:text-slate-600 group-focus-within:text-lime-500 transition-colors" />
                                     <input
                                         required
                                         type="text"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Ex: Villa en bord de mer, Nouvelle Tesla..."
-                                        className="w-full pl-16 pr-8 py-6 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[2rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-bold text-lg text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 shadow-inner"
+                                        className="w-full pl-16 pr-8 py-6 bg-white dark:bg-white/5/20 border border-slate-100 dark:border-slate-800/50 rounded-[2rem] focus:ring-2 focus:ring-lime-500/20 focus:border-lime-500 outline-none transition-all font-bold text-lg text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 shadow-inner"
                                     />
                                 </div>
                             </div>
@@ -120,12 +120,12 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                                             value={targetAmount}
                                             onChange={(e) => setTargetAmount(e.target.value)}
                                             placeholder="0.00"
-                                            className="w-full px-8 py-6 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[2rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-black text-3xl text-slate-900 dark:text-white tracking-tighter shadow-inner"
+                                            className="w-full px-8 py-6 bg-white dark:bg-white/5/20 border border-slate-100 dark:border-slate-800/50 rounded-[2rem] focus:ring-2 focus:ring-lime-500/20 focus:border-lime-500 outline-none transition-all font-black text-3xl text-slate-900 dark:text-white tracking-tighter shadow-inner"
                                         />
                                         <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-600 font-black">{currency}</div>
                                     </div>
                                 </div>
-                                <div className="md:col-span-5 space-y-3 group">
+                                <div className="md:col-span-12 space-y-3 group">
                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block">Déjà Économisé</label>
                                     <input
                                         required
@@ -134,7 +134,7 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                                         value={currentAmount}
                                         onChange={(e) => setCurrentAmount(e.target.value)}
                                         placeholder="0.00"
-                                        className="w-full px-8 py-6 bg-indigo-500/[0.03] dark:bg-indigo-500/[0.05] border border-indigo-500/10 rounded-[2rem] focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-black text-2xl text-indigo-600 dark:text-indigo-400 tracking-tighter"
+                                        className="w-full px-8 py-6 bg-lime-500/[0.03] dark:bg-lime-500/[0.05] border border-lime-500/10 rounded-[2rem] focus:ring-2 focus:ring-lime-500 outline-none transition-all font-black text-2xl text-lime-600 dark:text-lime-400 tracking-tighter"
                                     />
                                 </div>
                             </div>
@@ -144,12 +144,12 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                                 <div className="space-y-3 group">
                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block text-center md:text-left">Échéance souhaitée</label>
                                     <div className="relative">
-                                        <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 dark:text-slate-600 group-focus-within:text-indigo-500 transition-colors" />
+                                        <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 dark:text-slate-600 group-focus-within:text-lime-500 transition-colors" />
                                         <input
                                             type="date"
                                             value={deadline}
                                             onChange={(e) => setDeadline(e.target.value)}
-                                            className="w-full pl-16 pr-8 py-5 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[1.5rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none"
+                                            className="w-full pl-16 pr-8 py-5 bg-white dark:bg-white/5/20 border border-slate-100 dark:border-slate-800/50 rounded-[1.5rem] focus:ring-2 focus:ring-lime-500/20 focus:border-lime-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none"
                                         />
                                     </div>
                                 </div>
@@ -159,7 +159,7 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                                         <select
                                             value={category}
                                             onChange={(e) => setCategory(e.target.value as Category)}
-                                            className="w-full px-8 py-5 bg-slate-50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/50 rounded-[1.5rem] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none cursor-pointer"
+                                            className="w-full px-8 py-5 bg-white dark:bg-white/5/20 border border-slate-100 dark:border-slate-800/50 rounded-[1.5rem] focus:ring-2 focus:ring-lime-500/20 focus:border-lime-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none cursor-pointer"
                                         >
                                             <option value="">Sélectionner...</option>
                                             {CATEGORIES.map(c => (
@@ -174,11 +174,11 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
 
                         {/* Summary & Actions */}
                         <div className="flex flex-col md:flex-row items-center gap-8 pt-4">
-                            <div className="flex-1 flex gap-4 p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-[2rem] border border-emerald-500/10 group hover:bg-emerald-500/10 transition-colors">
-                                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                            <div className="flex-1 flex gap-4 p-6 bg-lime-500/5 dark:bg-lime-500/10 rounded-[2rem] border border-lime-500/10 group hover:bg-lime-500/10 transition-colors">
+                                <div className="w-10 h-10 rounded-xl bg-lime-500/20 flex items-center justify-center text-lime-600 dark:text-lime-400 shrink-0">
                                     <Info className="w-5 h-5" />
                                 </div>
-                                <p className="text-[10px] font-bold text-emerald-600/80 dark:text-emerald-400/80 leading-relaxed uppercase tracking-widest italic">
+                                <p className="text-[10px] font-bold text-lime-600/80 dark:text-lime-400/80 leading-relaxed uppercase tracking-widest italic">
                                     Épargner régulièrement est la clé du succès. Nous suivrons votre progression en temps réel.
                                 </p>
                             </div>

@@ -3,39 +3,42 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --color-slate-900: #0f172a;
-    --color-slate-800: #1e293b;
-    --color-slate-100: #f1f5f9;
-    --color-emerald-500: #10b981;
-    --color-red-500: #ef4444;
-    --color-sky-500: #0ea5e9;
+    --color-slate-900: #0a0a0a;
+    --color-slate-800: #1a1a1a;
+    --color-slate-100: #f5f5f5;
+    --color-emerald-500: #d9ff4d;
+    /* Lime */
+    --color-lime-500: #d9ff4d;
+    --color-red-500: #ff4d4d;
+    --color-sky-500: #4da6ff;
 }
 
+html,
 body {
-    @apply bg-[#eef2f6] dark:bg-[#111827] text-slate-700 dark:text-slate-200 font-sans antialiased transition-colors duration-300;
+    @apply bg-white dark:bg-black text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-300;
 }
 
 /* Claymorphism Utilities */
 @layer components {
     .clay-card {
-        @apply bg-[#fcfdfe] dark:bg-slate-800/80 border-none rounded-[2.5rem] transition-all duration-300;
+        @apply bg-white dark:bg-black border border-slate-200 dark:border-white/10 rounded-[2.5rem] transition-all duration-300;
         box-shadow:
-            10px 10px 20px rgba(163, 177, 198, 0.4),
-            -10px -10px 20px rgba(255, 255, 255, 1);
+            0 10px 30px -5px rgba(0, 0, 0, 0.05),
+            0 5px 15px -5px rgba(0, 0, 0, 0.03);
     }
 
     .dark .clay-card {
         box-shadow:
-            10px 10px 20px rgba(0, 0, 0, 0.4),
-            -10px -10px 20px rgba(30, 41, 59, 1);
+            0 20px 50px rgba(0, 0, 0, 0.6),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
     }
 
     /* Executive Soft UI */
     .executive-card {
-        @apply bg-white/70 dark:bg-slate-900/60 rounded-[2rem] border border-white/40 dark:border-white/5 backdrop-blur-md transition-all duration-500 overflow-hidden relative;
+        @apply bg-white dark:bg-black rounded-[2rem] border border-slate-200 dark:border-white/20 transition-all duration-500 overflow-hidden relative shadow-2xl;
         box-shadow:
-            0 10px 15px -3px rgba(0, 0, 0, 0.1),
-            0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            0 25px 50px -12px rgba(0, 0, 0, 0.08),
+            0 0 0 1px rgba(0, 0, 0, 0.02);
     }
 
     /* Spatial Depth Design */
@@ -52,7 +55,7 @@ body {
 
     /* Glass Bento Tile */
     .bento-tile {
-        @apply bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 dark:border-slate-800/50 rounded-[2rem] p-5 sm:p-7 transition-all duration-500 hover:bg-white/60 dark:hover:bg-slate-800/60;
+        @apply bg-white dark:bg-black border border-slate-200 dark:border-white/10 rounded-[2rem] p-5 sm:p-7 transition-all duration-500 hover:border-lime-500/30 shadow-md hover:shadow-xl;
     }
 
     /* Noise Texture Overlay */
@@ -71,8 +74,8 @@ body {
     }
 
     .soft-in {
-        @apply bg-slate-50/50 dark:bg-slate-900/40 border border-slate-200/10;
-        box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.3), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+        @apply bg-white dark:bg-black border border-slate-200/10;
+        box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
     }
 
     .dark .soft-in {
@@ -88,7 +91,7 @@ body {
 }
 
 .clay-button-primary {
-    @apply bg-indigo-600 text-white border border-indigo-500/20 shadow-lg shadow-indigo-600/20;
+    @apply bg-lime-500 text-black border border-lime-400/20 shadow-lg shadow-lime-500/20;
 }
 
 .clay-button-secondary {
@@ -122,7 +125,7 @@ body {
     }
 
     50% {
-        filter: brightness(1.2) drop-shadow(0 0 15px rgba(99, 102, 241, 0.6));
+        filter: brightness(1.2) drop-shadow(0 0 15px rgba(217, 255, 77, 0.6));
         transform: scale(1.02);
     }
 }

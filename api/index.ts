@@ -61,10 +61,11 @@ app.post('/api/ai/chat', authenticateToken, async (req: any, res) => {
     try {
         // ... (existing context fetching logic) ... 
         // 1. Fetch deep context
-        const [transactions, budgets, goals] = await Promise.all([
-            pool.query('SELECT amount, type, category, date, note FROM transactions WHERE user_id = $1 ORDER BY date DESC', [userId]),
-            pool.query('SELECT category, limit_amount FROM budgets WHERE user_id = $1', [userId]),
-            pool.query('SELECT name, target_amount, current_amount FROM savings_goals WHERE user_id = $1', [userId])
+        const [transactions, budgets, goals, accounts] = await Promise.all([
+            pool.query('SELECT amount, type, category, date, note, account_id, target_account_id FROM transactions WHERE user_id = $1 ORDER BY date DESC', [userId]),
+            pool.query('SELECT category, limit_amount, account_id FROM budgets WHERE user_id = $1', [userId]),
+            pool.query('SELECT name, target_amount, current_amount FROM savings_goals WHERE user_id = $1', [userId]),
+            pool.query('SELECT id, name, type, balance FROM accounts WHERE user_id = $1', [userId])
         ]);
 
         // Calculate precise totals
@@ -98,6 +99,9 @@ CONTEXTE FINANCIER COMPLET DE L'UTILISATEUR (Calculé sur tout l'historique) :
 - Revenus Totaux : ${totalIncome.toFixed(3)} TND
 - Dépenses Totales : ${totalExpenses.toFixed(3)} TND
 - Solde Net Actuel : ${totalBalance.toFixed(3)} TND
+
+COMPTES :
+${JSON.stringify(accounts.rows)}
 
 DÉTAILS DES BUDGETS :
 ${JSON.stringify(budgets.rows)}
@@ -242,9 +246,40 @@ const initDB = async () => {
     try {
         // Essential tables
         await pool.query(`
+            CREATE TABLE IF NOT EXISTS accounts (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                user_id TEXT NOT NULL,
+                name TEXT NOT NULL,
+                type TEXT NOT NULL,
+                balance DECIMAL(12,2) DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            -- Migration for existing tables
+            DO $$ 
+            BEGIN 
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='transactions' AND column_name='account_id') THEN
+                    ALTER TABLE transactions ADD COLUMN account_id UUID REFERENCES accounts(id) ON DELETE CASCADE;
+                END IF;
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='transactions' AND column_name='target_account_id') THEN
+                    ALTER TABLE transactions ADD COLUMN target_account_id UUID REFERENCES accounts(id) ON DELETE SET NULL;
+                END IF;
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='budgets' AND column_name='account_id') THEN
+                    ALTER TABLE budgets ADD COLUMN account_id UUID REFERENCES accounts(id) ON DELETE CASCADE;
+                END IF;
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='recurring_templates' AND column_name='account_id') THEN
+                    ALTER TABLE recurring_templates ADD COLUMN account_id UUID REFERENCES accounts(id) ON DELETE CASCADE;
+                END IF;
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='savings_goals' AND column_name='account_id') THEN
+                    ALTER TABLE savings_goals ADD COLUMN account_id UUID REFERENCES accounts(id) ON DELETE SET NULL;
+                END IF;
+            END $$;
+
             CREATE TABLE IF NOT EXISTS transactions (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 user_id TEXT NOT NULL,
+                account_id UUID REFERENCES accounts(id) ON DELETE CASCADE,
+                target_account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
                 amount DECIMAL(12,2) NOT NULL,
                 type TEXT NOT NULL,
                 category TEXT NOT NULL,
@@ -256,14 +291,16 @@ const initDB = async () => {
             CREATE TABLE IF NOT EXISTS budgets (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 user_id TEXT NOT NULL,
+                account_id UUID REFERENCES accounts(id) ON DELETE CASCADE,
                 category TEXT NOT NULL,
                 limit_amount DECIMAL(12,2) NOT NULL,
-                UNIQUE(user_id, category)
+                UNIQUE(user_id, category, account_id)
             );
 
             CREATE TABLE IF NOT EXISTS recurring_templates (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 user_id TEXT NOT NULL,
+                account_id UUID REFERENCES accounts(id) ON DELETE CASCADE,
                 amount DECIMAL(12,2) NOT NULL,
                 type TEXT NOT NULL,
                 category TEXT NOT NULL,
@@ -278,6 +315,7 @@ const initDB = async () => {
             CREATE TABLE IF NOT EXISTS savings_goals (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 user_id TEXT NOT NULL,
+                account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
                 name TEXT NOT NULL,
                 target_amount DECIMAL(12,2) NOT NULL,
                 current_amount DECIMAL(12,2) DEFAULT 0,
@@ -286,6 +324,7 @@ const initDB = async () => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
+            CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON accounts(user_id);
             CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id);
             CREATE INDEX IF NOT EXISTS idx_budgets_user_id ON budgets(user_id);
             CREATE INDEX IF NOT EXISTS idx_recurring_user_id ON recurring_templates(user_id);
@@ -296,6 +335,41 @@ const initDB = async () => {
     }
 };
 initDB();
+
+// Accounts Routes
+app.get('/api/accounts', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    try {
+        const result = await pool.query('SELECT * FROM accounts WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching accounts' });
+    }
+});
+
+app.post('/api/accounts', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    const { name, type, balance } = req.body;
+    try {
+        const result = await pool.query(
+            'INSERT INTO accounts (user_id, name, type, balance) VALUES ($1, $2, $3, $4) RETURNING *',
+            [userId, name, type, balance || 0]
+        );
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Error creating account' });
+    }
+});
+
+app.delete('/api/accounts/:id', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    try {
+        await pool.query('DELETE FROM accounts WHERE id = $1 AND user_id = $2', [req.params.id, userId]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Error deleting account' });
+    }
+});
 
 // Recurring Templates Routes
 app.get('/api/recurring', authenticateToken, async (req: any, res) => {
@@ -390,25 +464,71 @@ app.get('/api/transactions', authenticateToken, async (req: any, res) => {
 
 app.post('/api/transactions', authenticateToken, async (req: any, res) => {
     const userId = getUserId(req);
-    const { amount, type, category, date, note } = req.body;
+    const { amount, type, category, date, note, account_id, target_account_id } = req.body;
+
+    const client = await pool.connect();
     try {
-        const result = await pool.query(
-            'INSERT INTO transactions (user_id, amount, type, category, date, note) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [userId, amount, type, category, date, note]
+        await client.query('BEGIN');
+
+        // Insert transaction
+        const result = await client.query(
+            'INSERT INTO transactions (user_id, amount, type, category, date, note, account_id, target_account_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+            [userId, amount, type, category, date, note, account_id, target_account_id]
         );
+
+        // Update balances
+        if (type === 'income') {
+            await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [amount, account_id, userId]);
+        } else if (type === 'expense') {
+            await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [amount, account_id, userId]);
+        } else if (type === 'transfer' && target_account_id) {
+            await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [amount, account_id, userId]);
+            await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [amount, target_account_id, userId]);
+        }
+
+        await client.query('COMMIT');
         res.json(result.rows[0]);
     } catch (err) {
+        await client.query('ROLLBACK');
+        console.error(err);
         res.status(500).json({ error: 'Error adding transaction' });
+    } finally {
+        client.release();
     }
 });
 
 app.delete('/api/transactions/:id', authenticateToken, async (req: any, res) => {
     const userId = getUserId(req);
+    const client = await pool.connect();
     try {
-        await pool.query('DELETE FROM transactions WHERE id = $1 AND user_id = $2', [req.params.id, userId]);
+        await client.query('BEGIN');
+
+        // Get transaction details first
+        const tRes = await client.query('SELECT * FROM transactions WHERE id = $1 AND user_id = $2', [req.params.id, userId]);
+        if (tRes.rowCount && tRes.rowCount > 0) {
+            const t = tRes.rows[0];
+            const amount = Number(t.amount);
+
+            // Revert balances
+            if (t.type === 'income') {
+                await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [amount, t.account_id, userId]);
+            } else if (t.type === 'expense') {
+                await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [amount, t.account_id, userId]);
+            } else if (t.type === 'transfer' && t.target_account_id) {
+                await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [amount, t.account_id, userId]);
+                await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [amount, t.target_account_id, userId]);
+            }
+        }
+
+        await client.query('DELETE FROM transactions WHERE id = $1 AND user_id = $2', [req.params.id, userId]);
+        await client.query('COMMIT');
         res.json({ success: true });
     } catch (err) {
+        await client.query('ROLLBACK');
+        console.error(err);
         res.status(500).json({ error: 'Error deleting transaction' });
+    } finally {
+        client.release();
     }
 });
 

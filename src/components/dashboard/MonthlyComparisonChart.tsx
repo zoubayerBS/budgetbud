@@ -75,14 +75,14 @@ const MonthlyComparisonChart: React.FC = () => {
                     <Bar
                         dataKey="income"
                         name="Revenus"
-                        fill="#10b981"
+                        fill="#a6ce17ff"
                         radius={[6, 6, 0, 0]}
                         barSize={32}
                     />
                     <Bar
                         dataKey="expense"
                         name="Dépenses"
-                        fill="#ef4444"
+                        fill="#ff4d4d"
                         radius={[6, 6, 0, 0]}
                         barSize={32}
                     />

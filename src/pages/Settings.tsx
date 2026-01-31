@@ -114,11 +114,11 @@ const Settings: React.FC = () => {
             {/* --- Profile Header (Glass Card) --- */}
             <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 dark:bg-white text-white dark:text-slate-900 p-8 md:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 group">
                 {/* Abstract Backgrounds */}
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-500/30 rounded-full blur-[100px] -mr-20 -mt-20 group-hover:bg-indigo-500/40 transition-all duration-1000"></div>
-                <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-500/20 rounded-full blur-[80px] -ml-20 -mb-20"></div>
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-lime-500/30 rounded-full blur-[100px] -mr-20 -mt-20 group-hover:bg-lime-500/40 transition-all duration-1000"></div>
+                <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-lime-500/20 rounded-full blur-[80px] -ml-20 -mb-20"></div>
 
                 <div className="relative z-10 flex items-center gap-6">
-                    <div className="w-24 h-24 rounded-[2rem] bg-white/10 dark:bg-slate-900/10 backdrop-blur-md border border-white/20 dark:border-slate-900/10 flex items-center justify-center shadow-2xl">
+                    <div className="w-24 h-24 rounded-[2rem] bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-slate-900/10 flex items-center justify-center shadow-2xl">
                         {user?.image ? (
                             <img src={user.image} alt="Profile" className="w-full h-full object-cover rounded-[2rem]" />
                         ) : (
@@ -128,17 +128,17 @@ const Settings: React.FC = () => {
                     <div className="text-center md:text-left space-y-1">
                         <div className="flex items-center gap-3 justify-center md:justify-start">
                             <h1 className="text-3xl md:text-4xl font-black tracking-tighter">{user?.name || 'Utilisateur'}</h1>
-                            <span className="px-2 py-0.5 bg-indigo-500 rounded-md text-[10px] font-black uppercase tracking-widest text-white">Pro</span>
+                            <span className="px-2 py-0.5 bg-lime-500 rounded-md text-[10px] font-black uppercase tracking-widest text-black">Pro</span>
                         </div>
                         <p className="text-white/60 dark:text-slate-900/60 font-medium">{user?.email}</p>
                     </div>
                 </div>
 
                 <div className="relative z-10 flex gap-3">
-                    <button onClick={handleSignOut} className="p-4 bg-white/10 dark:bg-slate-900/5 hover:bg-red-500/20 dark:hover:bg-red-500/10 backdrop-blur-md rounded-2xl transition-all group/btn border border-white/10">
+                    <button onClick={handleSignOut} className="p-4 bg-white/10 dark:bg-black/5 hover:bg-red-500/20 dark:hover:bg-red-500/10 backdrop-blur-md rounded-2xl transition-all group/btn border border-white/10">
                         <LogOut className="w-5 h-5 text-red-300 dark:text-red-500" />
                     </button>
-                    <button className="px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                    <button className="px-8 py-4 bg-white dark:bg-black text-slate-900 dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
                         Éditer
                     </button>
                 </div>
@@ -148,19 +148,19 @@ const Settings: React.FC = () => {
                 {/* --- Left Column: Settings (7 cols) --- */}
                 <div className="lg:col-span-7 space-y-8">
                     {/* Preferences */}
-                    <section className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
+                    <section className="bg-white dark:bg-black rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-                                <Zap className="w-5 h-5 text-indigo-500" />
+                                <Zap className="w-5 h-5 text-lime-500" />
                                 Préférences
                             </h2>
                         </div>
 
                         <div className="space-y-6">
                             {/* Theme Toggle */}
-                            <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
+                            <div className="flex items-center justify-between p-4 bg-white dark:bg-white/5/50 rounded-2xl">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                    <div className="w-10 h-10 rounded-xl bg-lime-100 dark:bg-lime-900/20 flex items-center justify-center text-lime-600 dark:text-lime-400">
                                         {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                                     </div>
                                     <div>
@@ -184,8 +184,8 @@ const Settings: React.FC = () => {
                                             className={cn(
                                                 "px-5 py-3 rounded-xl text-xs font-bold transition-all border shrink-0",
                                                 currency === c
-                                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-500/30"
-                                                    : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                                    ? "bg-lime-600 text-black border-lime-600 shadow-lg shadow-lime-500/30"
+                                                    : "bg-white dark:bg-white/5/50 border-transparent text-slate-500 hover:bg-white dark:hover:bg-slate-800"
                                             )}
                                         >
                                             {c}
@@ -197,10 +197,10 @@ const Settings: React.FC = () => {
                     </section>
 
                     {/* Security & Notifications */}
-                    <section className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
+                    <section className="bg-white dark:bg-black rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-                                <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                                <ShieldCheck className="w-5 h-5 text-lime-500" />
                                 Sécurité & Alertes
                             </h2>
                         </div>
@@ -208,7 +208,7 @@ const Settings: React.FC = () => {
                         <div className="space-y-2 divide-y divide-slate-100 dark:divide-slate-800">
                             <div className="flex items-center justify-between py-4">
                                 <div className="flex items-center gap-4">
-                                    <div className="p-2 bg-emerald-50 dark:bg-emerald-900/10 rounded-lg text-emerald-600"><Fingerprint className="w-5 h-5" /></div>
+                                    <div className="p-2 bg-lime-50 dark:bg-lime-900/10 rounded-lg text-lime-600"><Fingerprint className="w-5 h-5" /></div>
                                     <div className="space-y-0.5">
                                         <p className="font-bold text-slate-900 dark:text-white">Biométrie</p>
                                         <p className="text-xs text-slate-500">
@@ -219,7 +219,7 @@ const Settings: React.FC = () => {
                                 <button
                                     onClick={handleBiometricToggle}
                                     disabled={!isBioSupported}
-                                    className={cn("w-12 h-6 rounded-full relative transition-colors duration-300 disabled:opacity-50", biometricEnabled ? "bg-emerald-500" : "bg-slate-200 dark:bg-slate-700")}
+                                    className={cn("w-12 h-6 rounded-full relative transition-colors duration-300 disabled:opacity-50", biometricEnabled ? "bg-lime-500" : "bg-slate-200 dark:bg-slate-700")}
                                 >
                                     <div className={cn("absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300", biometricEnabled && "translate-x-6")}></div>
                                 </button>
@@ -227,26 +227,26 @@ const Settings: React.FC = () => {
 
                             <div className="flex items-center justify-between py-4">
                                 <div className="flex items-center gap-4">
-                                    <div className="p-2 bg-blue-50 dark:bg-blue-900/10 rounded-lg text-blue-600"><Bell className="w-5 h-5" /></div>
+                                    <div className="p-2 bg-lime-50 dark:bg-lime-900/10 rounded-lg text-lime-600"><Bell className="w-5 h-5" /></div>
                                     <div className="space-y-0.5">
                                         <p className="font-bold text-slate-900 dark:text-white">Notifications Push</p>
                                         <p className="text-xs text-slate-500">Alertes de dépenses</p>
                                     </div>
                                 </div>
-                                <button onClick={() => setNotifications(p => ({ ...p, push: !p.push }))} className={cn("w-12 h-6 rounded-full relative transition-colors duration-300", notifications.push ? "bg-blue-500" : "bg-slate-200 dark:bg-slate-700")}>
+                                <button onClick={() => setNotifications(p => ({ ...p, push: !p.push }))} className={cn("w-12 h-6 rounded-full relative transition-colors duration-300", notifications.push ? "bg-lime-500" : "bg-slate-200 dark:bg-slate-700")}>
                                     <div className={cn("absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300", notifications.push && "translate-x-6")}></div>
                                 </button>
                             </div>
 
                             <div className="flex items-center justify-between py-4">
                                 <div className="flex items-center gap-4">
-                                    <div className="p-2 bg-purple-50 dark:bg-purple-900/10 rounded-lg text-purple-600"><Mail className="w-5 h-5" /></div>
+                                    <div className="p-2 bg-lime-50 dark:bg-lime-900/10 rounded-lg text-lime-600"><Mail className="w-5 h-5" /></div>
                                     <div className="space-y-0.5">
                                         <p className="font-bold text-slate-900 dark:text-white">Rapport Hebdomadaire</p>
                                         <p className="text-xs text-slate-500">Résumé par email</p>
                                     </div>
                                 </div>
-                                <button onClick={() => setNotifications(p => ({ ...p, weekly: !p.weekly }))} className={cn("w-12 h-6 rounded-full relative transition-colors duration-300", notifications.weekly ? "bg-purple-500" : "bg-slate-200 dark:bg-slate-700")}>
+                                <button onClick={() => setNotifications(p => ({ ...p, weekly: !p.weekly }))} className={cn("w-12 h-6 rounded-full relative transition-colors duration-300", notifications.weekly ? "bg-lime-500" : "bg-slate-200 dark:bg-slate-700")}>
                                     <div className={cn("absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300", notifications.weekly && "translate-x-6")}></div>
                                 </button>
                             </div>
@@ -258,11 +258,11 @@ const Settings: React.FC = () => {
                 <div className="lg:col-span-5 space-y-8">
                     {/* Data Management */}
                     <section className="bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-800 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-indigo-900 transition-colors duration-1000"></div>
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-800 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-lime-900/40 transition-colors duration-1000"></div>
                         <div className="relative z-10 space-y-8">
                             <div>
                                 <h2 className="text-xl font-bold flex items-center gap-3 mb-2">
-                                    <Lock className="w-5 h-5 text-indigo-400" />
+                                    <Lock className="w-5 h-5 text-lime-400" />
                                     Coffre-fort
                                 </h2>
                                 <p className="text-slate-400 text-sm">Gestion de vos données privées.</p>
@@ -274,7 +274,7 @@ const Settings: React.FC = () => {
                                     className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 transition-all group/item"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="p-2 bg-indigo-500/20 rounded-lg text-indigo-400 group-hover/item:text-white transition-colors"><FileDown className="w-5 h-5" /></div>
+                                        <div className="p-2 bg-lime-500/20 rounded-lg text-lime-400 group-hover/item:text-white transition-colors"><FileDown className="w-5 h-5" /></div>
                                         <div className="text-left">
                                             <p className="font-bold">Exporter les données</p>
                                             <p className="text-xs text-slate-400">Format CSV</p>
@@ -301,10 +301,10 @@ const Settings: React.FC = () => {
                     </section>
 
                     {/* Automations (Simplified View) */}
-                    <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div className="bg-white dark:bg-black rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="font-bold text-slate-900 dark:text-white">Règles Actives</h2>
-                            <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-black">{recurringTemplates.length}</span>
+                            <span className="px-2 py-1 bg-white dark:bg-white/5 rounded-lg text-xs font-black">{recurringTemplates.length}</span>
                         </div>
                         {recurringTemplates.length === 0 ? (
                             <div className="text-center py-8 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-2xl">
@@ -314,9 +314,9 @@ const Settings: React.FC = () => {
                         ) : (
                             <div className="space-y-3">
                                 {recurringTemplates.slice(0, 3).map(r => (
-                                    <div key={r.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                                    <div key={r.id} className="flex items-center justify-between p-3 bg-white dark:bg-white/5/50 rounded-xl">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                                            <div className="w-8 h-8 flex items-center justify-center bg-white dark:bg-white/5 rounded-lg shadow-sm">
                                                 <Repeat className="w-3 h-3 text-slate-400" />
                                             </div>
                                             <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{r.category}</span>
@@ -333,7 +333,7 @@ const Settings: React.FC = () => {
 
                     {/* System Info */}
                     <div className="flex flex-col items-center justify-center text-center p-6 space-y-4 opacity-60">
-                        <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                        <div className="w-10 h-10 bg-white dark:bg-white/5 rounded-xl flex items-center justify-center">
                             <Smartphone className="w-5 h-5 text-slate-400" />
                         </div>
                         <div>
@@ -341,9 +341,9 @@ const Settings: React.FC = () => {
                             <p className="text-[10px] text-slate-400 mt-1">Build 2024.10.25 • Neon Engine</p>
                         </div>
                         <div className="flex gap-4">
-                            <a href="#" className="text-[10px] font-bold text-indigo-500 hover:underline">Conditions</a>
-                            <a href="#" className="text-[10px] font-bold text-indigo-500 hover:underline">Confidentialité</a>
-                            <a href="#" className="text-[10px] font-bold text-indigo-500 hover:underline">Support</a>
+                            <a href="#" className="text-[10px] font-bold text-lime-500 hover:underline">Conditions</a>
+                            <a href="#" className="text-[10px] font-bold text-lime-500 hover:underline">Confidentialité</a>
+                            <a href="#" className="text-[10px] font-bold text-lime-500 hover:underline">Support</a>
                         </div>
                     </div>
                 </div>

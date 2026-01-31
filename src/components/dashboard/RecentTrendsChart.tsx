@@ -40,12 +40,12 @@ const RecentTrendsChart: React.FC = () => {
                 <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#d9ff4d" stopOpacity={0.8} />
+                            <stop offset="95%" stopColor="#d9ff4d" stopOpacity={0} />
                         </linearGradient>
                         <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#ff4d4d" stopOpacity={0.8} />
+                            <stop offset="95%" stopColor="#ff4d4d" stopOpacity={0} />
                         </linearGradient>
                     </defs>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" strokeOpacity={0.1} />
@@ -76,8 +76,8 @@ const RecentTrendsChart: React.FC = () => {
                     <Area
                         type="monotone"
                         dataKey="income"
-                        stroke="#10b981"
-                        strokeWidth={3}
+                        stroke="#d9ff4d"
+                        strokeWidth={4}
                         fillOpacity={1}
                         fill="url(#colorIncome)"
                         name="Revenus"
@@ -85,8 +85,8 @@ const RecentTrendsChart: React.FC = () => {
                     <Area
                         type="monotone"
                         dataKey="expense"
-                        stroke="#ef4444"
-                        strokeWidth={3}
+                        stroke="#ff4d4d"
+                        strokeWidth={4}
                         fillOpacity={1}
                         fill="url(#colorExpense)"
                         name="Dépenses"

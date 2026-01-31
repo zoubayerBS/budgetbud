@@ -1,19 +1,22 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useSession } from '../lib/auth-client';
-import type { Transaction, Budget, Category, Currency, RecurringTemplate, SavingsGoal } from '../types';
+import type { Transaction, Account, Budget, Category, Currency, RecurringTemplate, SavingsGoal } from '../types';
 
 interface BudgetContextType {
+    accounts: Account[];
     transactions: Transaction[];
     budgets: Budget[];
     recurringTemplates: RecurringTemplate[];
     savingsGoals: SavingsGoal[];
     addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
+    addAccount: (account: Omit<Account, 'id'>) => Promise<void>;
+    deleteTransaction: (id: string) => Promise<void>;
+    deleteAccount: (id: string) => Promise<void>;
     addRecurringTemplate: (template: Omit<RecurringTemplate, 'id'>) => Promise<void>;
     addSavingsGoal: (goal: Omit<SavingsGoal, 'id'>) => Promise<void>;
-    deleteTransaction: (id: string) => Promise<void>;
     deleteRecurringTemplate: (id: string) => Promise<void>;
     deleteSavingsGoal: (id: string) => Promise<void>;
-    updateBudget: (category: Category, limit: number) => Promise<void>;
+    updateBudget: (category: Category, limit: number, accountId?: string) => Promise<void>;
     updateSavingsGoal: (goal: SavingsGoal) => Promise<void>;
     resetAccount: () => Promise<void>;
     refresh: () => Promise<void>;
@@ -33,6 +36,7 @@ const BudgetContext = createContext<BudgetContextType | undefined>(undefined);
 export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { data: session, isPending } = useSession();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [accounts, setAccounts] = useState<Account[]>([]);
     const [budgets, setBudgets] = useState<Budget[]>([]);
     const [recurringTemplates, setRecurringTemplates] = useState<RecurringTemplate[]>([]);
     const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>([]);
@@ -86,22 +90,29 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         if (showLoading) setLoading(true);
         try {
             const headers = getHeaders();
-            const [resTrans, resBudgets, resRecurring, resSavings] = await Promise.all([
+            const [resTrans, resBudgets, resRecurring, resSavings, resAccounts] = await Promise.all([
                 fetch(`${API_URL}/transactions`, { headers }),
                 fetch(`${API_URL}/budgets`, { headers }),
                 fetch(`${API_URL}/recurring`, { headers }),
-                fetch(`${API_URL}/savings`, { headers })
+                fetch(`${API_URL}/savings`, { headers }),
+                fetch(`${API_URL}/accounts`, { headers })
             ]);
 
-            if (resTrans.ok && resBudgets.ok && resRecurring.ok && resSavings.ok) {
+            if (resTrans.ok && resBudgets.ok && resRecurring.ok && resSavings.ok && resAccounts.ok) {
                 const tData = await resTrans.json();
                 const bData = await resBudgets.json();
                 const rData = await resRecurring.json();
                 const sData = await resSavings.json();
+                const aData = await resAccounts.json();
 
                 setTransactions(tData.map((t: any) => ({
                     ...t,
                     amount: parseFloat(t.amount) || 0
+                })));
+
+                setAccounts(aData.map((a: any) => ({
+                    ...a,
+                    balance: parseFloat(a.balance) || 0
                 })));
 
                 setBudgets(bData.map((b: any) => ({
@@ -146,6 +157,33 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 ...newT,
                 amount: parseFloat(newT.amount) || 0
             }, ...prev]);
+            await fetchData(false); // Update balances
+        } catch (err) { console.error(err); }
+    };
+
+    const addAccount = async (account: Omit<Account, 'id'>) => {
+        try {
+            const res = await fetch(`${API_URL}/accounts`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(account)
+            });
+            const newA = await res.json();
+            setAccounts(prev => [{
+                ...newA,
+                balance: parseFloat(newA.balance) || 0
+            }, ...prev]);
+        } catch (err) { console.error(err); }
+    };
+
+    const deleteAccount = async (id: string) => {
+        try {
+            await fetch(`${API_URL}/accounts/${id}`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            setAccounts(prev => prev.filter(a => a.id !== id));
+            await fetchData(false); // Update transactions deleted by cascade
         } catch (err) { console.error(err); }
     };
 
@@ -172,6 +210,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 headers: getHeaders()
             });
             setTransactions(prev => prev.filter(t => t.id !== id));
+            await fetchData(false); // Revert balances
         } catch (err) { console.error(err); }
     };
 
@@ -227,12 +266,12 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         } catch (err) { console.error(err); }
     };
 
-    const updateBudget = async (category: Category, limit: number) => {
+    const updateBudget = async (category: Category, limit: number, accountId?: string) => {
         try {
             const res = await fetch(`${API_URL}/budgets`, {
                 method: 'POST',
                 headers: getHeaders(),
-                body: JSON.stringify({ category, limit_amount: limit })
+                body: JSON.stringify({ category, limit_amount: limit, account_id: accountId })
             });
             const updatedB = await res.json();
             const numericLimit = parseFloat(updatedB.limit_amount) || 0;
@@ -266,14 +305,17 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     return (
         <BudgetContext.Provider value={{
+            accounts,
             transactions,
             budgets,
             recurringTemplates,
             savingsGoals,
             addTransaction,
+            addAccount,
+            deleteTransaction,
+            deleteAccount,
             addRecurringTemplate,
             addSavingsGoal,
-            deleteTransaction,
             deleteRecurringTemplate,
             deleteSavingsGoal,
             updateBudget,
@@ -291,7 +333,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             user: session?.user
         }}>
             {children}
-        </BudgetContext.Provider>
+        </BudgetContext.Provider >
     );
 };
 

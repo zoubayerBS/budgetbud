@@ -36,10 +36,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, label }) => {
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl text-sm font-bold text-slate-800 dark:text-white shadow-inner flex items-center justify-between group transition-all active:scale-[0.98]"
+                className="w-full px-5 py-3.5 bg-white dark:bg-black border-none rounded-2xl text-sm font-bold text-slate-800 dark:text-white shadow-inner flex items-center justify-between group transition-all active:scale-[0.98]"
             >
                 <span>{format(selectedDate, 'dd MMMM yyyy', { locale: fr })}</span>
-                <CalendarIcon className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                <CalendarIcon className="w-5 h-5 text-slate-400 group-hover:text-lime-500 transition-colors" />
             </button>
 
             {isOpen && (
@@ -53,7 +53,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, label }) => {
                             <button
                                 type="button"
                                 onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                                className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:scale-110 transition-transform shadow-sm"
+                                className="p-3 bg-white dark:bg-white/5 rounded-2xl hover:scale-110 transition-transform shadow-sm"
                             >
                                 <ChevronLeft className="w-6 h-6 text-slate-600 dark:text-slate-300" />
                             </button>
@@ -68,7 +68,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, label }) => {
                             <button
                                 type="button"
                                 onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                                className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:scale-110 transition-transform shadow-sm"
+                                className="p-3 bg-white dark:bg-white/5 rounded-2xl hover:scale-110 transition-transform shadow-sm"
                             >
                                 <ChevronRight className="w-6 h-6 text-slate-600 dark:text-slate-300" />
                             </button>
@@ -95,8 +95,8 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, label }) => {
                                         className={cn(
                                             "aspect-square rounded-2xl flex items-center justify-center text-sm font-black transition-all",
                                             !isCurrentMonth && "text-slate-300 dark:text-slate-600 opacity-30",
-                                            isCurrentMonth && !isSelected && "text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-500",
-                                            isSelected && "bg-blue-500 text-white shadow-lg shadow-blue-500/40 scale-110 z-10"
+                                            isCurrentMonth && !isSelected && "text-slate-600 dark:text-slate-300 hover:bg-lime-50 dark:hover:bg-slate-800 hover:text-lime-500",
+                                            isSelected && "bg-lime-500 text-black shadow-lg shadow-lime-500/40 scale-110 z-10"
                                         )}
                                     >
                                         {format(day, 'd')}
@@ -109,14 +109,14 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, label }) => {
                             <button
                                 type="button"
                                 onClick={() => setIsOpen(false)}
-                                className="py-4 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-slate-100 transition-all active:scale-95"
+                                className="py-4 bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-white transition-all active:scale-95"
                             >
                                 Annuler
                             </button>
                             <button
                                 type="button"
                                 onClick={() => handleDateSelect(new Date())}
-                                className="py-4 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-blue-100 transition-all active:scale-95 shadow-sm"
+                                className="py-4 bg-lime-50 text-lime-600 dark:bg-lime-900/20 dark:text-lime-400 text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-lime-100 transition-all active:scale-95 shadow-sm"
                             >
                                 Aujourd'hui
                             </button>

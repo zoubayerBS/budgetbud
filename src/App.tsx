@@ -18,7 +18,7 @@ import AddTransactionModal from './components/modals/AddTransactionModal';
 const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { data: session, isPending } = useSession();
 
-  if (isPending) return <div className="min-h-screen flex items-center justify-center bg-[#eef2f6] dark:bg-[#111827]">Chargement...</div>;
+  if (isPending) return <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black text-slate-900 dark:text-white">Chargement...</div>;
 
   if (!session) {
     return <Navigate to="/login" replace />;

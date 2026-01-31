@@ -79,26 +79,26 @@ const NeuralButler: React.FC = () => {
                     "w-16 h-16 rounded-[2rem] flex items-center justify-center transition-all duration-500 shadow-2xl relative group overflow-hidden",
                     isOpen
                         ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 rotate-90"
-                        : "bg-indigo-600 text-white animate-blink-glow"
+                        : "bg-lime-600 text-black animate-blink-glow"
                 )}
             >
-                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-lime-500/20 to-lime-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 {isOpen ? <X className="w-6 h-6" /> : <BrainCircuit className="w-8 h-8" />}
             </button>
 
             {/* Chat Interface */}
             {isOpen && (
-                <div className="absolute bottom-20 right-0 w-[90vw] md:w-[450px] max-h-[70vh] flex flex-col bg-white/80 dark:bg-slate-950/80 backdrop-blur-2xl border border-white/20 dark:border-slate-800 rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.3)] overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
+                <div className="absolute bottom-20 right-0 w-[90vw] md:w-[450px] max-h-[70vh] flex flex-col bg-white/80 dark:bg-black/80 backdrop-blur-2xl border border-white/20 dark:border-slate-800 rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.3)] overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
 
                     {/* Header */}
-                    <div className="p-6 border-b border-white/10 flex items-center gap-4 bg-gradient-to-r from-indigo-600/10 to-purple-600/10">
-                        <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                    <div className="p-6 border-b border-white/10 flex items-center gap-4 bg-gradient-to-r from-lime-600/10 to-lime-600/10">
+                        <div className="w-10 h-10 bg-lime-600 rounded-2xl flex items-center justify-center text-black shadow-lg">
                             <BrainCircuit className="w-6 h-6" />
                         </div>
                         <div>
                             <h3 className="font-black text-sm uppercase tracking-[0.2em] dark:text-white">Neural Butler</h3>
                             <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                                <div className="w-1.5 h-1.5 bg-lime-500 rounded-full animate-pulse"></div>
                                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">En ligne</span>
                             </div>
                         </div>
@@ -118,7 +118,7 @@ const NeuralButler: React.FC = () => {
                                     "p-4 rounded-[1.5rem] text-sm font-medium leading-relaxed shadow-sm",
                                     m.role === 'user'
                                         ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-tr-none"
-                                        : "bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-tl-none"
+                                        : "bg-white dark:bg-black border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-tl-none"
                                 )}>
                                     {m.content}
                                 </div>
@@ -140,7 +140,7 @@ const NeuralButler: React.FC = () => {
                                 <button
                                     key={i}
                                     onClick={() => handleSend(s.label)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-800 transition-all shrink-0 active:scale-95"
+                                    className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-black hover:bg-lime-50 dark:hover:bg-lime-900/30 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-800 transition-all shrink-0 active:scale-95"
                                 >
                                     <s.icon className="w-3 h-3" />
                                     {s.label}
@@ -157,12 +157,12 @@ const NeuralButler: React.FC = () => {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder="Posez une question..."
-                                className="flex-1 bg-slate-100 dark:bg-slate-900 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white dark:placeholder-slate-500"
+                                className="flex-1 bg-white dark:bg-black border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-lime-500 transition-all dark:text-white dark:placeholder-slate-500"
                             />
                             <button
                                 type="submit"
                                 disabled={!input.trim() || isLoading}
-                                className="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-500/20 transition-all active:scale-90 disabled:opacity-50 disabled:grayscale"
+                                className="w-14 h-14 bg-lime-600 hover:bg-lime-700 text-black rounded-2xl flex items-center justify-center shadow-xl shadow-lime-500/20 transition-all active:scale-90 disabled:opacity-50 disabled:grayscale"
                             >
                                 <Send className="w-5 h-5" />
                             </button>

@@ -34,10 +34,10 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#eef2f6] dark:bg-[#111827] p-4">
+        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black p-4">
             <div className="clay-card p-8 w-full max-w-md animate-in zoom-in-95 duration-500">
                 <div className="flex flex-col items-center mb-8 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-[1.75rem] flex items-center justify-center shadow-xl shadow-blue-500/20 text-white mb-6 transition-transform hover:scale-110 duration-500">
+                    <div className="w-16 h-16 bg-gradient-to-tr from-lime-500 to-lime-600 rounded-[1.75rem] flex items-center justify-center shadow-xl shadow-lime-500/20 text-black mb-6 transition-transform hover:scale-110 duration-500">
                         <span className="font-black text-3xl tracking-tighter">B</span>
                     </div>
                     <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-tight">BudgetBud</h2>
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
                             type="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            className="w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-blue-500/50"
+                            className="w-full p-4 bg-white dark:bg-black rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-lime-500/50"
                             required
                         />
                     </div>
@@ -67,7 +67,7 @@ const Login: React.FC = () => {
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            className="w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-blue-500/50"
+                            className="w-full p-4 bg-white dark:bg-black rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-lime-500/50"
                             required
                         />
                     </div>
@@ -87,12 +87,12 @@ const Login: React.FC = () => {
                             setEmail('demo@budgetbud.com');
                             setPassword('budgetbud2026');
                         }}
-                        className="text-blue-500 font-black text-[10px] uppercase tracking-widest hover:text-blue-600 transition-colors"
+                        className="text-lime-600 font-black text-[10px] uppercase tracking-widest hover:text-lime-700 transition-colors"
                     >
                         Utiliser les accès démo
                     </button>
                     <p className="text-slate-500 font-medium text-sm">
-                        Pas encore de compte ? <Link to="/register" className="text-blue-600 font-bold hover:underline">Créer un compte</Link>
+                        Pas encore de compte ? <Link to="/register" className="text-lime-600 font-bold hover:underline">Créer un compte</Link>
                     </p>
                 </div>
             </div>

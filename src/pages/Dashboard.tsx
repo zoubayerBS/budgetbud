@@ -6,8 +6,9 @@ import RecentActivity from '../components/dashboard/RecentActivity';
 import ExpensePieChart from '../components/dashboard/ExpensePieChart';
 import MonthlyComparisonChart from '../components/dashboard/MonthlyComparisonChart';
 import InsightCard from '../components/dashboard/InsightCard';
+import AccountsList from '../components/dashboard/AccountsList';
 import { Link } from 'react-router-dom';
-import { AlertTriangle, Target, TrendingUp, Sparkles, ChevronRight, Calendar } from 'lucide-react';
+import { AlertTriangle, Target, Sparkles, ChevronRight, Calendar } from 'lucide-react';
 import { formatCurrency } from '../lib/format';
 
 const Dashboard: React.FC = () => {
@@ -45,18 +46,18 @@ const Dashboard: React.FC = () => {
             {/* Header: Executive Status Bar */}
             <div className="flex flex-col md:flex-row items-end justify-between gap-6 px-2">
                 <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-indigo-500 font-black text-[10px] uppercase tracking-[0.3em] opacity-80 mb-2">
+                    <div className="flex items-center gap-2 text-lime-600 font-black text-[10px] uppercase tracking-[0.3em] opacity-80 mb-2">
                         <Sparkles className="w-3 h-3" />
                         <span>État du compte</span>
                     </div>
                     <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
-                        Bonjour, <span className="text-indigo-600 dark:text-indigo-400">{user?.name || 'Utilisateur'}</span>
+                        Bonjour, <span className="text-lime-600 dark:text-lime-400">{user?.name || 'Utilisateur'}</span>
                     </h1>
                     <p className="text-slate-500 font-bold text-base opacity-80">Tout est sous contrôle aujourd'hui.</p>
                 </div>
 
-                <div className="flex items-center gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 dark:border-slate-800 shadow-sm">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50"></div>
+                <div className="flex items-center gap-4 bg-white/40 dark:bg-black/40 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 dark:border-slate-800 shadow-sm">
+                    <div className="w-2 h-2 bg-lime-500 rounded-full animate-pulse shadow-lg shadow-lime-500/50"></div>
                     <span className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                         {new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
                     </span>
@@ -87,31 +88,30 @@ const Dashboard: React.FC = () => {
                 )}
 
                 {/* 2. Global Vision: Financial Overview (8 cols) */}
-                <div className="md:col-span-8 md:row-span-2 bento-tile flex flex-col justify-between group overflow-hidden border-none shadow-2xl shadow-indigo-500/10 active:scale-[0.99] transition-transform border-l-4 border-emerald-500/20">
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <TrendingUp className="w-48 h-48 rotate-12" />
-                    </div>
+                <div className="md:col-span-8 md:row-span-2 relative group overflow-hidden rounded-[2.5rem] shadow-2xl transition-all duration-700 hover:shadow-lime-500/10 active:scale-[0.99] border border-slate-100 dark:border-white/5 group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-black group-hover:from-black group-hover:to-slate-900 transition-all duration-1000"></div>
                     <div className="relative z-10 w-full h-full">
-                        <div className="flex items-center gap-3 mb-10">
-                            <div className="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
-                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('totalBalance')}</h3>
-                        </div>
                         <FinancialOverview />
                     </div>
                 </div>
 
-                {/* 3. Smart Pulse: Insight Card (4 cols) */}
-                <div className="md:col-span-4 md:row-span-2">
-                    <InsightCard />
+                {/* 3. Smart Pulse: Insight Card & Accounts (4 cols) */}
+                <div className="md:col-span-4 md:row-span-2 space-y-6">
+                    <div className="hover:scale-[1.01] transition-transform duration-500">
+                        <InsightCard />
+                    </div>
+                    <div className="bento-tile bg-white dark:bg-black/40 border-l-4 border-lime-500/20">
+                        <AccountsList />
+                    </div>
                 </div>
 
                 {/* 4. Temporal Stream: Monthly Comparison (12 cols) */}
-                <div className="md:col-span-12 md:row-span-2 bento-tile bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-none relative overflow-hidden group border-r-4 border-blue-500/20">
-                    <div className="absolute inset-0 bg-blue-600/10 dark:bg-blue-500/5"></div>
+                <div className="md:col-span-12 md:row-span-2 bento-tile bg-white dark:bg-black text-slate-900 dark:text-white border border-slate-100 dark:border-white/5 relative overflow-hidden group hover:shadow-lime-500/10 transition-all duration-700">
+                    <div className="absolute inset-0 bg-lime-500/5 dark:bg-lime-500/5"></div>
                     <div className="relative z-10 h-full flex flex-col">
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-3">
-                                <div className="w-1.5 h-6 bg-blue-500 rounded-full"></div>
+                                <div className="w-1.5 h-6 bg-lime-500 rounded-full"></div>
                                 <h3 className="text-xl font-black tracking-tighter">Comparaison Mensuelle</h3>
                             </div>
                             <Calendar className="w-5 h-5 opacity-40" />
@@ -123,13 +123,13 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {/* 5. Sectorial Matrix: Distribution (5 cols) */}
-                <div className="md:col-span-5 md:row-span-3 bento-tile border-l-4 border-purple-500/20">
+                <div className="md:col-span-5 md:row-span-3 bento-tile bg-white dark:bg-black/40 border-l-4 border-lime-500/20 hover:scale-[1.01] transition-transform duration-500">
                     <div className="flex items-center justify-between mb-10">
                         <div className="flex items-center gap-3">
-                            <div className="w-1.5 h-6 bg-purple-500 rounded-full"></div>
+                            <div className="w-1.5 h-6 bg-lime-500 rounded-full"></div>
                             <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Où va votre argent</h3>
                         </div>
-                        <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+                        <span className="w-2 h-2 bg-lime-500 rounded-full animate-pulse"></span>
                     </div>
                     <div className="h-[360px]">
                         <ExpensePieChart />
@@ -137,14 +137,14 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {/* 6. Execution Stream: Recent Activity (7 cols) */}
-                <div className="md:col-span-7 md:row-span-3 bento-tile bg-white dark:bg-slate-900/40 relative overflow-hidden border-orange-500/10 dark:border-orange-400/10">
-                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl"></div>
+                <div className="md:col-span-7 md:row-span-3 bento-tile bg-white dark:bg-black/40 relative overflow-hidden hover:scale-[1.01] transition-transform duration-500">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-lime-500/5 rounded-full blur-3xl"></div>
                     <div className="flex items-center justify-between mb-8 relative z-10">
                         <div className="flex items-center gap-3">
-                            <div className="w-1.5 h-5 bg-orange-500 rounded-full"></div>
+                            <div className="w-1.5 h-5 bg-lime-500 rounded-full"></div>
                             <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('recentActivity')}</h3>
                         </div>
-                        <Link to="/history" className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-orange-500 hover:text-white dark:hover:bg-orange-400 dark:hover:text-black transition-all">
+                        <Link to="/history" className="p-2 bg-white dark:bg-white/5 rounded-full hover:bg-lime-500 hover:text-black dark:hover:bg-lime-400 dark:hover:text-black transition-all">
                             <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
@@ -155,12 +155,11 @@ const Dashboard: React.FC = () => {
 
                 {/* 7. Strategic Target: Savings (12 cols) */}
                 <div className="md:col-span-12 md:row-span-2 spatial-card group h-full">
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                    <div className="relative z-10 p-10 h-full flex flex-col md:flex-row items-center justify-between gap-10 group-hover:text-white transition-colors">
-
+                    <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-900 to-black opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                    <div className="relative z-10 p-10 h-full flex flex-col md:flex-row items-center justify-between gap-10 group-hover:text-white transition-colors duration-500">
                         <div className="flex items-center gap-6 flex-wrap justify-center md:justify-start">
-                            <div className="w-20 h-20 bg-indigo-500/10 rounded-[2.5rem] border border-indigo-500/20 flex items-center justify-center group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-700 group-hover:rotate-[360deg]">
-                                <Target className="w-10 h-10 text-indigo-500 group-hover:text-emerald-400" />
+                            <div className="w-20 h-20 bg-lime-500/10 rounded-[2.5rem] border border-lime-500/20 flex items-center justify-center group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-700 group-hover:rotate-[360deg]">
+                                <Target className="w-10 h-10 text-lime-500 group-hover:text-lime-400" />
                             </div>
                             <div className="space-y-1 text-center md:text-left">
                                 <h3 className="text-4xl font-black tracking-tighter">Objectifs d'Épargne</h3>
@@ -175,9 +174,9 @@ const Dashboard: React.FC = () => {
                                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Économisé</span>
                                 <span className="text-3xl font-black tracking-tighter">{formatCurrency(totalCurrentSavings, currency)}</span>
                             </div>
-                            <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-1 shadow-inner group-hover:bg-white/10">
+                            <div className="h-4 bg-white dark:bg-white/5 rounded-full overflow-hidden p-1 shadow-inner group-hover:bg-white/10">
                                 <div
-                                    className="h-full bg-indigo-600 dark:bg-indigo-400 group-hover:bg-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                                    className="h-full bg-lime-600 dark:bg-lime-400 group-hover:bg-lime-400 rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                                     style={{ width: `${Math.min(savingsProgress, 100)}%` }}
                                 ></div>
                             </div>
@@ -186,9 +185,9 @@ const Dashboard: React.FC = () => {
                         <div className="flex items-center gap-3 shrink-0">
                             <Link
                                 to="/advisor"
-                                className="px-8 py-6 bg-indigo-600/10 backdrop-blur-md text-indigo-600 dark:text-indigo-400 rounded-[2.5rem] font-black text-xs shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border border-indigo-500/20 flex items-center gap-2 group/btn animate-blink-glow"
+                                className="px-8 py-6 bg-lime-500/10 backdrop-blur-md text-lime-600 dark:text-lime-400 rounded-[2.5rem] font-black text-xs shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border border-lime-500/20 flex items-center gap-2 group/btn animate-blink-glow"
                             >
-                                <Sparkles className="w-4 h-4 text-indigo-400 group-hover/btn:animate-pulse" />
+                                <Sparkles className="w-4 h-4 text-lime-400 group-hover/btn:animate-pulse" />
                                 Simulation IA
                             </Link>
                             <Link

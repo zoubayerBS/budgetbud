@@ -29,22 +29,22 @@ const KPIStats: React.FC = () => {
             label: 'Revenus',
             amount: stats.income,
             icon: TrendingUp,
-            color: 'text-emerald-500',
-            bgColor: 'bg-emerald-100 dark:bg-emerald-500/20',
+            color: 'text-lime-600 dark:text-lime-400',
+            bgColor: 'bg-lime-500/10 dark:bg-lime-500/20',
         },
         {
             label: 'Dépenses',
             amount: stats.expense,
             icon: TrendingDown,
-            color: 'text-red-500',
-            bgColor: 'bg-red-100 dark:bg-red-500/20',
+            color: 'text-red-600 dark:text-red-400',
+            bgColor: 'bg-red-500/10 dark:bg-red-500/20',
         },
         {
             label: 'Solde',
             amount: balance,
             icon: Wallet,
-            color: 'text-blue-500',
-            bgColor: 'bg-blue-100 dark:bg-blue-500/20',
+            color: 'text-lime-600 dark:text-lime-400',
+            bgColor: 'bg-lime-500/10 dark:bg-lime-500/20',
         },
     ];
 

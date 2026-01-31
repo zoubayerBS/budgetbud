@@ -12,7 +12,7 @@ export default defineConfig({
         name: 'BudgetBud Finance',
         short_name: 'BudgetBud',
         description: 'La révolution financière dans votre poche.',
-        theme_color: '#3b82f6',
+        theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [

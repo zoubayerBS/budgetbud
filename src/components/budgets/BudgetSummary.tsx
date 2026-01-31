@@ -48,9 +48,9 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
     }, [totalBudget, totalSpent, percentage]);
 
     const getHealthStatus = () => {
-        if (healthScore > 90) return { label: 'Optimum', color: 'text-emerald-500', bg: 'bg-emerald-500/10' };
-        if (healthScore > 70) return { label: 'Sain', color: 'text-blue-500', bg: 'bg-blue-500/10' };
-        if (healthScore > 40) return { label: 'Vigilance', color: 'text-amber-500', bg: 'bg-amber-500/10' };
+        if (healthScore > 90) return { label: 'Optimum', color: 'text-lime-500', bg: 'bg-lime-500/10' };
+        if (healthScore > 70) return { label: 'Sain', color: 'text-lime-500', bg: 'bg-lime-500/10' };
+        if (healthScore > 40) return { label: 'Vigilance', color: 'text-lime-400', bg: 'bg-lime-400/10' };
         return { label: 'Critique', color: 'text-red-500', bg: 'bg-red-500/10' };
     };
 
@@ -61,7 +61,7 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
             {/* Primary Executive Card */}
             <div className="lg:col-span-8 executive-card p-10 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-500/5 rounded-full -mr-40 -mt-40 blur-[100px]" />
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-lime-500/5 rounded-full -mr-40 -mt-40 blur-[100px]" />
 
                 <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
@@ -77,7 +77,7 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Efficacité</p>
                                 <p className="text-2xl font-bold text-slate-800 dark:text-zinc-200 tracking-tight">{Math.round(100 - percentage)}% Libres</p>
                             </div>
-                            <div className="w-14 h-14 rounded-2xl soft-in flex items-center justify-center text-indigo-600">
+                            <div className="w-14 h-14 rounded-2xl soft-in flex items-center justify-center text-lime-600">
                                 <LineChart className="w-7 h-7" />
                             </div>
                         </div>
@@ -89,14 +89,14 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Répartition des Flux</span>
                                 <span className="text-[10px] font-bold text-slate-500">{budgets.length} Catégories Actives</span>
                             </div>
-                            <div className="relative h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+                            <div className="relative h-4 bg-white dark:bg-white/5 rounded-full overflow-hidden flex shadow-inner">
                                 {budgets.map((b, i) => {
                                     const categorySpent = spentByCategory[b.category] || 0;
                                     const share = totalSpent > 0 ? (categorySpent / totalSpent) * 100 : 0;
                                     const colors = [
-                                        'bg-indigo-500', 'bg-emerald-500', 'bg-amber-500',
-                                        'bg-rose-500', 'bg-cyan-500', 'bg-violet-500',
-                                        'bg-sky-500', 'bg-teal-500'
+                                        'bg-lime-500', 'bg-lime-500', 'bg-slate-900',
+                                        'bg-red-500', 'bg-slate-400', 'bg-lime-300',
+                                        'bg-lime-600', 'bg-slate-700'
                                     ];
                                     if (share === 0) return null;
                                     return (
@@ -113,8 +113,8 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
                             <div className="flex flex-wrap gap-4 mt-4">
                                 {budgets.slice(0, 4).map((b, i) => {
                                     const colors = [
-                                        'bg-indigo-500', 'bg-emerald-500', 'bg-amber-500',
-                                        'bg-rose-500'
+                                        'bg-lime-500', 'bg-lime-500', 'bg-slate-400',
+                                        'bg-red-500'
                                     ];
                                     return (
                                         <div key={b.category} className="flex items-center gap-2">
@@ -134,11 +134,11 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
                                     {Math.round(percentage)}% du total
                                 </span>
                             </div>
-                            <div className="relative h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                            <div className="relative h-2 bg-white dark:bg-white/5 rounded-full overflow-hidden shadow-inner">
                                 <div
                                     className={cn(
                                         "h-full rounded-full transition-all duration-1000 ease-in-out",
-                                        percentage > 95 ? "bg-red-500" : percentage > 80 ? "bg-amber-500" : "bg-indigo-600"
+                                        percentage > 95 ? "bg-red-500" : percentage > 80 ? "bg-lime-400" : "bg-lime-600"
                                     )}
                                     style={{ width: `${Math.min(percentage, 100)}%` }}
                                 />
@@ -147,7 +147,7 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({
 
                         <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             <span className="flex items-center gap-2">
-                                <Activity className="w-3 h-3" /> Décaissé: {formatCurrency(totalSpent, currency as any)}
+                                <Activity className="w-3 h-3" /> Décaissé: <span className="text-red-500">{formatCurrency(totalSpent, currency as any)}</span>
                             </span>
                             <span className="flex items-center gap-2">
                                 <History className="w-3 h-3" /> Libre: {formatCurrency(Math.max(0, remaining), currency as any)}

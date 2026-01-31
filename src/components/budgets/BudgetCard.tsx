@@ -19,7 +19,7 @@ interface BudgetCardProps {
 }
 
 const Sparkline = ({ data }: { data: number[] }) => {
-    if (data.length < 2) return <div className="h-full w-full bg-slate-100 dark:bg-slate-800 rounded-lg opacity-20" />;
+    if (data.length < 2) return <div className="h-full w-full bg-white dark:bg-white/5 rounded-lg opacity-20" />;
 
     const max = Math.max(...data, 1);
     const min = Math.min(...data);
@@ -42,7 +42,7 @@ const Sparkline = ({ data }: { data: number[] }) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 points={points}
-                className="text-indigo-500/40 dark:text-indigo-400/30"
+                className="text-lime-500/40 dark:text-lime-400/30"
             />
             {/* Last point indicator */}
             <circle
@@ -50,7 +50,7 @@ const Sparkline = ({ data }: { data: number[] }) => {
                 cy={height - ((data[data.length - 1] - min) / range) * height}
                 r="3"
                 fill="currentColor"
-                className="text-indigo-500"
+                className="text-lime-500"
             />
         </svg>
     );
@@ -112,14 +112,14 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent, categoryTransact
             {/* Subtle Gradient Backdrop */}
             <div className={cn(
                 "absolute top-0 right-0 w-32 h-32 blur-3xl rounded-full opacity-10 transition-colors",
-                isOverBudget ? "bg-red-500" : isPaceFast ? "bg-orange-500" : "bg-emerald-500"
+                isOverBudget ? "bg-red-500" : isPaceFast ? "bg-lime-400" : "bg-lime-500"
             )} />
 
             <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-4">
                     <div className={cn(
                         "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm",
-                        isOverBudget ? "bg-red-50 text-red-600" : "bg-slate-50 dark:bg-slate-800 text-slate-400"
+                        isOverBudget ? "bg-red-50 text-red-600" : "bg-white dark:bg-white/5 text-slate-400"
                     )}>
                         <Target className="w-6 h-6" />
                     </div>
@@ -139,7 +139,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent, categoryTransact
                             setLimit(budget.limit.toString());
                             setIsEditing(true);
                         }}
-                        className="p-2 opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-slate-400"
+                        className="p-2 opacity-0 group-hover:opacity-100 transition-all hover:bg-white dark:hover:bg-slate-800 rounded-xl text-slate-400"
                     >
                         <Pencil className="w-4 h-4" />
                     </button>
@@ -162,7 +162,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent, categoryTransact
                         <button onClick={handleSave} className="flex-1 clay-button-primary py-3 rounded-xl text-sm font-bold">
                             Confirmer
                         </button>
-                        <button onClick={() => setIsEditing(false)} className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-400">
+                        <button onClick={() => setIsEditing(false)} className="p-3 bg-white dark:bg-white/5 rounded-xl text-slate-400">
                             <X className="w-5 h-5" />
                         </button>
                     </div>
@@ -176,17 +176,17 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent, categoryTransact
                                 <Activity className="w-3 h-3 text-slate-400" />
                                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Vitesse 7 Jours</span>
                             </div>
-                            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Temps Réel</span>
+                            <span className="text-[9px] font-bold text-lime-500 uppercase tracking-widest">Temps Réel</span>
                         </div>
                         <Sparkline data={weeklyData} />
                     </div>
 
                     {/* Main Bar */}
-                    <div className="relative h-2 bg-slate-100 dark:bg-slate-800 rounded-full mb-8 overflow-hidden">
+                    <div className="relative h-2 bg-white dark:bg-white/5 rounded-full mb-8 overflow-hidden">
                         <div
                             className={cn(
                                 "h-full rounded-full transition-all duration-1000 ease-out relative group",
-                                isOverBudget ? "bg-red-500" : isPaceFast ? "bg-orange-500" : "bg-emerald-500"
+                                isOverBudget ? "bg-red-500" : isPaceFast ? "bg-lime-400" : "bg-lime-500"
                             )}
                             style={{ width: `${percentageSpent}%` }}
                         />
@@ -228,7 +228,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent, categoryTransact
                         <div className="flex items-center gap-3">
                             <div className={cn(
                                 "w-2 h-2 rounded-full",
-                                isOverBudget || isProjectedToExceed ? "bg-red-500 animate-pulse" : isPaceFast ? "bg-orange-500" : "bg-emerald-500"
+                                isOverBudget || isProjectedToExceed ? "bg-red-500 animate-pulse" : isPaceFast ? "bg-lime-400" : "bg-lime-500"
                             )} />
                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                                 {isOverBudget ? 'Budget Épuisé' : isProjectedToExceed ? 'Risque Projection' : 'Rythme Maîtrisé'}
@@ -240,7 +240,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget, spent, categoryTransact
                             {isProjectedToExceed ? (
                                 <ArrowUpRight className="w-3 h-3 text-red-500" />
                             ) : (
-                                <ArrowDownRight className="w-3 h-3 text-emerald-500" />
+                                <ArrowDownRight className="w-3 h-3 text-lime-500" />
                             )}
                         </div>
                     </div>

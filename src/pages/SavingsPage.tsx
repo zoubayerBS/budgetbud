@@ -37,11 +37,11 @@ const Savings: React.FC = () => {
             <div className="flex flex-col md:flex-row items-end justify-between gap-6 px-2">
                 <div className="space-y-1 text-center md:text-left">
                     <div className="flex items-center gap-3 justify-center md:justify-start">
-                        <Sparkles className="w-5 h-5 text-indigo-500 animate-pulse" />
+                        <Sparkles className="w-5 h-5 text-lime-500 animate-pulse" />
                         <h1 className="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Mes Projets</h1>
                     </div>
                     <h2 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
-                        {t('savings')} <span className="text-indigo-600 dark:text-indigo-400">Stratégie</span>
+                        {t('savings')} <span className="text-lime-600 dark:text-lime-400">Stratégie</span>
                     </h2>
                 </div>
 
@@ -58,30 +58,30 @@ const Savings: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
 
                 {/* 1. Global Vision: Immersive Hero (8 cols) */}
-                <div className="md:col-span-8 md:row-span-2 spatial-card bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 p-12 relative overflow-hidden group min-h-[400px] flex flex-col justify-between">
-                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500/10 rounded-full -mr-32 -mt-32 blur-[120px] group-hover:bg-indigo-500/20 transition-all duration-1000"></div>
+                <div className="md:col-span-8 md:row-span-2 spatial-card bg-gradient-to-br from-slate-900 via-black to-slate-900 p-12 relative overflow-hidden group min-h-[400px] flex flex-col justify-between">
+                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-lime-500/10 rounded-full -mr-32 -mt-32 blur-[120px] group-hover:bg-lime-500/20 transition-all duration-1000"></div>
 
                     <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
                         <div className="flex items-center gap-3 mb-8">
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>
-                            <p className="text-indigo-200/50 font-black uppercase tracking-[0.2em] text-[10px]">Progression Totale</p>
+                            <div className="w-2 h-2 bg-lime-400 rounded-full shadow-[0_0_10px_rgba(217,255,77,0.8)]"></div>
+                            <p className="text-lime-200/50 font-black uppercase tracking-[0.2em] text-[10px]">Progression Totale</p>
                         </div>
                         <h3 className="text-8xl md:text-9xl font-black text-white tracking-tighter mb-4 transition-all duration-700 group-hover:scale-105 origin-left">
-                            {Math.round(globalProgress)}<span className="text-indigo-400">%</span>
+                            {Math.round(globalProgress)}<span className="text-lime-400">%</span>
                         </h3>
-                        <p className="text-indigo-200/40 font-bold text-lg max-w-sm">
+                        <p className="text-lime-200/40 font-bold text-lg max-w-sm">
                             Vous avez déjà économisé <span className="text-white">{formatCurrency(totalCurrent, currency)}</span> sur un objectif de {formatCurrency(totalTarget, currency)}.
                         </p>
                     </div>
 
                     <div className="relative z-10 w-full mt-10">
                         <div className="flex justify-between items-end mb-4">
-                            <span className="text-[10px] font-black text-indigo-200/50 uppercase tracking-widest">Épargne actuelle</span>
+                            <span className="text-[10px] font-black text-lime-200/50 uppercase tracking-widest">Épargne actuelle</span>
                             <span className="text-xs font-black text-white">{formatCurrency(totalCurrent, currency)}</span>
                         </div>
                         <div className="h-4 bg-white/5 rounded-full overflow-hidden p-1 shadow-inner border border-white/10 backdrop-blur-xl">
                             <div
-                                className="h-full bg-gradient-to-r from-indigo-500 via-blue-400 to-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(99,102,241,0.5)]"
+                                className="h-full bg-gradient-to-r from-lime-500 via-lime-400 to-lime-300 rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(217,255,77,0.5)]"
                                 style={{ width: `${Math.min(globalProgress, 100)}%` }}
                             ></div>
                         </div>
@@ -90,8 +90,8 @@ const Savings: React.FC = () => {
 
                 {/* 2. Tactical Metrics: Stats Cards (4 cols) */}
                 <div className="md:col-span-4 grid grid-cols-1 gap-6">
-                    <div className="bento-tile bg-white dark:bg-slate-900/40 p-8 flex flex-col justify-center gap-4 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <div className="bento-tile bg-white dark:bg-black/40 p-8 flex flex-col justify-center gap-4 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity text-lime-500">
                             <Activity className="w-16 h-16" />
                         </div>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Objectif total</p>
@@ -100,12 +100,12 @@ const Savings: React.FC = () => {
                         </h4>
                     </div>
 
-                    <div className="bento-tile bg-white dark:bg-slate-900/40 p-8 flex flex-col justify-center gap-4 border-l-4 border-emerald-500/20 group relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <div className="bento-tile bg-white dark:bg-black/40 p-8 flex flex-col justify-center gap-4 border-l-4 border-lime-500/20 group relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity text-lime-500">
                             <TrendingUp className="w-16 h-16" />
                         </div>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Épargne réelle</p>
-                        <h4 className="text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-tighter">
+                        <h4 className="text-4xl font-black text-lime-600 dark:text-lime-400 tracking-tighter">
                             {formatCurrency(totalCurrent, currency)}
                         </h4>
                     </div>
@@ -120,7 +120,7 @@ const Savings: React.FC = () => {
 
                     {savingsGoals.length === 0 ? (
                         <div className="text-center py-32 bento-tile flex flex-col items-center justify-center gap-8 group">
-                            <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-[2.5rem] flex items-center justify-center text-slate-300 dark:text-slate-600 group-hover:scale-110 transition-all duration-700">
+                            <div className="executive-card p-12 text-center flex flex-col items-center justify-center border-dashed border-2 border-slate-200 dark:border-white/10 group hover:border-lime-500/50 transition-all duration-500">
                                 <Target className="w-12 h-12" />
                             </div>
                             <div className="space-y-2">
@@ -141,18 +141,18 @@ const Savings: React.FC = () => {
                                         style={{ animationDelay: `${idx * 100}ms` }}
                                         className="bento-tile group relative overflow-hidden animate-in slide-in-from-bottom-6 duration-1000 p-8 flex flex-col justify-between h-[450px]"
                                     >
-                                        <div className="absolute inset-0 bg-indigo-500/5 dark:bg-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                        <div className="absolute inset-0 bg-lime-500/5 dark:bg-lime-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
                                         <div>
                                             <div className="flex justify-between items-start mb-10">
-                                                <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                                                    <Target className={cn("w-6 h-6", isCompleted ? "text-emerald-500" : "text-indigo-500")} />
+                                                <div className="w-14 h-14 bg-white dark:bg-white/5 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                                                    <Target className={cn("w-6 h-6", isCompleted ? "text-lime-500" : "text-lime-500")} />
                                                 </div>
                                                 <div className="flex gap-2 relative z-20">
-                                                    <button onClick={() => handleEdit(goal)} className="p-3 bg-white dark:bg-slate-800 rounded-xl hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 transition-all shadow-sm">
+                                                    <button onClick={() => handleEdit(goal)} className="p-3 bg-white dark:bg-white/5 rounded-xl hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all shadow-sm">
                                                         <Edit3 className="w-4 h-4" />
                                                     </button>
-                                                    <button onClick={() => setGoalToDelete(goal)} className="p-3 bg-white dark:bg-slate-800 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                                    <button onClick={() => setGoalToDelete(goal)} className="p-3 bg-white dark:bg-white/5 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm">
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 </div>
@@ -162,11 +162,11 @@ const Savings: React.FC = () => {
                                                 <div className="flex items-center gap-2">
                                                     <h4 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter truncate leading-tight">{goal.name}</h4>
                                                     {isCompleted && (
-                                                        <div className="bg-emerald-500/20 text-emerald-500 p-1 rounded-full"><Plus className="w-3 h-3 rotate-45" /></div>
+                                                        <div className="bg-lime-500/20 text-lime-500 p-1 rounded-full"><Plus className="w-3 h-3 rotate-45" /></div>
                                                     )}
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-100 dark:border-white/5">
+                                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-white/5 rounded-full border border-slate-100 dark:border-white/5">
                                                         <Calendar className="w-3 h-3 text-slate-400" />
                                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">
                                                             {goal.deadline ? new Date(goal.deadline).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }) : 'Indéfini'}
@@ -194,18 +194,18 @@ const Savings: React.FC = () => {
                                             </div>
 
                                             <div className="space-y-4">
-                                                <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5">
+                                                <div className="h-3 bg-white dark:bg-white/5 rounded-full overflow-hidden p-0.5">
                                                     <div
                                                         className={cn(
                                                             "h-full rounded-full transition-all duration-1000",
-                                                            isCompleted ? "bg-emerald-500" : "bg-gradient-to-r from-indigo-500 via-blue-500 to-emerald-500"
+                                                            isCompleted ? "bg-lime-500" : "bg-gradient-to-r from-lime-600 via-lime-500 to-lime-400"
                                                         )}
                                                         style={{ width: `${Math.min(progress, 100)}%` }}
                                                     ></div>
                                                 </div>
                                                 <div className="flex justify-between items-center">
                                                     <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">{isCompleted ? 'Terminé' : 'Progrès'}</span>
-                                                    <span className={cn("text-xs font-black", isCompleted ? "text-emerald-500" : "text-indigo-500")}>{Math.round(progress)}%</span>
+                                                    <span className={cn("text-xs font-black", isCompleted ? "text-lime-500" : "text-lime-500")}>{Math.round(progress)}%</span>
                                                 </div>
                                             </div>
                                         </div>

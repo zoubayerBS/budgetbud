@@ -6,14 +6,14 @@ import type { Transaction } from '../../types';
 
 // Palette moderne Pastel/Neon
 const COLORS = [
-    '#6366f1', // Indigo
-    '#22c55e', // Green
-    '#06b6d4', // Cyan
-    '#f43f5e', // Rose
-    '#eab308', // Yellow
-    '#a855f7', // Purple
-    '#f97316', // Orange
-    '#ec4899'  // Pink
+    '#d9ff4d', // Lime (Brand Primary)
+    '#1e293b', // Slate 800
+    '#475569', // Slate 600
+    '#94a3b8', // Slate 400
+    '#0f172a', // Slate 900
+    '#ff4d4d', // Red (Contextual Expense)
+    '#64748b', // Slate 500
+    '#d1d5db'  // Gray 300
 ];
 
 const ExpensePieChart: React.FC = () => {
@@ -36,7 +36,7 @@ const ExpensePieChart: React.FC = () => {
     if (data.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center h-64 text-slate-400 gap-4">
-                <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shadow-inner">
+                <div className="w-16 h-16 rounded-full bg-white dark:bg-white/5 flex items-center justify-center shadow-inner">
                     <span className="text-2xl">🤷‍♂️</span>
                 </div>
                 <p className="font-medium">Aucune dépense pour le moment</p>

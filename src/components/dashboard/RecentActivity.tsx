@@ -13,7 +13,7 @@ const RecentActivity: React.FC = () => {
 
     if (recent.length === 0) {
         return (
-            <div className="py-12 text-center bg-slate-50 dark:bg-slate-900/40 rounded-[2rem] border-dashed border-2 border-slate-200 dark:border-slate-800 animate-in fade-in duration-700">
+            <div className="py-12 text-center bg-white dark:bg-black/40 rounded-[2rem] border-dashed border-2 border-slate-200 dark:border-slate-800 animate-in fade-in duration-700">
                 <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">{t('noTransactions')}</p>
             </div>
         );
@@ -25,16 +25,16 @@ const RecentActivity: React.FC = () => {
                 <div
                     key={t.id}
                     style={{ animationDelay: `${idx * 100}ms` }}
-                    className="flex items-center justify-between p-4 sm:p-5 rounded-3xl bg-slate-50/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 group border border-transparent hover:border-blue-500/20 active:scale-[0.98] animate-in slide-in-from-right-4"
+                    className="flex items-center justify-between p-4 sm:p-5 rounded-3xl bg-white/50 dark:bg-black/50 hover:bg-white dark:hover:bg-white/5 hover:shadow-2xl hover:shadow-lime-500/10 transition-all duration-500 group border border-transparent hover:border-lime-500/20 active:scale-[0.98] animate-in slide-in-from-right-4"
                 >
                     <div className="flex items-center gap-4 sm:gap-5 min-w-0">
                         <div className={cn(
                             "w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative shrink-0",
-                            t.type === 'income' ? "bg-emerald-50 text-emerald-500 dark:bg-emerald-900/20" : "bg-red-50 text-red-500 dark:bg-red-900/20"
+                            t.type === 'income' ? "bg-lime-50 text-lime-600 dark:bg-lime-900/20 dark:text-lime-400" : "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400"
                         )}>
                             <div className={cn(
                                 "absolute inset-0 rounded-2xl opacity-20 blur-sm group-hover:blur-md transition-all",
-                                t.type === 'income' ? "bg-emerald-500" : "bg-red-500"
+                                t.type === 'income' ? "bg-lime-500" : "bg-red-500"
                             )}></div>
                             {t.type === 'income' ? <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" /> : <ArrowDownLeft className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" />}
                         </div>
@@ -46,7 +46,7 @@ const RecentActivity: React.FC = () => {
                     <div className="text-right shrink-0 ml-4">
                         <span className={cn(
                             "font-black text-sm sm:text-base tracking-tighter block",
-                            t.type === 'income' ? "text-emerald-500" : "text-slate-800 dark:text-slate-200"
+                            t.type === 'income' ? "text-lime-600 dark:text-lime-400" : "text-red-600 dark:text-red-400"
                         )}>
                             {t.type === 'income' ? '+' : '-'} {formatCurrency(t.amount, currency)}
                         </span>

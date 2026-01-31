@@ -66,11 +66,11 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                 onClick={onClose}
             />
 
-            <div className="relative w-full max-w-6xl h-full max-h-[90vh] bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl border border-white/20 dark:border-slate-800 overflow-hidden flex flex-col animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
+            <div className="relative w-full max-w-6xl h-full max-h-[90vh] bg-white dark:bg-black rounded-[3rem] shadow-2xl border border-white/20 dark:border-slate-800 overflow-hidden flex flex-col animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
                 {/* Modal Header */}
                 <div className="flex items-center justify-between p-8 border-b border-slate-100 dark:border-slate-800 shrink-0">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
+                        <div className="w-12 h-12 bg-lime-600 rounded-2xl flex items-center justify-center text-black shadow-xl shadow-lime-500/20">
                             <PieChart className="w-6 h-6" />
                         </div>
                         <div>
@@ -80,7 +80,7 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:scale-110 active:scale-95 transition-all"
+                        className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white dark:bg-white/5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:scale-110 active:scale-95 transition-all"
                     >
                         <X className="w-6 h-6" />
                     </button>
@@ -91,28 +91,28 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                     <section className="space-y-6">
                         <div className="flex items-center justify-between px-2">
                             <div className="flex items-center gap-3">
-                                <div className="w-1.5 h-6 bg-indigo-500 rounded-full" />
+                                <div className="w-1.5 h-6 bg-lime-500 rounded-full" />
                                 <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Évolution des Flux (6 mois)</h3>
                             </div>
                             <div className="flex gap-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                                    <div className="w-2 h-2 rounded-full bg-lime-500" />
                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Revenus</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-rose-500" />
+                                    <div className="w-2 h-2 rounded-full bg-red-500" />
                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dépenses</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="h-[350px] w-full bg-slate-50 dark:bg-slate-800/30 rounded-[2.5rem] p-6 border border-slate-100 dark:border-slate-800 group">
+                        <div className="h-[350px] w-full bg-white dark:bg-white/5/30 rounded-[2.5rem] p-6 border border-slate-100 dark:border-slate-800 group">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={data}>
                                     <defs>
                                         <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
-                                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#d9ff4d" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#d9ff4d" stopOpacity={0} />
                                         </linearGradient>
                                         <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
                                             <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.1} />
@@ -145,7 +145,7 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                                     <Area
                                         type="monotone"
                                         dataKey="income"
-                                        stroke="#6366f1"
+                                        stroke="#d9ff4d"
                                         strokeWidth={3}
                                         fillOpacity={1}
                                         fill="url(#colorIncome)"
@@ -167,23 +167,23 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
 
                     {/* 2. Grid Info: Key Metrics */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="executive-card p-8 group relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-                            <TrendingUp className="absolute -right-6 -bottom-6 w-24 h-24 text-indigo-500 opacity-5 group-hover:rotate-12 transition-transform duration-700" />
+                        <div className="executive-card p-8 group relative overflow-hidden bg-white dark:bg-black border border-slate-100 dark:border-slate-800">
+                            <TrendingUp className="absolute -right-6 -bottom-6 w-24 h-24 text-lime-500 opacity-5 group-hover:rotate-12 transition-transform duration-700" />
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Revenu Moyen</p>
                             <h4 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                                 {formatCurrency(data.reduce((sum, d) => sum + d.income, 0) / 6, currency)}
                             </h4>
                         </div>
-                        <div className="executive-card p-8 group relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-                            <TrendingDown className="absolute -right-6 -bottom-6 w-24 h-24 text-rose-500 opacity-5 group-hover:rotate-12 transition-transform duration-700" />
+                        <div className="executive-card p-8 group relative overflow-hidden bg-white dark:bg-black border border-slate-100 dark:border-slate-800">
+                            <TrendingDown className="absolute -right-6 -bottom-6 w-24 h-24 text-red-500 opacity-5 group-hover:rotate-12 transition-transform duration-700" />
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Dépense Moyenne</p>
-                            <h4 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter text-rose-500">
+                            <h4 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter text-red-500">
                                 {formatCurrency(data.reduce((sum, d) => sum + d.expense, 0) / 6, currency)}
                             </h4>
                         </div>
                         <div className="executive-card p-8 group relative overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-2xl">
-                            <Zap className="absolute -right-6 -bottom-6 w-24 h-24 text-indigo-400 opacity-20 group-hover:scale-120 transition-all duration-700" />
-                            <p className="text-[10px] font-black text-indigo-300 dark:text-indigo-600 uppercase tracking-widest mb-4">Capacité d'Épargne</p>
+                            <Zap className="absolute -right-6 -bottom-6 w-24 h-24 text-lime-400 opacity-20 group-hover:scale-120 transition-all duration-700" />
+                            <p className="text-[10px] font-black text-lime-300 dark:text-lime-600 uppercase tracking-widest mb-4">Capacité d'Épargne</p>
                             <h4 className="text-3xl font-black tracking-tighter">
                                 {Math.round((data.reduce((sum, d) => sum + d.saving, 0) / data.reduce((sum, d) => sum + d.income, 1)) * 100)}%
                             </h4>
@@ -193,13 +193,13 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                     {/* 3. Personalized Tips */}
                     <section className="space-y-6">
                         <div className="flex items-center gap-3 px-2">
-                            <Sparkles className="w-5 h-5 text-indigo-500" />
+                            <Sparkles className="w-5 h-5 text-lime-500" />
                             <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Conseils Personnalisés</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {insights.map((insight, i) => (
-                                <div key={i} className="flex gap-4 p-6 bg-slate-50 dark:bg-slate-800/40 rounded-3xl border border-slate-100 dark:border-slate-800 group hover:border-indigo-500/30 transition-all">
-                                    <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center text-indigo-500 shadow-sm shrink-0">
+                                <div key={i} className="flex gap-4 p-6 bg-white dark:bg-white/5/40 rounded-3xl border border-slate-100 dark:border-slate-800 group hover:border-lime-500/30 transition-all">
+                                    <div className="w-10 h-10 rounded-2xl bg-white dark:bg-white/5 flex items-center justify-center text-lime-500 shadow-sm shrink-0">
                                         <Info className="w-5 h-5" />
                                     </div>
                                     <p className="text-sm font-bold text-slate-600 dark:text-slate-300 leading-relaxed">{insight}</p>
@@ -213,7 +213,7 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                 </div>
 
                 {/* Footer: Close button for accessibility */}
-                <div className="p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 shrink-0 flex justify-end">
+                <div className="p-8 border-t border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-black/50 shrink-0 flex justify-end">
                     <button
                         onClick={onClose}
                         className="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all"

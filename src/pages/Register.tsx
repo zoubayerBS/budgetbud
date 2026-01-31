@@ -35,10 +35,10 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#eef2f6] dark:bg-[#111827] p-4">
+        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black p-4">
             <div className="clay-card p-8 w-full max-w-md animate-in zoom-in-95 duration-500">
                 <div className="flex flex-col items-center mb-8 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-[1.75rem] flex items-center justify-center shadow-xl shadow-emerald-500/20 text-white mb-6 transition-transform hover:scale-110 duration-500">
+                    <div className="w-16 h-16 bg-gradient-to-tr from-lime-500 to-lime-600 rounded-[1.75rem] flex items-center justify-center shadow-xl shadow-lime-500/20 text-black mb-6 transition-transform hover:scale-110 duration-500">
                         <span className="font-black text-3xl tracking-tighter">B</span>
                     </div>
                     <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-tight">BudgetBud</h2>
@@ -58,7 +58,7 @@ const Register: React.FC = () => {
                             type="text"
                             value={name}
                             onChange={e => setName(e.target.value)}
-                            className="w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-emerald-500/50"
+                            className="w-full p-4 bg-white dark:bg-black rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-lime-500/50"
                             required
                         />
                     </div>
@@ -68,7 +68,7 @@ const Register: React.FC = () => {
                             type="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            className="w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-emerald-500/50"
+                            className="w-full p-4 bg-white dark:bg-black rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-lime-500/50"
                             required
                         />
                     </div>
@@ -78,7 +78,7 @@ const Register: React.FC = () => {
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            className="w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-emerald-500/50"
+                            className="w-full p-4 bg-white dark:bg-black rounded-2xl text-slate-800 dark:text-white font-bold shadow-inner outline-none focus:ring-2 focus:ring-lime-500/50"
                             required
                         />
                     </div>
@@ -86,14 +86,14 @@ const Register: React.FC = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="clay-button bg-emerald-500 text-white w-full py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-xl shadow-emerald-500/30 disabled:opacity-50"
+                        className="clay-button bg-lime-500 text-black w-full py-4 rounded-2xl flex items-center justify-center gap-2 text-lg shadow-xl shadow-lime-500/30 disabled:opacity-50"
                     >
                         {loading ? 'Création en cours...' : 'S\'inscrire'}
                     </button>
                 </form>
 
                 <p className="mt-8 text-center text-slate-500 font-medium text-sm">
-                    Déjà un compte ? <Link to="/login" className="text-emerald-600 font-bold hover:underline">Se connecter</Link>
+                    Déjà un compte ? <Link to="/login" className="text-lime-600 font-bold hover:underline">Se connecter</Link>
                 </p>
             </div>
         </div>

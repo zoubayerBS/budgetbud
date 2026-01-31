@@ -31,8 +31,8 @@ const Budgets: React.FC = () => {
             {/* --- Executive Page Header --- */}
             <header className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 pb-10 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-6">
-                    <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl executive-card flex items-center justify-center border border-slate-100 dark:border-slate-700 shadow-sm">
-                        <PieChart className="w-10 h-10 text-indigo-500" />
+                    <div className="w-20 h-20 bg-white dark:bg-white/5 rounded-3xl executive-card flex items-center justify-center border border-slate-100 dark:border-slate-700 shadow-sm">
+                        <PieChart className="w-10 h-10 text-lime-500" />
                     </div>
                     <div className="text-center md:text-left">
                         <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -51,7 +51,7 @@ const Budgets: React.FC = () => {
                     <div className="p-1 bg-white/20 rounded-lg">
                         <Plus className="w-5 h-5" />
                     </div>
-                    <span className="font-black text-sm uppercase tracking-widest">Nouveau Budget</span>
+                    <span className="font-black text-xs uppercase tracking-[0.2em]">Nouveau Budget</span>
                 </button>
             </header>
 
@@ -85,7 +85,7 @@ const Budgets: React.FC = () => {
                         ))
                     ) : (
                         <div className="col-span-full executive-card p-24 text-center flex flex-col items-center justify-center border-dashed border-2 border-slate-200 dark:border-slate-800">
-                            <div className="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-[3rem] flex items-center justify-center mb-8 soft-in border border-white/50 dark:border-slate-800 shadow-xl">
+                            <div className="w-24 h-24 bg-white dark:bg-black rounded-[3rem] flex items-center justify-center mb-8 soft-in border border-white/50 dark:border-slate-800 shadow-xl">
                                 <Target className="w-10 h-10 text-slate-300 dark:text-slate-700" />
                             </div>
                             <h3 className="text-xl font-black text-slate-800 dark:text-white mb-3 uppercase tracking-tighter">Aucun Budget</h3>

@@ -42,10 +42,10 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, value, onChange, cl
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full p-4 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl text-slate-800 dark:text-white font-black text-lg shadow-inner flex items-center justify-between group transition-all"
+                className="w-full p-4 bg-white dark:bg-black border-none rounded-2xl text-slate-800 dark:text-white font-black text-lg shadow-inner flex items-center justify-between group transition-all"
             >
                 <span>{selectedOption.label}</span>
-                <ChevronDown className={cn("w-6 h-6 text-slate-400 group-hover:text-blue-500 transition-transform duration-300", isOpen && "rotate-180")} />
+                <ChevronDown className={cn("w-6 h-6 text-slate-400 group-hover:text-lime-500 transition-transform duration-300", isOpen && "rotate-180")} />
             </button>
 
             {isOpen && (
@@ -66,8 +66,8 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, value, onChange, cl
                                 className={cn(
                                     "w-full text-left p-4 rounded-xl font-bold transition-all",
                                     value === opt.value
-                                        ? 'bg-blue-500 text-white shadow-lg'
-                                        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                                        ? 'bg-lime-500 text-black shadow-lg'
+                                        : 'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800/50'
                                 )}
                             >
                                 {opt.label}
