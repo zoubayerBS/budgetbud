@@ -532,6 +532,64 @@ app.delete('/api/transactions/:id', authenticateToken, async (req: any, res) => 
     }
 });
 
+app.put('/api/transactions/:id', authenticateToken, async (req: any, res) => {
+    const userId = getUserId(req);
+    const { amount, type, category, date, note, account_id, target_account_id } = req.body;
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        // 1. Get original transaction
+        const tRes = await client.query('SELECT * FROM transactions WHERE id = $1 AND user_id = $2', [req.params.id, userId]);
+        if (tRes.rowCount === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'Transaction not found' });
+        }
+        const oldT = tRes.rows[0];
+        const oldAmount = Number(oldT.amount);
+
+        // 2. Revert old balance effects
+        if (oldT.type === 'income') {
+            await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [oldAmount, oldT.account_id, userId]);
+        } else if (oldT.type === 'expense') {
+            await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [oldAmount, oldT.account_id, userId]);
+        } else if (oldT.type === 'transfer' && oldT.target_account_id) {
+            await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [oldAmount, oldT.account_id, userId]);
+            await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [oldAmount, oldT.target_account_id, userId]);
+        }
+
+        // 3. Apply new balance effects
+        const newAmount = Number(amount);
+        if (type === 'income') {
+            await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [newAmount, account_id, userId]);
+        } else if (type === 'expense') {
+            await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [newAmount, account_id, userId]);
+        } else if (type === 'transfer' && target_account_id) {
+            await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2 AND user_id = $3', [newAmount, account_id, userId]);
+            await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2 AND user_id = $3', [newAmount, target_account_id, userId]);
+        }
+
+        // 4. Update transaction
+        const updateRes = await client.query(
+            `UPDATE transactions 
+             SET amount = $1, type = $2, category = $3, date = $4, note = $5, account_id = $6, target_account_id = $7
+             WHERE id = $8 AND user_id = $9
+             RETURNING *`,
+            [newAmount, type, category, date, note, account_id, target_account_id || null, req.params.id, userId]
+        );
+
+        await client.query('COMMIT');
+        res.json(updateRes.rows[0]);
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Error updating transaction:', err);
+        res.status(500).json({ error: 'Failed to update transaction' });
+    } finally {
+        client.release();
+    }
+});
+
 // Budgets
 app.get('/api/budgets', authenticateToken, async (req: any, res) => {
     const userId = getUserId(req);

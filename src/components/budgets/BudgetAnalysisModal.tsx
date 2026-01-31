@@ -74,8 +74,8 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                             <PieChart className="w-6 h-6" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">Analyses Détaillées</h2>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inspection de votre santé financière</p>
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">Analyse de Budget</h2>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Conseils et Statistiques IA</p>
                         </div>
                     </div>
                     <button
@@ -92,7 +92,7 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                         <div className="flex items-center justify-between px-2">
                             <div className="flex items-center gap-3">
                                 <div className="w-1.5 h-6 bg-lime-500 rounded-full" />
-                                <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Évolution des Flux (6 mois)</h3>
+                                <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Évolution de vos finances (6 mois)</h3>
                             </div>
                             <div className="flex gap-4">
                                 <div className="flex items-center gap-2">
@@ -169,14 +169,14 @@ const BudgetAnalysisModal: React.FC<BudgetAnalysisModalProps> = ({ isOpen, onClo
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="executive-card p-8 group relative overflow-hidden bg-white dark:bg-black border border-slate-100 dark:border-slate-800">
                             <TrendingUp className="absolute -right-6 -bottom-6 w-24 h-24 text-lime-500 opacity-5 group-hover:rotate-12 transition-transform duration-700" />
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Revenu Moyen</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Moyenne Revenus</p>
                             <h4 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                                 {formatCurrency(data.reduce((sum, d) => sum + d.income, 0) / 6, currency)}
                             </h4>
                         </div>
                         <div className="executive-card p-8 group relative overflow-hidden bg-white dark:bg-black border border-slate-100 dark:border-slate-800">
                             <TrendingDown className="absolute -right-6 -bottom-6 w-24 h-24 text-red-500 opacity-5 group-hover:rotate-12 transition-transform duration-700" />
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Dépense Moyenne</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Moyenne Dépenses</p>
                             <h4 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter text-red-500">
                                 {formatCurrency(data.reduce((sum, d) => sum + d.expense, 0) / 6, currency)}
                             </h4>

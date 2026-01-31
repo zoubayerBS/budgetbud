@@ -4,7 +4,7 @@ export interface Transaction {
     id: string;
     amount: number;
     type: TransactionType;
-    category: string;
+    category: Category;
     date: string; // ISO string
     note?: string;
     account_id: string;
@@ -26,7 +26,7 @@ export interface Budget {
     account_id?: string; // Optional: specific to an account
 }
 
-export type Currency = 'EUR' | 'USD' | 'CHF' | 'CAD' | 'TND';
+export type Currency = 'EUR' | 'USD' | 'CHF' | 'CAD' | 'GBP' | 'JPY' | 'AUD' | 'NZD' | 'CNY' | 'INR' | 'SGD' | 'KRW' | 'TND' | 'AED' | 'SAR' | 'ZAR' | 'TRY' | 'BRL' | 'MXN' | 'SEK' | 'NOK' | 'DKK';
 
 export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
@@ -34,7 +34,7 @@ export interface RecurringTemplate {
     id: string;
     amount: number;
     type: TransactionType;
-    category: string;
+    category: Category;
     frequency: RecurrenceFrequency;
     start_date: string;
     last_processed?: string;

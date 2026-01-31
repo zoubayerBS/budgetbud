@@ -124,7 +124,7 @@ const AIAdvisor: React.FC = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <h3 className="text-7xl md:text-8xl font-black text-white tracking-tighter leading-none">
+                            <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none whitespace-nowrap">
                                 {formatCurrency(analysis.predictedBalance, currency)}
                             </h3>
                             <div className="flex items-center gap-3">

@@ -9,6 +9,7 @@ interface BudgetContextType {
     recurringTemplates: RecurringTemplate[];
     savingsGoals: SavingsGoal[];
     addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
+    updateTransaction: (transaction: Transaction) => Promise<void>;
     addAccount: (account: Omit<Account, 'id'>) => Promise<void>;
     deleteTransaction: (id: string) => Promise<void>;
     deleteAccount: (id: string) => Promise<void>;
@@ -23,6 +24,9 @@ interface BudgetContextType {
     isAddModalOpen: boolean;
     openAddModal: () => void;
     closeAddModal: () => void;
+    isQuickAddModalOpen: boolean;
+    openQuickAddModal: () => void;
+    closeQuickAddModal: () => void;
     currency: Currency;
     setCurrency: (c: Currency) => void;
     theme: 'light' | 'dark';
@@ -41,6 +45,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const [recurringTemplates, setRecurringTemplates] = useState<RecurringTemplate[]>([]);
     const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>([]);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isQuickAddModalOpen, setIsQuickAddModalOpen] = useState(false);
     const [currency, setCurrency] = useState<Currency>('TND');
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const [loading, setLoading] = useState(true);
@@ -157,6 +162,22 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 ...newT,
                 amount: parseFloat(newT.amount) || 0
             }, ...prev]);
+            await fetchData(false); // Update balances
+        } catch (err) { console.error(err); }
+    };
+
+    const updateTransaction = async (transaction: Transaction) => {
+        try {
+            const res = await fetch(`${API_URL}/transactions/${transaction.id}`, {
+                method: 'PUT',
+                headers: getHeaders(),
+                body: JSON.stringify(transaction)
+            });
+            const updatedT = await res.json();
+            setTransactions(prev => prev.map(t => t.id === updatedT.id ? {
+                ...updatedT,
+                amount: parseFloat(updatedT.amount) || 0
+            } : t));
             await fetchData(false); // Update balances
         } catch (err) { console.error(err); }
     };
@@ -303,6 +324,9 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const openAddModal = () => setIsAddModalOpen(true);
     const closeAddModal = () => setIsAddModalOpen(false);
 
+    const openQuickAddModal = () => setIsQuickAddModalOpen(true);
+    const closeQuickAddModal = () => setIsQuickAddModalOpen(false);
+
     return (
         <BudgetContext.Provider value={{
             accounts,
@@ -311,6 +335,7 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             recurringTemplates,
             savingsGoals,
             addTransaction,
+            updateTransaction,
             addAccount,
             deleteTransaction,
             deleteAccount,
@@ -325,6 +350,9 @@ export const BudgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             isAddModalOpen,
             openAddModal,
             closeAddModal,
+            isQuickAddModalOpen,
+            openQuickAddModal,
+            closeQuickAddModal,
             currency,
             setCurrency,
             theme,

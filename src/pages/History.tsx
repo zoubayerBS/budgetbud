@@ -55,7 +55,7 @@ const History: React.FC = () => {
     ];
 
     const categoryOptions = [
-        { label: 'Toutes catégories', value: 'all' },
+        { label: 'Toutes les catégories', value: 'all' },
         ...CATEGORIES.map(c => ({ label: c, value: c }))
     ];
 
@@ -68,7 +68,7 @@ const History: React.FC = () => {
                         <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                             {t('history')}
                         </h2>
-                        <p className="text-slate-500 font-medium">Historique complet de vos activités financières.</p>
+                        <p className="text-slate-500 font-medium">Historique complet de vos dépenses et revenus.</p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -99,20 +99,20 @@ const History: React.FC = () => {
                 {/* Quick Stats Panel */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     <div className="p-4 bg-white dark:bg-black border border-slate-200 dark:border-slate-800 rounded-2xl">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 font-mono">Total Volume</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 font-mono">Total Transactions</p>
                         <p className="text-xl font-black text-slate-900 dark:text-white">{filteredTransactions.length}</p>
                     </div>
                     <div className="p-4 bg-white dark:bg-black border border-slate-200 dark:border-slate-800 rounded-2xl">
                         <div className="flex items-center gap-2 mb-1">
                             <TrendingUp className="w-3 h-3 text-lime-500" />
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest font-mono">Entrées</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest font-mono">Total Revenus</p>
                         </div>
                         <p className="text-xl font-black text-lime-600 dark:text-lime-400">{formatCurrency(stats.income, currency)}</p>
                     </div>
                     <div className="hidden sm:block p-4 bg-white dark:bg-black border border-slate-200 dark:border-slate-800 rounded-2xl">
                         <div className="flex items-center gap-2 mb-1">
                             <TrendingDown className="w-3 h-3 text-red-500" />
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest font-mono">Sorties</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest font-mono">Total Dépenses</p>
                         </div>
                         <p className="text-xl font-black text-red-600 dark:text-red-400">{formatCurrency(stats.expense, currency)}</p>
                     </div>
@@ -129,7 +129,7 @@ const History: React.FC = () => {
                         onChange={(v) => setFilterType(v as any)}
                     />
                     <Dropdown
-                        label="Secteur"
+                        label="Catégorie"
                         options={categoryOptions}
                         value={filterCategory}
                         onChange={(v) => setFilterCategory(v as any)}

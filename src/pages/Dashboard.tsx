@@ -48,7 +48,7 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-1">
                     <div className="flex items-center gap-2 text-lime-600 font-black text-[10px] uppercase tracking-[0.3em] opacity-80 mb-2">
                         <Sparkles className="w-3 h-3" />
-                        <span>État du compte</span>
+                        <span>Résumé des comptes</span>
                     </div>
                     <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
                         Bonjour, <span className="text-lime-600 dark:text-lime-400">{user?.name || 'Utilisateur'}</span>

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Plus, History, PiggyBank, Landmark, Settings, RefreshCw, Zap, BrainCircuit } from 'lucide-react';
+import { LayoutDashboard, Plus, History, Target, Landmark, Settings, RefreshCw, Zap, BrainCircuit, Menu } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useBudget } from '../context/BudgetContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Moon, Sun } from 'lucide-react';
 
 const Navbar: React.FC = () => {
-    const { refresh, loading, openAddModal, theme, toggleTheme } = useBudget();
+    const { refresh, loading, openAddModal, openQuickAddModal, theme, toggleTheme } = useBudget();
     const { t } = useLanguage();
     const location = useLocation();
     const [scrolled, setScrolled] = useState(false);
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
         { to: '/', icon: LayoutDashboard, label: t('dashboard') },
         { to: '/history', icon: History, label: t('history') },
         { to: '/budgets', icon: Landmark, label: t('budgets') },
-        { to: '/savings', icon: PiggyBank, label: t('savings') },
+        { to: '/savings', icon: Target, label: t('savings') },
         { to: '/advisor', icon: BrainCircuit, label: t('advisor') },
         { to: '/settings', icon: Settings, label: t('settings') },
     ];
@@ -120,6 +120,13 @@ const Navbar: React.FC = () => {
                         </div>
 
                         <button
+                            onClick={openQuickAddModal}
+                            className="w-9 h-9 rounded-full flex items-center justify-center bg-lime-500 hover:bg-lime-400 text-slate-900 shadow-lg shadow-lime-500/20 active:scale-95 transition-all text-xs font-black relative group"
+                        >
+                            <Zap className="w-5 h-5 fill-current" />
+                        </button>
+
+                        <button
                             onClick={toggleTheme}
                             className="w-9 h-9 rounded-full flex items-center justify-center bg-white dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 hover:text-yellow-600 border border-transparent hover:border-yellow-200/50 transition-colors relative overflow-hidden group"
                         >
@@ -153,7 +160,7 @@ const Navbar: React.FC = () => {
                             isOpen ? "bg-white dark:bg-white/5 text-slate-900 dark:text-white rotate-90" : "text-slate-400"
                         )}
                     >
-                        <Zap className={cn("w-5 h-5", isOpen && "fill-lime-500 text-lime-500")} />
+                        <Menu className={cn("w-5 h-5", isOpen && "text-lime-500")} />
                     </button>
 
                     {/* Nav Items (Animated width/opacity) */}
@@ -200,6 +207,17 @@ const Navbar: React.FC = () => {
                     </div>
 
                     {/* Add Button (Always visible on the right) */}
+
+                    <button
+                        onClick={() => {
+                            setIsOpen(false);
+                            openQuickAddModal();
+                        }}
+                        className="w-10 h-10 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center text-lime-600 dark:text-lime-400 shadow-sm active:scale-90 transition-transform ml-1 shrink-0"
+                    >
+                        <Zap className="w-5 h-5 fill-current" />
+                    </button>
+
                     <button
                         onClick={() => {
                             setIsOpen(false);
@@ -210,7 +228,7 @@ const Navbar: React.FC = () => {
                         <Plus className="w-6 h-6" />
                     </button>
                 </nav>
-            </div>
+            </div >
         </>
     );
 };

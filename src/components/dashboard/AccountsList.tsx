@@ -106,7 +106,7 @@ const AccountsList: React.FC = () => {
                                     <div>
                                         <h4 className="text-sm font-black text-slate-800 dark:text-white leading-tight">{acc.name}</h4>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest opacity-60">
-                                            {acc.type === 'checking' ? 'Courant' : acc.type === 'savings' ? 'Épargne' : acc.type === 'cash' ? 'Espèces' : 'Portefeuille'}
+                                            {acc.type === 'checking' ? 'Compte Courant' : acc.type === 'savings' ? 'Compte d\'épargne' : acc.type === 'cash' ? 'Encaisse / Cash' : 'Autre Actif'}
                                         </p>
                                     </div>
                                 </div>

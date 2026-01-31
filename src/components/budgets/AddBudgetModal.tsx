@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { X, Check, Target, BrainCircuit } from 'lucide-react';
 import { EXPENSE_CATEGORIES, type Category } from '../../types';
 import { useBudget } from '../../context/BudgetContext';
+import SearchableDropdown from '../common/SearchableDropdown';
+import { CreditCard, Landmark, Banknote, Wallet } from 'lucide-react';
+import { formatCurrency } from '../../lib/format';
 
 interface AddBudgetModalProps {
     isOpen: boolean;
@@ -14,6 +17,23 @@ const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ isOpen, onClose }) => {
     const [limit, setLimit] = useState('');
     const [accountId, setAccountId] = useState<string>('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const accountIcons: Record<string, any> = {
+        checking: CreditCard,
+        savings: Landmark,
+        cash: Banknote,
+        other: Wallet
+    };
+
+    const accountOptions = [
+        { label: 'Tous les comptes (Global)', value: '' },
+        ...accounts.map(acc => ({
+            label: acc.name,
+            value: acc.id,
+            subLabel: formatCurrency(acc.balance, currency),
+            icon: accountIcons[acc.type] || Wallet
+        }))
+    ];
 
     if (!isOpen) return null;
 
@@ -99,17 +119,14 @@ const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ isOpen, onClose }) => {
                         </div>
 
                         <div>
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-3 block">Compte Concerné (Optionnel)</label>
-                            <select
+                            <SearchableDropdown
+                                label="Compte Concerné (Optionnel)"
+                                options={accountOptions}
                                 value={accountId}
-                                onChange={(e) => setAccountId(e.target.value)}
-                                className="w-full p-6 bg-white dark:bg-black border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] text-slate-800 dark:text-white font-black text-sm shadow-sm outline-none transition-all hover:border-lime-500/30"
-                            >
-                                <option value="">Tous les comptes (Global)</option>
-                                {accounts.map(acc => (
-                                    <option key={acc.id} value={acc.id}>{acc.name}</option>
-                                ))}
-                            </select>
+                                onChange={setAccountId}
+                                placeholder="Tous les comptes (Global)"
+                                showSearch={accounts.length > 5}
+                            />
                         </div>
 
                         <div>

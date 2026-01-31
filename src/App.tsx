@@ -14,6 +14,7 @@ import Register from './pages/Register';
 import { useSession } from './lib/auth-client';
 import SplashScreen from './components/common/SplashScreen';
 import AddTransactionModal from './components/modals/AddTransactionModal';
+import QuickExpenseModal from './components/modals/QuickExpenseModal';
 
 const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { data: session, isPending } = useSession();
@@ -46,6 +47,7 @@ function App() {
       <BudgetProvider>
         <LanguageProvider>
           <AddTransactionModal />
+          <QuickExpenseModal />
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />

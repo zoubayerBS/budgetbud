@@ -26,21 +26,21 @@ const KPIStats: React.FC = () => {
 
     const cards = [
         {
-            label: 'Revenus',
+            label: 'Flux Entrants',
             amount: stats.income,
             icon: TrendingUp,
             color: 'text-lime-600 dark:text-lime-400',
             bgColor: 'bg-lime-500/10 dark:bg-lime-500/20',
         },
         {
-            label: 'Dépenses',
+            label: 'Flux Sortants',
             amount: stats.expense,
             icon: TrendingDown,
             color: 'text-red-600 dark:text-red-400',
             bgColor: 'bg-red-500/10 dark:bg-red-500/20',
         },
         {
-            label: 'Solde',
+            label: 'Trésorerie Nette',
             amount: balance,
             icon: Wallet,
             color: 'text-lime-600 dark:text-lime-400',

@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useBudget } from '../../context/BudgetContext';
-import { formatCurrency } from '../../lib/format';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../types';
-import type { Category, TransactionType } from '../../types';
+import type { Category, TransactionType, Transaction } from '../../types';
 import {
     X,
-    Repeat,
     Zap,
     ArrowRight,
     Utensils,
@@ -29,6 +27,7 @@ import {
 import { cn } from '../../lib/utils';
 import DatePicker from '../common/DatePicker';
 import SearchableDropdown from '../common/SearchableDropdown';
+import { formatCurrency } from '../../lib/format';
 
 const categoryIcons: Record<string, any> = {
     'Alimentation': Utensils,
@@ -54,32 +53,28 @@ const accountIcons: Record<string, any> = {
     other: Wallet
 };
 
-const AddTransactionModal: React.FC = () => {
+interface EditTransactionModalProps {
+    transaction: Transaction;
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+const EditTransactionModal: React.FC<EditTransactionModalProps> = ({ transaction, isOpen, onClose }) => {
     const {
-        isAddModalOpen,
-        closeAddModal,
-        addTransaction,
-        addRecurringTemplate,
+        updateTransaction,
         accounts,
         currency
     } = useBudget();
 
-    const [type, setType] = useState<TransactionType>('expense');
-    const [amount, setAmount] = useState('');
-    const [category, setCategory] = useState<Category>(EXPENSE_CATEGORIES[0]);
-    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-    const [note, setNote] = useState('');
-    const [accountId, setAccountId] = useState(accounts[0]?.id || '');
-    const [targetAccountId, setTargetAccountId] = useState('');
-    const [isRecurring, setIsRecurring] = useState(false);
+    const [type, setType] = useState<TransactionType>(transaction.type);
+    const [amount, setAmount] = useState(transaction.amount.toString());
+    const [category, setCategory] = useState<Category>(transaction.category as Category);
+    const [date, setDate] = useState(transaction.date.split('T')[0]);
+    const [note, setNote] = useState(transaction.note || '');
+    const [accountId, setAccountId] = useState(transaction.account_id);
+    const [targetAccountId, setTargetAccountId] = useState(transaction.target_account_id || '');
     const [loading, setLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-
-    useEffect(() => {
-        if (accounts.length > 0 && !accountId) {
-            setAccountId(accounts[0].id);
-        }
-    }, [accounts]);
 
     const activeCategories = type === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
 
@@ -102,13 +97,13 @@ const AddTransactionModal: React.FC = () => {
     const handleTypeChange = (newType: TransactionType) => {
         setType(newType);
         if (newType === 'transfer') {
-            setCategory('Autre'); // Fallback or dedicated category
-        } else {
+            setCategory('Autre');
+        } else if (!activeCategories.includes(category as any)) {
             setCategory(newType === 'expense' ? EXPENSE_CATEGORIES[0] : INCOME_CATEGORIES[0]);
         }
     };
 
-    if (!isAddModalOpen) return null;
+    if (!isOpen) return null;
 
     const handleSubmit = async () => {
         if (!amount || isNaN(Number(amount)) || !accountId) return;
@@ -116,32 +111,20 @@ const AddTransactionModal: React.FC = () => {
 
         setLoading(true);
 
-        const amountVal = Number(amount);
         try {
-            if (isRecurring) {
-                await addRecurringTemplate({
-                    amount: amountVal,
-                    type,
-                    category,
-                    frequency: 'monthly',
-                    start_date: new Date(date).toISOString(),
-                    note,
-                    account_id: accountId
-                } as any);
-            } else {
-                await addTransaction({
-                    amount: amountVal,
-                    type,
-                    category,
-                    date: new Date(date).toISOString(),
-                    note,
-                    account_id: accountId,
-                    target_account_id: type === 'transfer' ? targetAccountId : undefined
-                });
-            }
+            await updateTransaction({
+                ...transaction,
+                amount: Number(amount),
+                type,
+                category,
+                date: new Date(date).toISOString(),
+                note,
+                account_id: accountId,
+                target_account_id: type === 'transfer' ? targetAccountId : undefined
+            });
             setIsSuccess(true);
             setTimeout(() => {
-                resetAndClose();
+                onClose();
             }, 1200);
         } catch (err) {
             console.error(err);
@@ -150,27 +133,17 @@ const AddTransactionModal: React.FC = () => {
         }
     };
 
-    const resetAndClose = () => {
-        setIsSuccess(false);
-        setAmount('');
-        setNote('');
-        setTargetAccountId('');
-        closeAddModal();
-    };
-
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
-            {/* Zen Backdrop */}
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6">
             <div
                 className="absolute inset-0 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-700"
-                onClick={resetAndClose}
+                onClick={onClose}
             ></div>
 
-            {/* Zen Modal Container */}
             <div className="relative w-full max-w-xl max-h-[90vh] bg-white dark:bg-black rounded-[2.5rem] shadow-2xl overflow-y-auto border border-slate-200/50 dark:border-slate-800 animate-in zoom-in-95 duration-500 custom-scrollbar">
 
                 <button
-                    onClick={resetAndClose}
+                    onClick={onClose}
                     className="absolute top-6 right-6 p-2 text-slate-300 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-50 rounded-full hover:bg-white dark:hover:bg-slate-800"
                 >
                     <X className="w-5 h-5" />
@@ -181,18 +154,16 @@ const AddTransactionModal: React.FC = () => {
                         <div className="w-20 h-20 bg-lime-50 dark:bg-lime-900/20 text-lime-500 rounded-full flex items-center justify-center mx-auto mb-6">
                             <CheckCircle2 className="w-10 h-10" />
                         </div>
-                        <h3 className="text-2xl font-black text-slate-800 dark:text-white">Opération Effectuée</h3>
-                        <p className="text-slate-400 font-bold mt-2">Vos comptes ont été mis à jour.</p>
+                        <h3 className="text-2xl font-black text-slate-800 dark:text-white">Opération Modifiée</h3>
+                        <p className="text-slate-400 font-bold mt-2">Les modifications ont été enregistrées.</p>
                     </div>
                 ) : (
                     <div className="p-8 md:p-10 space-y-8">
-                        {/* Header */}
                         <div>
-                            <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Nouvelle Opération</h2>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Gestion Multi-Comptes</p>
+                            <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Modifier l'Opération</h2>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Édition de Transaction</p>
                         </div>
 
-                        {/* Type Toggle - 3 options */}
                         <div className="flex p-1 bg-slate-50 dark:bg-white/5 rounded-2xl">
                             {(['expense', 'income', 'transfer'] as const).map((t) => (
                                 <button
@@ -210,7 +181,6 @@ const AddTransactionModal: React.FC = () => {
                             ))}
                         </div>
 
-                        {/* Amount Input */}
                         <div className="text-center py-4">
                             <div className="inline-flex items-baseline gap-2 relative group focus-within:scale-105 transition-transform duration-500">
                                 <span className="text-xl font-black text-slate-300 dark:text-slate-700">{currency}</span>
@@ -225,7 +195,6 @@ const AddTransactionModal: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Account Selector(s) */}
                         <div className={cn(
                             "grid gap-4",
                             type === 'transfer' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
@@ -251,7 +220,6 @@ const AddTransactionModal: React.FC = () => {
                             )}
                         </div>
 
-                        {/* Category Selection (Only for income/expense) */}
                         {type !== 'transfer' && (
                             <div className="grid grid-cols-4 gap-3">
                                 {activeCategories.map((cat: string) => {
@@ -276,7 +244,6 @@ const AddTransactionModal: React.FC = () => {
                             </div>
                         )}
 
-                        {/* Secondary Inputs */}
                         <div className="space-y-4">
                             <DatePicker label="Date" value={date} onChange={setDate} />
 
@@ -290,41 +257,18 @@ const AddTransactionModal: React.FC = () => {
                                     className="w-full px-5 py-3.5 bg-slate-50 dark:bg-white/5 rounded-xl border-none outline-none font-bold text-sm text-slate-700 dark:text-slate-200 shadow-inner"
                                 />
                             </div>
-
-                            {/* Automation Toggle */}
-                            {type !== 'transfer' && (
-                                <div className="flex items-center justify-between px-2">
-                                    <div className="flex items-center gap-3">
-                                        <Repeat className={cn("w-4 h-4 transition-colors", isRecurring ? "text-lime-500" : "text-slate-300")} />
-                                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Récurrence mensuelle</span>
-                                    </div>
-                                    <button
-                                        onClick={() => setIsRecurring(!isRecurring)}
-                                        className={cn(
-                                            "w-10 h-6 rounded-full relative transition-all duration-300",
-                                            isRecurring ? "bg-lime-500" : "bg-slate-200 dark:bg-white/5"
-                                        )}
-                                    >
-                                        <div className={cn(
-                                            "absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300",
-                                            isRecurring ? "left-5" : "left-1"
-                                        )} />
-                                    </button>
-                                </div>
-                            )}
                         </div>
 
-                        {/* Submit Button */}
                         <button
                             onClick={handleSubmit}
                             disabled={loading || !amount || (type === 'transfer' && !targetAccountId) || !accountId}
-                            className="w-full py-5 rounded-[1.5rem] bg-slate-900 dark:bg-white text-white dark:text-black font-black text-lg shadow-2xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-30 disabled:hover:scale-100"
+                            className="w-full py-5 rounded-[1.5rem] bg-slate-900 dark:bg-white text-white dark:text-black font-black text-lg shadow-2xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-30"
                         >
                             {loading ? (
                                 <Zap className="w-5 h-5 animate-spin" />
                             ) : (
                                 <>
-                                    <span>{type === 'transfer' ? 'Confirmer le Transfert' : 'Ajouter Transaction'}</span>
+                                    <span>Mettre à jour</span>
                                     <ArrowRight className="w-5 h-5" />
                                 </>
                             )}
@@ -336,4 +280,4 @@ const AddTransactionModal: React.FC = () => {
     );
 };
 
-export default AddTransactionModal;
+export default EditTransactionModal;

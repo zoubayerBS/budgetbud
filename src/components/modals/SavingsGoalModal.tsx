@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useBudget } from '../../context/BudgetContext';
 import type { SavingsGoal, Category } from '../../types';
-import { X, Target, Info, Calendar, Sparkles, ChevronRight, Check } from 'lucide-react';
 import { CATEGORIES } from '../../types';
+import SearchableDropdown from '../common/SearchableDropdown';
+import { X, Target, Info, Calendar, Sparkles, Check } from 'lucide-react';
 
 interface SavingsGoalModalProps {
     isOpen: boolean;
@@ -34,6 +35,12 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
             setDeadline('');
         }
     }, [goal, isOpen]);
+
+    const categoryOptions = CATEGORIES.map(c => ({
+        label: c,
+        value: c,
+        icon: Sparkles // Generic icon for savings categories
+    }));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -154,20 +161,14 @@ const SavingsGoalModal: React.FC<SavingsGoalModalProps> = ({ isOpen, onClose, go
                                     </div>
                                 </div>
                                 <div className="space-y-3 group">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block text-center md:text-left">Catégorie du projet</label>
-                                    <div className="relative">
-                                        <select
-                                            value={category}
-                                            onChange={(e) => setCategory(e.target.value as Category)}
-                                            className="w-full px-8 py-5 bg-white dark:bg-white/5/20 border border-slate-100 dark:border-slate-800/50 rounded-[1.5rem] focus:ring-2 focus:ring-lime-500/20 focus:border-lime-500 outline-none transition-all font-bold text-slate-800 dark:text-white appearance-none cursor-pointer"
-                                        >
-                                            <option value="">Sélectionner...</option>
-                                            {CATEGORIES.map(c => (
-                                                <option key={c} value={c}>{c}</option>
-                                            ))}
-                                        </select>
-                                        <ChevronRight className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 dark:text-slate-600 rotate-90" />
-                                    </div>
+                                    <SearchableDropdown
+                                        label="Catégorie du projet"
+                                        options={categoryOptions}
+                                        value={category}
+                                        onChange={(val) => setCategory(val as Category)}
+                                        placeholder="Sélectionner..."
+                                        showSearch={CATEGORIES.length > 5}
+                                    />
                                 </div>
                             </div>
                         </div>

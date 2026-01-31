@@ -1,0 +1,25 @@
+declare module 'country-flag-icons/react/3x2' {
+    import React from 'react';
+    export const US: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const EU: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const GB: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const CH: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const JP: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const AU: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const NZ: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const CN: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const IN: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const SG: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const KR: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const CA: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const TN: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const AE: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const SA: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const ZA: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const TR: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const BR: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const MX: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const SE: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const NO: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export const DK: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+}

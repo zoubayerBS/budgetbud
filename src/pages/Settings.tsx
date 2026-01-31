@@ -8,9 +8,11 @@ import {
 import { cn } from '../lib/utils';
 import { formatCurrency } from '../lib/format';
 import AlertModal from '../components/common/AlertModal';
+import SearchableDropdown from '../components/common/SearchableDropdown';
 import { signOut } from '../lib/auth-client';
 // Use require or ignore if module resolution issue, but biometrics file exists
 import { isBiometricSupported, registerBiometric, verifyBiometric } from '../lib/biometrics';
+import { US, EU, GB, CH, JP, AU, NZ, CN, IN, SG, KR, CA, TN, AE, SA, ZA, TR, BR, MX, SE, NO, DK } from 'country-flag-icons/react/3x2';
 
 const Settings: React.FC = () => {
     const {
@@ -40,7 +42,45 @@ const Settings: React.FC = () => {
         checkSupport();
     }, []);
 
-    const currencies: Currency[] = ['EUR', 'USD', 'CHF', 'CAD', 'TND'];
+
+
+    // ... existing imports ...
+
+    const currencies: Currency[] = [
+        'EUR', 'USD', 'GBP', 'CHF', 'JPY', 'CAD', 'AUD', 'NZD',
+        'CNY', 'INR', 'SGD', 'KRW', 'TND', 'AED', 'SAR', 'ZAR',
+        'TRY', 'BRL', 'MXN', 'SEK', 'NOK', 'DKK'
+    ];
+    const flagMap: Record<Currency, React.ElementType> = {
+        'EUR': EU,
+        'USD': US,
+        'GBP': GB,
+        'CHF': CH,
+        'JPY': JP,
+        'CAD': CA,
+        'AUD': AU,
+        'NZD': NZ,
+        'CNY': CN,
+        'INR': IN,
+        'SGD': SG,
+        'KRW': KR,
+        'TND': TN,
+        'AED': AE,
+        'SAR': SA,
+        'ZAR': ZA,
+        'TRY': TR,
+        'BRL': BR,
+        'MXN': MX,
+        'SEK': SE,
+        'NOK': NO,
+        'DKK': DK
+    };
+
+    const currencyOptions = currencies.map(c => ({
+        label: c,
+        value: c,
+        icon: flagMap[c]
+    }));
 
     const handleReset = async () => {
         if (biometricEnabled) {
@@ -113,9 +153,15 @@ const Settings: React.FC = () => {
         <div className="max-w-5xl mx-auto py-8 px-4 md:px-8 space-y-10 animate-in fade-in duration-700 pb-32">
             {/* --- Profile Header (Glass Card) --- */}
             <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 dark:bg-white text-white dark:text-slate-900 p-8 md:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 group">
-                {/* Abstract Backgrounds */}
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-lime-500/30 rounded-full blur-[100px] -mr-20 -mt-20 group-hover:bg-lime-500/40 transition-all duration-1000"></div>
-                <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-lime-500/20 rounded-full blur-[80px] -ml-20 -mb-20"></div>
+                {/* Wave Background */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                    <svg className="absolute -top-[50%] -right-[20%] w-[120%] h-[200%] text-lime-500/20 fill-current rotate-180 opacity-60" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+                        <path fillOpacity="1" d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,128C960,139,1056,181,1152,197.3C1248,213,1344,203,1392,197.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                    </svg>
+                    <svg className="absolute -top-[40%] -right-[10%] w-[100%] h-[180%] text-lime-500/10 fill-current rotate-180" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+                        <path fillOpacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                    </svg>
+                </div>
 
                 <div className="relative z-10 flex items-center gap-6">
                     <div className="w-24 h-24 rounded-[2rem] bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-slate-900/10 flex items-center justify-center shadow-2xl">
@@ -176,22 +222,13 @@ const Settings: React.FC = () => {
                             {/* Currency Selection */}
                             <div>
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Devise Principale</h3>
-                                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                                    {currencies.map((c) => (
-                                        <button
-                                            key={c}
-                                            onClick={() => setCurrency(c)}
-                                            className={cn(
-                                                "px-5 py-3 rounded-xl text-xs font-bold transition-all border shrink-0",
-                                                currency === c
-                                                    ? "bg-lime-600 text-black border-lime-600 shadow-lg shadow-lime-500/30"
-                                                    : "bg-white dark:bg-white/5/50 border-transparent text-slate-500 hover:bg-white dark:hover:bg-slate-800"
-                                            )}
-                                        >
-                                            {c}
-                                        </button>
-                                    ))}
-                                </div>
+                                <SearchableDropdown
+                                    label="Devise Principale"
+                                    value={currency}
+                                    onChange={(val) => setCurrency(val as Currency)}
+                                    options={currencyOptions}
+                                    placeholder="Sélectionner..."
+                                />
                             </div>
                         </div>
                     </section>
@@ -303,7 +340,7 @@ const Settings: React.FC = () => {
                     {/* Automations (Simplified View) */}
                     <div className="bg-white dark:bg-black rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-bold text-slate-900 dark:text-white">Règles Actives</h2>
+                            <h2 className="font-bold text-slate-900 dark:text-white">Abonnements & Récurrences</h2>
                             <span className="px-2 py-1 bg-white dark:bg-white/5 rounded-lg text-xs font-black">{recurringTemplates.length}</span>
                         </div>
                         {recurringTemplates.length === 0 ? (
