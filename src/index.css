@@ -16,6 +16,7 @@
 html,
 body {
     @apply bg-white dark:bg-black text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-300;
+    background-color: #ffffff;
 }
 
 /* Claymorphism Utilities */
