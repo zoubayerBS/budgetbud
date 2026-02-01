@@ -108,7 +108,7 @@ const Navbar: React.FC = () => {
 
                     {/* Status & Actions */}
                     <div className="flex items-center gap-2 pl-4 pr-2 border-l border-slate-200/50 dark:border-slate-800/50">
-                        {/* Neural Status Pill */}
+                        {/* Atlas Status Pill */}
                         <div className={cn(
                             "hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wider transition-colors",
                             aiStatus === 'live'

@@ -10,16 +10,16 @@ interface Message {
     content: string;
 }
 
-const NeuralButler: React.FC = () => {
+const Atlas: React.FC = () => {
     const { user, refresh } = useBudget();
     const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: 'Bienvenue. Je suis votre Neural Butler. Comment puis-je assister votre gestion de capital aujourd\'hui ?' }
+        { role: 'assistant', content: 'Bienvenue. Je suis Atlas, votre guide financier. Comment puis-je vous assister aujourd\'hui ?' }
     ]);
     const [isLoading, setIsLoading] = useState(false);
-    const [statusText, setStatusText] = useState('Le Butler réfléchit...');
+    const [statusText, setStatusText] = useState('Atlas réfléchit...');
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -57,10 +57,10 @@ const NeuralButler: React.FC = () => {
             }
 
         } catch (err) {
-            setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, j'ai rencontré un problème pour accéder au réseau neural." }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, Atlas a rencontré un problème de connexion." }]);
         } finally {
             setIsLoading(false);
-            setStatusText(t('neuralButlerThink'));
+            setStatusText(t('atlasThink'));
         }
     };
 
@@ -96,7 +96,7 @@ const NeuralButler: React.FC = () => {
                             <BrainCircuit className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="font-black text-sm uppercase tracking-[0.2em] dark:text-white">Neural Butler</h3>
+                            <h3 className="font-black text-sm uppercase tracking-[0.2em] dark:text-white">Atlas</h3>
                             <div className="flex items-center gap-1.5">
                                 <div className="w-1.5 h-1.5 bg-lime-500 rounded-full animate-pulse"></div>
                                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">En ligne</span>
@@ -174,4 +174,4 @@ const NeuralButler: React.FC = () => {
     );
 };
 
-export default NeuralButler;
+export default Atlas;

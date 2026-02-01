@@ -92,7 +92,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                         <div className="space-y-1">
                             <div className="flex items-center gap-3">
                                 {isAiLoading ? <Loader2 className="w-5 h-5 text-lime-500 animate-spin" /> : <Zap className="w-5 h-5 text-lime-500 animate-pulse" />}
-                                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Simulateur Neural</h3>
+                                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Simulateur Atlas</h3>
                             </div>
                             <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
                                 Simuler un <span className="text-lime-600 dark:text-lime-400">Avenir</span>
@@ -168,7 +168,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                                             <div className="w-20 h-20 rounded-[1.5rem] bg-lime-600 flex items-center justify-center text-3xl font-black text-black shadow-2xl shadow-lime-500/20 relative">
                                                 {isAiLoading ? <Loader2 className="w-8 h-8 animate-spin" /> : (aiResult?.score || "??")}
                                             </div>
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-lime-300/50">Score Neurale</span>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-lime-300/50">Score Atlas</span>
                                         </div>
                                     </div>
                                 </div>
@@ -210,7 +210,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                                 </div>
                                 <h4 className="text-lg font-black text-slate-400 uppercase tracking-widest">Configuration Requise</h4>
                                 <p className="text-slate-400 text-sm max-w-xs mx-auto font-medium leading-relaxed italic">
-                                    Entrez un montant cible et assurez-vous d'avoir une épargne positive pour lancer le calcul neural.
+                                    Entrez un montant cible et assurez-vous d'avoir une épargne positive pour lancer le calcul Atlas.
                                 </p>
                             </div>
                         )}

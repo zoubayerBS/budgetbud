@@ -12,7 +12,7 @@ const AIAdvisor: React.FC = () => {
     const [aiInsights, setAiInsights] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    // --- Neural Predictive Engine ---
+    // --- Atlas Predictive Engine ---
     const analysis = useMemo(() => {
         const last3Months = [2, 1, 0].map(i => {
             const date = subMonths(new Date(), i);
@@ -82,7 +82,7 @@ const AIAdvisor: React.FC = () => {
     return (
         <div className="space-y-12 animate-in fade-in duration-1000 p-2 md:p-4 max-w-[1400px] mx-auto pb-24">
 
-            {/* Cinematic Neural Header */}
+            {/* Cinematic Atlas Header */}
             <div className="relative group px-2">
                 <div className="absolute -top-20 -left-20 w-64 h-64 bg-lime-500/10 rounded-full blur-[100px] animate-pulse"></div>
                 <div className="relative z-10 space-y-2">
@@ -90,7 +90,7 @@ const AIAdvisor: React.FC = () => {
                         <div className="w-8 h-8 bg-lime-600 rounded-xl flex items-center justify-center text-black shadow-lg shadow-lime-500/20">
                             <BrainCircuit className="w-5 h-5" />
                         </div>
-                        <h1 className="text-xs font-black text-slate-400 uppercase tracking-[0.5em]">Neural Advisor v1.0</h1>
+                        <h1 className="text-xs font-black text-slate-400 uppercase tracking-[0.5em]">Atlas Advisor v1.0</h1>
                     </div>
                     <h2 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tighter">
                         Votre <span className="text-lime-600 dark:text-lime-400">Assistant</span> Propulsé par IA
@@ -219,7 +219,7 @@ const AIAdvisor: React.FC = () => {
                                         <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm transition-all group-hover:scale-110", bgs[i % 3])}>
                                             <Icon className={cn("w-6 h-6", colors[i % 3])} />
                                         </div>
-                                        <h4 className="text-lg font-black text-slate-900 dark:text-white tracking-tighter mb-2 italic">Analyse Neurale #{i + 1}</h4>
+                                        <h4 className="text-lg font-black text-slate-900 dark:text-white tracking-tighter mb-2 italic">Analyse Atlas #{i + 1}</h4>
                                         <p className="text-slate-500 text-sm font-bold leading-relaxed">{insight}</p>
                                     </div>
                                 );

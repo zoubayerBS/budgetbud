@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
-import NeuralButler from './ia/NeuralButler';
+import Atlas from './ia/Atlas';
 
 const Layout: React.FC = () => {
     return (
@@ -17,7 +17,7 @@ const Layout: React.FC = () => {
             <main className="flex-1 w-full max-w-[1600px] mx-auto pt-24 md:pt-32 pb-32 px-2 sm:px-4 md:px-10 overflow-x-hidden relative z-10">
                 <Outlet />
             </main>
-            <NeuralButler />
+            <Atlas />
         </div>
     );
 };
