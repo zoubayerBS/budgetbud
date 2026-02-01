@@ -40,8 +40,6 @@ const FinancialHealthScore: React.FC = () => {
         const lastMonthExpenses = lastMonthTxns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
 
         const totalBudget = budgets.reduce((sum, b) => sum + b.limit, 0);
-        const totalSavingsTarget = savingsGoals.reduce((sum, g) => sum + g.target_amount, 0);
-        const totalCurrentSavings = savingsGoals.reduce((sum, g) => sum + g.current_amount, 0);
 
         // 1. Budget Adherence (40%) - How well staying within budget
         const budgetAdherence = totalBudget > 0
