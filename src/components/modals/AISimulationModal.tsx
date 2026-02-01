@@ -38,7 +38,6 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
     const [projectName, setProjectName] = useState('');
     const [targetAmount, setTargetAmount] = useState('');
     const [extraEffort, setExtraEffort] = useState('0');
-    const [aiResult, setAiResult] = useState<{ score: number, advice: string } | null>(null);
     const [isAiLoading, setIsAiLoading] = useState(false);
 
     const monthlySavings = baseIncome - baseExpense;
@@ -54,9 +53,22 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
         // 1. Calculate Risk Score (0-100)
         const savingsRatio = totalMonthly / baseIncome;
         const effortRatio = effort / totalMonthly;
-        const budgetUtilization = budgets.length > 0
-            ? budgets.reduce((sum, b) => sum + (b.spent / b.limit), 0) / budgets.length
-            : 0.5;
+
+        // Calculate budget utilization from actual transactions
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+        const monthlyExpenses = transactions
+            .filter(t => {
+                const tDate = new Date(t.date);
+                return t.type === 'expense' &&
+                    tDate.getMonth() === currentMonth &&
+                    tDate.getFullYear() === currentYear;
+            })
+            .reduce((sum, t) => sum + t.amount, 0);
+
+        const totalBudgetLimit = budgets.reduce((sum, b) => sum + b.limit, 0);
+        const budgetUtilization = totalBudgetLimit > 0 ? monthlyExpenses / totalBudgetLimit : 0.5;
 
         const riskScore = Math.round(
             (savingsRatio * 100 * 0.4) +           // 40% - Savings capacity
@@ -145,7 +157,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                     goals: savingsGoals.map(g => ({ name: g.name, target: g.target_amount, curr: g.current_amount }))
                 };
 
-                const res = await fetch('/api/ai/simulate', {
+                await fetch('/api/ai/simulate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -159,8 +171,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                         financialContext
                     })
                 });
-                const data = await res.json();
-                if (data.score !== undefined) setAiResult(data);
+                // AI result not used in current implementation
             } catch (err) {
                 console.error("AI Simulation Error:", err);
             } finally {
@@ -278,7 +289,7 @@ const AISimulationModal: React.FC<AISimulationModalProps> = ({ isOpen, onClose, 
                                     <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full transition-all duration-1000 ${simulation.riskScore >= 70 ? 'bg-lime-500' :
-                                                    simulation.riskScore >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                                                simulation.riskScore >= 40 ? 'bg-amber-500' : 'bg-red-500'
                                                 }`}
                                             style={{ width: `${simulation.riskScore}%` }}
                                         />
