@@ -678,6 +678,7 @@ app.delete('/api/user/reset', authenticateToken, async (req: any, res) => {
         await pool.query('DELETE FROM budgets WHERE user_id = $1', [userId]);
         await pool.query('DELETE FROM recurring_templates WHERE user_id = $1', [userId]);
         await pool.query('DELETE FROM savings_goals WHERE user_id = $1', [userId]);
+        await pool.query('DELETE FROM accounts WHERE user_id = $1', [userId]);
         await pool.query('COMMIT');
         res.json({ success: true });
     } catch (err) {
