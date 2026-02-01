@@ -3,7 +3,6 @@ import { useLanguage } from '../context/LanguageContext';
 import { useBudget } from '../context/BudgetContext';
 import FinancialOverview from '../components/dashboard/FinancialOverview';
 import RecentActivity from '../components/dashboard/RecentActivity';
-import ExpensePieChart from '../components/dashboard/ExpensePieChart';
 import MonthlyComparisonChart from '../components/dashboard/MonthlyComparisonChart';
 import InsightCard from '../components/dashboard/InsightCard';
 import AccountsList from '../components/dashboard/AccountsList';
