@@ -177,14 +177,14 @@ const Navbar: React.FC = () => {
                                     to={item.to}
                                     onClick={() => setIsOpen(false)}
                                     className={cn(
-                                        "p-4 rounded-full transition-all duration-500 relative flex flex-col items-center gap-1",
+                                        "min-w-[48px] min-h-[48px] p-3 rounded-full transition-all duration-500 relative flex flex-col items-center justify-center gap-1",
                                         isActive ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-lg" : "text-slate-500"
                                     )}
                                 >
-                                    <Icon className="w-5 h-5" />
+                                    <Icon className="w-6 h-6" />
                                     {item.label === 'IA' && (
                                         <>
-                                            <span className="absolute top-3 right-3 flex h-2 w-2">
+                                            <span className="absolute top-2 right-2 flex h-2 w-2">
                                                 {aiStatus === 'live' && (
                                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
                                                 )}
@@ -213,9 +213,9 @@ const Navbar: React.FC = () => {
                             setIsOpen(false);
                             openQuickAddModal();
                         }}
-                        className="w-10 h-10 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center text-lime-600 dark:text-lime-400 shadow-sm active:scale-90 transition-transform ml-1 shrink-0"
+                        className="w-12 h-12 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center text-lime-600 dark:text-lime-400 shadow-lg active:scale-90 transition-transform ml-1 shrink-0"
                     >
-                        <Zap className="w-5 h-5 fill-current" />
+                        <Zap className="w-6 h-6 fill-current" />
                     </button>
 
                     <button
@@ -223,9 +223,9 @@ const Navbar: React.FC = () => {
                             setIsOpen(false);
                             openAddModal();
                         }}
-                        className="w-12 h-12 bg-lime-600 rounded-full flex items-center justify-center text-black shadow-lg active:scale-90 transition-transform ml-1 shrink-0"
+                        className="w-14 h-14 bg-lime-600 rounded-full flex items-center justify-center text-black shadow-2xl shadow-lime-500/30 active:scale-90 transition-transform ml-1 shrink-0 ring-2 ring-lime-400/20"
                     >
-                        <Plus className="w-6 h-6" />
+                        <Plus className="w-7 h-7" />
                     </button>
                 </nav>
             </div >
