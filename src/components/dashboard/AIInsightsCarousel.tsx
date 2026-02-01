@@ -150,6 +150,14 @@ const AIInsightsCarousel: React.FC = () => {
         return () => clearInterval(interval);
     }, [insights.length]);
 
+    const handlePrev = () => {
+        setCurrentIndex((prev) => (prev - 1 + insights.length) % insights.length);
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % insights.length);
+    };
+
     const currentInsight = insights[currentIndex];
 
     const getTypeColor = (type: string) => {
@@ -191,39 +199,39 @@ const AIInsightsCarousel: React.FC = () => {
                         {currentInsight.message}
                     </p>
                 </div>
-
-                {/* Navigation */}
-                <div className="flex items-center gap-2 shrink-0">
-                    <button
-                        onClick={() => setCurrentIndex((prev) => (prev - 1 + insights.length) % insights.length)}
-                        className="p-2 rounded-lg bg-white dark:bg-black hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
-                        aria-label="Previous insight"
-                    >
-                        <ChevronLeft className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-                    </button>
-                    <button
-                        onClick={() => setCurrentIndex((prev) => (prev + 1) % insights.length)}
-                        className="p-2 rounded-lg bg-white dark:bg-black hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
-                        aria-label="Next insight"
-                    >
-                        <ChevronRight className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-                    </button>
-                </div>
             </div>
 
-            {/* Dots Indicator */}
-            <div className="flex items-center justify-center gap-1.5 mt-4">
-                {insights.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`h-1.5 rounded-full transition-all ${index === currentIndex
-                            ? 'w-6 bg-slate-900 dark:bg-white'
-                            : 'w-1.5 bg-slate-300 dark:bg-slate-700'
-                            }`}
-                        aria-label={`Go to insight ${index + 1}`}
-                    />
-                ))}
+            {/* Navigation Arrows */}
+            <div className="flex items-center justify-center gap-3 mt-6">
+                <button
+                    onClick={handlePrev}
+                    disabled={currentIndex === 0}
+                    className="w-11 h-11 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90"
+                >
+                    <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                {/* Dots */}
+                <div className="flex items-center gap-2">
+                    {insights.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentIndex(index)}
+                            className={`transition-all rounded-full ${index === currentIndex
+                                    ? 'w-8 h-2 bg-lime-500'
+                                    : 'w-2 h-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600'
+                                }`}
+                        />
+                    ))}
+                </div>
+
+                <button
+                    onClick={handleNext}
+                    disabled={currentIndex === insights.length - 1}
+                    className="w-11 h-11 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90"
+                >
+                    <ChevronRight className="w-5 h-5" />
+                </button>
             </div>
         </div>
     );

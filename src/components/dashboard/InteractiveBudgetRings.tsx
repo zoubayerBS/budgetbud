@@ -116,7 +116,7 @@ const InteractiveBudgetRings: React.FC = () => {
                                     strokeLinecap="round"
                                     strokeDasharray={circumference}
                                     strokeDashoffset={offset}
-                                    className="transition-all duration-500 cursor-pointer"
+                                    className="transition-all duration-500 cursor-pointer active:scale-95"
                                     style={{
                                         filter: isHovered ? `drop-shadow(0 0 10px ${ring.color})` : 'none',
                                         opacity: isHovered ? 1 : 0.8
@@ -159,7 +159,7 @@ const InteractiveBudgetRings: React.FC = () => {
                 {budgetRings.map((ring) => (
                     <div
                         key={ring.category}
-                        className={`flex items-center justify-between p-2 rounded-lg transition-all cursor-pointer ${hoveredRing === ring.category
+                        className={`flex items-center justify-between p-2 rounded-lg transition-all cursor-pointer active:scale-95 ${hoveredRing === ring.category
                                 ? 'bg-slate-100 dark:bg-slate-800'
                                 : 'hover:bg-slate-50 dark:hover:bg-slate-900'
                             }`}
