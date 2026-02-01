@@ -16,20 +16,51 @@ const History: React.FC = () => {
     // Filter States
     const [filterType, setFilterType] = useState<TransactionType | 'all'>('all');
     const [filterCategory, setFilterCategory] = useState<Category | 'all'>('all');
+    const [filterDateRange, setFilterDateRange] = useState<'all' | 'thisMonth' | 'lastMonth' | 'last3Months'>('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilters, setShowFilters] = useState(false);
 
     // Sorting and Filtering
     const filteredTransactions = useMemo(() => {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
         return transactions
             .filter(t => {
+                // Type Filter
                 if (filterType !== 'all' && t.type !== filterType) return false;
+
+                // Category Filter
                 if (filterCategory !== 'all' && t.category !== filterCategory) return false;
-                if (searchQuery && !t.category.toLowerCase().includes(searchQuery.toLowerCase()) && !t.note?.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+
+                // Date Range Filter
+                const tDate = new Date(t.date);
+                if (filterDateRange === 'thisMonth') {
+                    if (tDate.getMonth() !== currentMonth || tDate.getFullYear() !== currentYear) return false;
+                } else if (filterDateRange === 'lastMonth') {
+                    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+                    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+                    if (tDate.getMonth() !== lastMonth || tDate.getFullYear() !== lastMonthYear) return false;
+                } else if (filterDateRange === 'last3Months') {
+                    const threeMonthsAgo = new Date();
+                    threeMonthsAgo.setMonth(now.getMonth() - 3);
+                    if (tDate < threeMonthsAgo) return false;
+                }
+
+                // Search Query (Category, Note, Amount)
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    const matchesCategory = t.category.toLowerCase().includes(query);
+                    const matchesNote = t.note?.toLowerCase().includes(query);
+                    const matchesAmount = t.amount.toString().includes(query);
+                    if (!matchesCategory && !matchesNote && !matchesAmount) return false;
+                }
+
                 return true;
             })
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    }, [transactions, filterType, filterCategory, searchQuery]);
+    }, [transactions, filterType, filterCategory, filterDateRange, searchQuery]);
 
     // Grouping by Date
     const groupedTransactions = useMemo(() => {
@@ -121,7 +152,18 @@ const History: React.FC = () => {
 
             {/* Filters Panel */}
             {showFilters && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-black p-6 rounded-2xl border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-black p-6 rounded-2xl border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <Dropdown
+                        label="Période"
+                        options={[
+                            { label: 'Tout l\'historique', value: 'all' },
+                            { label: 'Ce mois-ci', value: 'thisMonth' },
+                            { label: 'Mois dernier', value: 'lastMonth' },
+                            { label: '3 derniers mois', value: 'last3Months' },
+                        ]}
+                        value={filterDateRange}
+                        onChange={(v) => setFilterDateRange(v as any)}
+                    />
                     <Dropdown
                         label="Type de flux"
                         options={typeOptions}

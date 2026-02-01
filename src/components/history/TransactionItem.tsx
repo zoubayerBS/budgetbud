@@ -7,6 +7,7 @@ import { Trash2, ArrowUpRight, Receipt, Shuffle, ArrowRight, Edit3 } from 'lucid
 import { cn } from '../../lib/utils';
 import AlertModal from '../common/AlertModal';
 import EditTransactionModal from '../modals/EditTransactionModal';
+import { getMerchantIcon } from '../../lib/merchantIcons';
 
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -34,6 +35,9 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
 
     const sourceAccount = accounts.find(a => a.id === transaction.account_id);
     const targetAccount = accounts.find(a => a.id === transaction.target_account_id);
+
+    // Detect merchant icon from note or category
+    const merchantIcon = getMerchantIcon(transaction.note || transaction.category);
 
     const handleDragEnd = (_: any, info: any) => {
         if (info.offset.x > 100) {
@@ -74,15 +78,30 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
                     {isTransfer && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-500 rounded-r-full"></div>}
 
                     <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
-                        <div className={cn(
-                            "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 shrink-0",
-                            isIncome
-                                ? "bg-lime-500 text-black shadow-lg shadow-lime-500/20"
-                                : isTransfer
-                                    ? "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 shadow-lg shadow-blue-500/5"
-                                    : "bg-red-500/10 text-red-500 dark:bg-red-500/20 shadow-lg shadow-red-500/5"
-                        )}>
-                            {isIncome ? <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" /> : isTransfer ? <Shuffle className="w-5 h-5 sm:w-6 sm:h-6" /> : <Receipt className="w-5 h-5 sm:w-6 sm:h-6" />}
+                        <div
+                            className={cn(
+                                "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 shrink-0",
+                                merchantIcon
+                                    ? "bg-white dark:bg-black border-2 shadow-lg"
+                                    : isIncome
+                                        ? "bg-lime-500 text-black shadow-lg shadow-lime-500/20"
+                                        : isTransfer
+                                            ? "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 shadow-lg shadow-blue-500/5"
+                                            : "bg-red-500/10 text-red-500 dark:bg-red-500/20 shadow-lg shadow-red-500/5"
+                            )}
+                            style={merchantIcon ? {
+                                borderColor: merchantIcon.color,
+                                boxShadow: `0 4px 14px ${merchantIcon.color}20`
+                            } : undefined}
+                        >
+                            {merchantIcon ? (
+                                <merchantIcon.icon
+                                    className="w-5 h-5 sm:w-6 sm:h-6"
+                                    style={{ color: merchantIcon.color }}
+                                />
+                            ) : (
+                                isIncome ? <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" /> : isTransfer ? <Shuffle className="w-5 h-5 sm:w-6 sm:h-6" /> : <Receipt className="w-5 h-5 sm:w-6 sm:h-6" />
+                            )}
                         </div>
 
                         <div className="flex-1 min-w-0">

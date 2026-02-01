@@ -4,16 +4,18 @@ import { useBudget } from '../../context/BudgetContext';
 import { formatCurrency } from '../../lib/format';
 import type { Transaction } from '../../types';
 
-// Palette moderne Pastel/Neon
+// Enhanced Executive Color Palette
 const COLORS = [
     '#d9ff4d', // Lime (Brand Primary)
-    '#1e293b', // Slate 800
-    '#475569', // Slate 600
-    '#94a3b8', // Slate 400
-    '#0f172a', // Slate 900
-    '#ff4d4d', // Red (Contextual Expense)
-    '#64748b', // Slate 500
-    '#d1d5db'  // Gray 300
+    '#0ea5e9', // Sky Blue
+    '#f59e0b', // Amber
+    '#ec4899', // Pink
+    '#8b5cf6', // Purple
+    '#ef4444', // Red
+    '#10b981', // Emerald
+    '#6366f1', // Indigo
+    '#f97316', // Orange
+    '#14b8a6'  // Teal
 ];
 
 const ExpensePieChart: React.FC = () => {
@@ -32,6 +34,12 @@ const ExpensePieChart: React.FC = () => {
     }, [transactions]);
 
     const totalExpense = data.reduce((sum, item) => sum + item.value, 0);
+
+    // Custom label renderer with percentages
+    const renderCustomLabel = (entry: any) => {
+        const percent = ((entry.value / totalExpense) * 100).toFixed(0);
+        return `${percent}%`;
+    };
 
     if (data.length === 0) {
         return (
@@ -52,15 +60,21 @@ const ExpensePieChart: React.FC = () => {
                         data={data}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
-                        paddingAngle={5}
-                        cornerRadius={8}
+                        innerRadius={70}
+                        outerRadius={100}
+                        paddingAngle={3}
+                        cornerRadius={6}
                         dataKey="value"
                         stroke="none"
+                        label={renderCustomLabel}
+                        labelLine={false}
                     >
                         {data.map((_, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            <Cell
+                                key={`cell-${index}`}
+                                fill={COLORS[index % COLORS.length]}
+                                className="transition-opacity hover:opacity-80"
+                            />
                         ))}
                     </Pie>
                     <Tooltip
@@ -79,9 +93,14 @@ const ExpensePieChart: React.FC = () => {
                         verticalAlign="bottom"
                         align="center"
                         iconType="circle"
-                        formatter={(value) => (
-                            <span className="text-slate-600 dark:text-slate-300 text-xs font-bold ml-2">{value}</span>
-                        )}
+                        formatter={(value, entry: any) => {
+                            const percent = ((entry.payload.value / totalExpense) * 100).toFixed(1);
+                            return (
+                                <span className="text-slate-600 dark:text-slate-300 text-xs font-bold ml-2">
+                                    {value} ({percent}%)
+                                </span>
+                            );
+                        }}
                     />
                 </PieChart>
             </ResponsiveContainer>

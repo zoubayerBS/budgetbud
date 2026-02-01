@@ -7,6 +7,7 @@ import ExpensePieChart from '../components/dashboard/ExpensePieChart';
 import MonthlyComparisonChart from '../components/dashboard/MonthlyComparisonChart';
 import InsightCard from '../components/dashboard/InsightCard';
 import AccountsList from '../components/dashboard/AccountsList';
+import DailyBudgetWidget from '../components/dashboard/DailyBudgetWidget';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, Target, Sparkles, ChevronRight, Calendar } from 'lucide-react';
 import { formatCurrency } from '../lib/format';
@@ -95,10 +96,13 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 3. Smart Pulse: Insight Card & Accounts (4 cols) */}
+                {/* 3. Smart Pulse: Insight Card, Daily Budget & Accounts (4 cols) */}
                 <div className="md:col-span-4 md:row-span-2 space-y-6">
                     <div className="hover:scale-[1.01] transition-transform duration-500">
                         <InsightCard />
+                    </div>
+                    <div className="hover:scale-[1.01] transition-transform duration-500">
+                        <DailyBudgetWidget />
                     </div>
                     <div className="bento-tile bg-white dark:bg-black/40 border-l-4 border-lime-500/20">
                         <AccountsList />
