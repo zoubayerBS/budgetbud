@@ -8,12 +8,16 @@ import MonthlyComparisonChart from '../components/dashboard/MonthlyComparisonCha
 import InsightCard from '../components/dashboard/InsightCard';
 import AccountsList from '../components/dashboard/AccountsList';
 import DailyBudgetWidget from '../components/dashboard/DailyBudgetWidget';
+import FinancialHealthScore from '../components/dashboard/FinancialHealthScore';
+import SpendingVelocityGauge from '../components/dashboard/SpendingVelocityGauge';
+import AIInsightsCarousel from '../components/dashboard/AIInsightsCarousel';
+import InteractiveBudgetRings from '../components/dashboard/InteractiveBudgetRings';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, Target, Sparkles, ChevronRight, Calendar } from 'lucide-react';
 import { formatCurrency } from '../lib/format';
 
 const Dashboard: React.FC = () => {
-    const { transactions, budgets, user, savingsGoals, currency } = useBudget();
+    const { transactions, budgets, savingsGoals, currency } = useBudget();
     const { t } = useLanguage();
 
     const totalSavingsTarget = savingsGoals.reduce((sum, g) => sum + g.target_amount, 0);
@@ -44,25 +48,9 @@ const Dashboard: React.FC = () => {
     return (
         <div className="space-y-10 animate-in fade-in duration-1000 p-2 md:p-4 max-w-[1400px] mx-auto pb-24">
 
-            {/* Header: Executive Status Bar */}
-            <div className="flex flex-col md:flex-row items-end justify-between gap-6 px-2">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-lime-600 font-black text-[10px] uppercase tracking-[0.3em] opacity-80 mb-2">
-                        <Sparkles className="w-3 h-3" />
-                        <span>Résumé des comptes</span>
-                    </div>
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
-                        Bonjour, <span className="text-lime-600 dark:text-lime-400">{user?.name || 'Utilisateur'}</span>
-                    </h1>
-                    <p className="text-slate-500 font-bold text-base opacity-80">Tout est sous contrôle aujourd'hui.</p>
-                </div>
-
-                <div className="flex items-center gap-4 bg-white/40 dark:bg-black/40 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 dark:border-slate-800 shadow-sm">
-                    <div className="w-2 h-2 bg-lime-500 rounded-full animate-pulse shadow-lg shadow-lime-500/50"></div>
-                    <span className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                        {new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
-                    </span>
-                </div>
+            {/* REVOLUTIONARY HERO SECTION - Financial Health Score */}
+            <div className="animate-in slide-in-from-top-4 duration-700">
+                <FinancialHealthScore />
             </div>
 
             {/* BENTO GRID INFRASTRUCTURE */}
@@ -88,6 +76,16 @@ const Dashboard: React.FC = () => {
                     </div>
                 )}
 
+                {/* 1.5. Spending Velocity Gauge (6 cols) */}
+                <div className="md:col-span-6 animate-in slide-in-from-left-4 duration-700">
+                    <SpendingVelocityGauge />
+                </div>
+
+                {/* 1.6. Daily Budget Widget (6 cols) */}
+                <div className="md:col-span-6 animate-in slide-in-from-right-4 duration-700">
+                    <DailyBudgetWidget />
+                </div>
+
                 {/* 2. Global Vision: Financial Overview (8 cols) */}
                 <div className="md:col-span-8 md:row-span-2 relative group overflow-hidden rounded-[2.5rem] shadow-2xl transition-all duration-700 hover:shadow-lime-500/10 active:scale-[0.99] border border-slate-100 dark:border-white/5 group">
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-black group-hover:from-black group-hover:to-slate-900 transition-all duration-1000"></div>
@@ -96,13 +94,10 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 3. Smart Pulse: Insight Card, Daily Budget & Accounts (4 cols) */}
+                {/* 3. Smart Pulse: Insight Card & Accounts (4 cols) */}
                 <div className="md:col-span-4 md:row-span-2 space-y-6">
                     <div className="hover:scale-[1.01] transition-transform duration-500">
                         <InsightCard />
-                    </div>
-                    <div className="hover:scale-[1.01] transition-transform duration-500">
-                        <DailyBudgetWidget />
                     </div>
                     <div className="bento-tile bg-white dark:bg-black/40 border-l-4 border-lime-500/20">
                         <AccountsList />
@@ -126,17 +121,22 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 5. Sectorial Matrix: Distribution (5 cols) */}
+                {/* 4.5. AI Insights Carousel (12 cols) */}
+                <div className="md:col-span-12 animate-in slide-in-from-bottom-4 duration-700">
+                    <AIInsightsCarousel />
+                </div>
+
+                {/* 5. Interactive Budget Rings (5 cols) */}
                 <div className="md:col-span-5 md:row-span-3 bento-tile bg-white dark:bg-black/40 border-l-4 border-lime-500/20 hover:scale-[1.01] transition-transform duration-500">
                     <div className="flex items-center justify-between mb-10">
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-6 bg-lime-500 rounded-full"></div>
-                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Où va votre argent</h3>
+                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Budgets Interactifs</h3>
                         </div>
                         <span className="w-2 h-2 bg-lime-500 rounded-full animate-pulse"></span>
                     </div>
                     <div className="h-[360px]">
-                        <ExpensePieChart />
+                        <InteractiveBudgetRings />
                     </div>
                 </div>
 

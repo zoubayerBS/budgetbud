@@ -68,12 +68,16 @@ const ExpensePieChart: React.FC = () => {
                         stroke="none"
                         label={renderCustomLabel}
                         labelLine={false}
+                        onClick={(data) => {
+                            // Navigate to history with category filter
+                            window.location.href = `/history?category=${encodeURIComponent(data.name)}`;
+                        }}
                     >
                         {data.map((_, index) => (
                             <Cell
                                 key={`cell-${index}`}
                                 fill={COLORS[index % COLORS.length]}
-                                className="transition-opacity hover:opacity-80"
+                                className="transition-opacity hover:opacity-80 cursor-pointer"
                             />
                         ))}
                     </Pie>
