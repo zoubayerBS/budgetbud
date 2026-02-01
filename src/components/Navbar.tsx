@@ -176,8 +176,9 @@ const Navbar: React.FC = () => {
                                     key={item.to}
                                     to={item.to}
                                     onClick={() => setIsOpen(false)}
+                                    aria-label={item.label}
                                     className={cn(
-                                        "min-w-[48px] min-h-[48px] p-3 rounded-full transition-all duration-500 relative flex flex-col items-center justify-center gap-1",
+                                        "min-w-[48px] min-h-[48px] p-3 rounded-full transition-all duration-500 relative flex flex-col items-center justify-center gap-1 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-black",
                                         isActive ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-lg" : "text-slate-500"
                                     )}
                                 >
@@ -213,7 +214,8 @@ const Navbar: React.FC = () => {
                             setIsOpen(false);
                             openQuickAddModal();
                         }}
-                        className="w-12 h-12 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center text-lime-600 dark:text-lime-400 shadow-lg active:scale-90 transition-transform ml-1 shrink-0"
+                        aria-label="Ajout rapide de dépense"
+                        className="w-12 h-12 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center text-lime-600 dark:text-lime-400 shadow-lg active:scale-90 transition-transform ml-1 shrink-0 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-black"
                     >
                         <Zap className="w-6 h-6 fill-current" />
                     </button>
@@ -223,7 +225,8 @@ const Navbar: React.FC = () => {
                             setIsOpen(false);
                             openAddModal();
                         }}
-                        className="w-14 h-14 bg-lime-600 rounded-full flex items-center justify-center text-black shadow-2xl shadow-lime-500/30 active:scale-90 transition-transform ml-1 shrink-0 ring-2 ring-lime-400/20"
+                        aria-label="Ajouter une transaction"
+                        className="w-14 h-14 bg-lime-600 rounded-full flex items-center justify-center text-black shadow-2xl shadow-lime-500/30 active:scale-90 transition-transform ml-1 shrink-0 ring-2 ring-lime-400/20 focus:outline-none focus:ring-4 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-black"
                     >
                         <Plus className="w-7 h-7" />
                     </button>

@@ -159,13 +159,22 @@ const InteractiveBudgetRings: React.FC = () => {
                 {budgetRings.map((ring) => (
                     <div
                         key={ring.category}
-                        className={`flex items-center justify-between p-2 rounded-lg transition-all cursor-pointer active:scale-95 ${hoveredRing === ring.category
+                        className={`flex items-center justify-between p-2 rounded-lg transition-all cursor-pointer active:scale-95 focus-within:ring-2 focus-within:ring-lime-500 ${hoveredRing === ring.category
                                 ? 'bg-slate-100 dark:bg-slate-800'
                                 : 'hover:bg-slate-50 dark:hover:bg-slate-900'
                             }`}
                         onMouseEnter={() => setHoveredRing(ring.category)}
                         onMouseLeave={() => setHoveredRing(null)}
                         onClick={() => navigate('/budgets')}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${ring.category}: ${ring.percentage}% du budget utilisé`}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                navigate('/budgets');
+                            }
+                        }}
                     >
                         <div className="flex items-center gap-2 flex-1 min-w-0">
                             <div

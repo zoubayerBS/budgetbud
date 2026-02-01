@@ -206,18 +206,22 @@ const AIInsightsCarousel: React.FC = () => {
                 <button
                     onClick={handlePrev}
                     disabled={currentIndex === 0}
-                    className="w-11 h-11 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90"
+                    aria-label="Insight précédent"
+                    className="w-11 h-11 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-black"
                 >
                     <ChevronLeft className="w-5 h-5" />
                 </button>
 
                 {/* Dots */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2" role="tablist" aria-label="Insights navigation">
                     {insights.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => setCurrentIndex(index)}
-                            className={`transition-all rounded-full ${index === currentIndex
+                            role="tab"
+                            aria-selected={index === currentIndex}
+                            aria-label={`Aller à l'insight ${index + 1}`}
+                            className={`transition-all rounded-full focus:outline-none focus:ring-2 focus:ring-lime-500 ${index === currentIndex
                                     ? 'w-8 h-2 bg-lime-500'
                                     : 'w-2 h-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600'
                                 }`}
@@ -228,7 +232,8 @@ const AIInsightsCarousel: React.FC = () => {
                 <button
                     onClick={handleNext}
                     disabled={currentIndex === insights.length - 1}
-                    className="w-11 h-11 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90"
+                    aria-label="Insight suivant"
+                    className="w-11 h-11 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-black"
                 >
                     <ChevronRight className="w-5 h-5" />
                 </button>
