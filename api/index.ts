@@ -25,7 +25,6 @@ const pool = new Pool({
 });
 
 const getUserId = (req: any) => {
-    // Prioritize header from frontend, then fallback
     return req.headers['x-user-id'] || '00000000-0000-0000-0000-000000000000';
 };
 
@@ -410,6 +409,7 @@ const processRecurrences = async (userId: string) => {
     try {
         const templates = await pool.query('SELECT * FROM recurring_templates WHERE user_id = $1 AND active = TRUE', [userId]);
         const today = new Date();
+        if (templates.rowCount === 0) return;
 
         for (const t of templates.rows) {
             let lastDate = t.last_processed ? new Date(t.last_processed) : new Date(t.start_date);
@@ -450,11 +450,9 @@ const processRecurrences = async (userId: string) => {
 
 app.get('/api/transactions', authenticateToken, async (req: any, res) => {
     const userId = getUserId(req);
-    console.log(`[GET] /api/transactions - Fetching for user: ${userId}`);
     try {
         await processRecurrences(userId);
         const result = await pool.query('SELECT * FROM transactions WHERE user_id = $1 ORDER BY date DESC', [userId]);
-        console.log(`[GET] /api/transactions - Found ${result.rowCount} transactions`);
         res.json(result.rows);
     } catch (err) {
         console.error("Error fetching transactions:", err);
@@ -672,6 +670,7 @@ app.delete('/api/savings/:id', authenticateToken, async (req: any, res) => {
 // Reset Account Data
 app.delete('/api/user/reset', authenticateToken, async (req: any, res) => {
     const userId = getUserId(req);
+    console.log(`[AUDIT] Data Reset triggered for user: ${userId}`);
     try {
         await pool.query('BEGIN');
         await pool.query('DELETE FROM transactions WHERE user_id = $1', [userId]);
