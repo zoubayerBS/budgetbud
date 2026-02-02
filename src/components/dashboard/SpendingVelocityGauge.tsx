@@ -48,7 +48,14 @@ const SpendingVelocityGauge: React.FC = () => {
         // 50 = on track, <50 = under budget, >50 = over budget
         const idealPace = (daysElapsed / daysInMonth) * 100;
         const actualPace = totalBudget > 0 ? (monthlyExpenses / totalBudget) * 100 : 0;
-        const currentPace = totalBudget > 0 ? (actualPace / idealPace) * 50 : 50;
+        let currentPace = 0;
+        if (totalBudget > 0) {
+            currentPace = (actualPace / idealPace) * 50;
+        } else if (monthlyExpenses > 0) {
+            currentPace = 100; // Over budget if we have expenses but no budget
+        } else {
+            currentPace = 0; // No data = 0 pace
+        }
 
         // Determine zone
         let zone: 'safe' | 'caution' | 'danger' = 'safe';
@@ -206,8 +213,8 @@ const SpendingVelocityGauge: React.FC = () => {
                         Projection Fin Mois
                     </p>
                     <p className={`text-sm font-black ${velocityMetrics.projectedSpend > velocityMetrics.totalBudget
-                            ? 'text-red-600 dark:text-red-400'
-                            : 'text-lime-600 dark:text-lime-400'
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-lime-600 dark:text-lime-400'
                         }`}>
                         {formatCurrency(velocityMetrics.projectedSpend, currency)}
                     </p>

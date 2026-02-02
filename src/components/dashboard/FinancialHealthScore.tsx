@@ -39,12 +39,24 @@ const FinancialHealthScore: React.FC = () => {
         const lastMonthIncome = lastMonthTxns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
         const lastMonthExpenses = lastMonthTxns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
 
+        // If no data, return 0 for everything
+        if (transactions.length === 0 && budgets.length === 0) {
+            return {
+                score: 0,
+                budgetAdherence: 0,
+                savingsRate: 0,
+                incomeStability: 0,
+                spendingTrend: 0,
+                trend: 'stable'
+            };
+        }
+
         const totalBudget = budgets.reduce((sum, b) => sum + b.limit, 0);
 
         // 1. Budget Adherence (40%) - How well staying within budget
         const budgetAdherence = totalBudget > 0
             ? Math.max(0, Math.min(100, ((totalBudget - currentExpenses) / totalBudget) * 100))
-            : 50;
+            : transactions.length > 0 ? 100 : 0; // 100 if we have data but no budgets, 0 if no data
 
         // 2. Savings Rate (30%) - Percentage of income saved
         const savingsRate = currentIncome > 0
@@ -60,7 +72,9 @@ const FinancialHealthScore: React.FC = () => {
         const spendingChange = lastMonthExpenses > 0
             ? ((lastMonthExpenses - currentExpenses) / lastMonthExpenses) * 100
             : 0;
-        const spendingTrend = Math.max(0, Math.min(100, 50 + spendingChange));
+        const spendingTrend = lastMonthExpenses > 0
+            ? Math.max(0, Math.min(100, 50 + spendingChange))
+            : (currentExpenses > 0 ? 0 : 0);
 
         // Calculate overall score
         const score = Math.round(
@@ -71,7 +85,7 @@ const FinancialHealthScore: React.FC = () => {
         );
 
         // Determine trend
-        const lastMonthScore = 50; // Simplified - could calculate from historical data
+        const lastMonthScore = 50;
         const trend = score > lastMonthScore + 5 ? 'up' : score < lastMonthScore - 5 ? 'down' : 'stable';
 
         return {
